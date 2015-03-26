@@ -1,4 +1,4 @@
-# VocabularyMatchingTool  
+# Vocabulary Matching Tool  
 
 The Vocabulary Matching Tool is intended to aid in the creation of mappings from a number of (SKOS) Linked Open Data vocabularies to the Getty Art & Architecture Thesaurus (AAT). The application presents source and target concepts side by side along with associated contextual metadata to make more informed mapping decisions. The set of mappings developed may then be exported to TriG (rdf) or delimited text (CSV) format for use in other applications.
 
