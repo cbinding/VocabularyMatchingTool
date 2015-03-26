@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>    
+    <title>Vocabulary Matching Tool - Help</title>
+    <meta charset="utf-8">
+    <meta name="description" content="A tool for creating matches between SKOS concepts in different vocabularies">
+    <meta name="author" content="Ceri Binding, University of South Wales">
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">     
+</head>
+<body>
+    <!-- Primary Page Layout
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="container">
+        <!-- .container is main centered wrapper -->
+        <section class="header">
+            <h2 class="title">Vocabulary Matching Tool</h2>
+        </section>
+
+        <h3><a name="introduction">Introduction</a></h3>
+        <p>The Vocabulary Matching Tool is intended to aid in the creation of mappings from a number of (SKOS) Linked Open Data vocabularies to the <a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/aat/">Getty Art &amp; Architecture Thesaurus (AAT).</a>. The application presents source and target concepts side by side along with associated contextual metadata to make more informed mapping decisions. The set of mappings developed may then be exported to <a target="_blank" href="http://www.w3.org/TR/trig/">TriG</a> (rdf) or delimited text (CSV) format for use in other applications. The Vocabulary Matching Tool, particularly the file loading and saving functionality will only work with a modern browser (it has so far been tested on Google Chrome version 40 and on Microsoft Internet Explorer version 11)</p>     
+    
+        <h3><a name="sourceVocabulary">Source Vocabulary</a></h3>
+        <p>The currently selected source vocabulary. You can choose a source vocabulary from the list of vocabularies hosted on <a target="_blank" href="http://www.heritagedata.org">http://www.heritagedata.org</a>. Searches will then be restricted to concepts originating from the chosen vocabulary. Typing into the search box and hitting return will display a list of matching concept labels. Selecting any one of the results will display further details of the selected concept, and selects that concept as the 'source concept' in the Concept Matching' section, for potential addition to the current set of matches.</p>
+
+        <h3><a name="targetVocabulary">Target Vocabulary</a></h3>
+        <p>The target vocabulary. In this initial version of the Vocabulary Matching Tool the target vocabulary is always the <a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/aat/">Getty Art &amp; Architecture Thesaurus (AAT)</a>. Typing into the search box and hitting return will display a list of matching concept labels. Selecting any one of the results will display further details of the selected concept, and selects that concept as the 'target concept' in the Concept Matching' section, for potential addition to the current set of matches.</p>
+
+        <h3><a name="conceptMatch">Concept Match</a></h3>
+        <p>A potential concept match, based on the currently selected concepts from source and target vocabularies. Select a different match type if appropriate (the default is "close match"). Click on "Add Match" to add this match to the current set of matches held in the table. There is nothing stopping the same match being added more than once, and you may match a source concept with multiple target concepts (or vice versa).</p>
+
+        <h3><a name="clearMatches">Clear</a></h3>
+        <p>Clear all current matches from the table. You may wish to save the current set of matches to an external file prior to doing this, so they can be loaded back in at a later date to continue working, or communicated to other people.</p>
+
+        <h3><a name="loadMatches">Load</a></h3>
+        <p>Load a set of matches from a previously saved external file. This can be useful if you want to continue working on a set of matches you previously saved, or sets of matches produced by pther people.</p>
+
+        <h3><a name="saveMatches">Save</a></h3>
+        <p>Save the current set of matches to an external file. Bear in mind there is no database or server side component to this application, so it is advisable to regularly back up your work. A default file name is auto generated based on the current date and time (i.e. YYYYMMDDhhmmss.json)</p>
+
+        <h3><a name="exportTRIG">Export (TriG)</a></h3>
+        <p>Export the current set of matches to a TriG (RDF) format file, this is useful for subsequent import of the mappings to an RDF triple store.  A default file name is auto generated based on the current date and time (i.e. YYYYMMDDhhmmss.trig)</p>
+
+        <h3><a name="exportCSV">Export (CSV)</a></h3>
+        <p>Export the current set of matches to a delimited text (CSV) format file, this is useful for subsequent import to e.g. a spreadsheet application.  A default file name is auto generated based on the current date and time (i.e. YYYYMMDDhhmmss.csv)</p>
+
+        <h3><a name="matchesTable">Matches Table</a></h3>
+        <p>The current set of matches. Although the table data will be automatically saved between sessions, it is only local to the current device/browser, and so it is advisable to save your work to an external file in order to properly back it up or to transfer it between machines/browsers. If you want to use a different device/browser save the current mappings to a file then open this application on the new device/browser and load the previously saved file.</p>
+ 
+    <p>Typing in the box labelled "search" will filter the displayed matches. Clicking on a column header will toggle sorting on that column in ascending or descending order. Clicking the 'delete' button on the far right of any row will delete that row from the table.</p>
+
+    </div><!--end div.container-->
+</body>
+</html>

@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Basic Page Needs
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<meta charset="utf-8">
+	<title>Vocabulary Matching Tool</title>
+	<meta name="description" content="For creating matches between SKOS concepts in different vocabularies">
+	<meta name="author" content="Ceri Binding, University of South Wales">
+
+	<!-- Mobile Specific Metas
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+	<link rel="stylesheet" href="css/usw.vocabularymatchingtool.css">
+
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/simplemodal.css">-->
+
+	<!-- CDN Scripts
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script><!-- for main data table -->
+    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script><!-- for data output (PDF, CSV etc.) -->
+
+    <!-- Local Scripts
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="lib/moment-min.js"></script><!--for formatting dates-->
+    <script src="lib/papaparse.min.js"></script><!--for handling CSV correctly-->
+
+    <!-- Local Scripts itemised for testing, but in deployment use minified versioned composite script -->
+    <!--
+    <script src="lib/usw.uri.js"></script>
+    <script src="lib/usw.util.js"></script>
+	<script src="lib/usw.aatlist.js"></script>
+    <script src="lib/usw.aatnarrower.js"></script>
+    <script src="lib/usw.aatbroader.js"></script>
+    <script src="lib/usw.aatrelated.js"></script>
+    <script src="lib/usw.aatpreflabels.js"></script>
+    <script src="lib/usw.aataltlabels.js"></script>
+    <script src="lib/usw.aatscopenotes.js"></script>
+    <script src="lib/usw.aatconceptdetails.js"></script>
+    <script src="lib/usw.aatsearch.js"></script>
+    <script src="lib/usw.skoslist.js"></script>
+    <script src="lib/usw.skosconceptschemes.js"></script>
+    <script src="lib/usw.skosnarrower.js"></script>
+    <script src="lib/usw.skosbroader.js"></script>
+    <script src="lib/usw.skosrelated.js"></script>
+    <script src="lib/usw.skospreflabels.js"></script>
+    <script src="lib/usw.skosaltlabels.js"></script>
+    <script src="lib/usw.skosscopenotes.js"></script>
+    <script src="lib/usw.skosconceptdetails.js"></script>
+    <script src="lib/usw.skossearch.js"></script>
+    <script src="lib/usw.skosmapping.js"></script>
+    <script src="lib/usw.mappingstable.js"></script>
+    <script src="lib/usw.fileselect.js"></script>
+    -->
+
+    <!--minified, versioned composite script-->
+    <script src="lib/usw.vocabularymatchingtool.20150326-min.js"></script>
+	
+    <script type="text/javascript">
+        (function ($) { // start of main jquery closure
+            "use strict"; // strict	mode pragma
+            $.support.cors = true;
+
+            //debugger; // adding this breaks into the debugger at this point
+            $(document).ready(function () {
+
+                // file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
+                function saveTextAsFile(textToWrite, fileName)
+                {
+                    var textFileAsBlob = new Blob([textToWrite], {type:"text/plain"});
+                    //var browserName = navigator.appName;
+                    // if IE...
+                    if (window.navigator.msSaveBlob)
+                    {
+                        window.navigator.msSaveBlob(textFileAsBlob, fileName);
+                    }                    
+                    else
+                    {
+                        var downloadLink = document.createElement("a");
+                        downloadLink.download = fileName;
+                        downloadLink.innerHTML = "Download File";
+                        if (window.webkitURL != null)
+                        {
+                            // Chrome allows the link to be clicked
+                            // without actually adding it to the DOM.
+                            downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+                        }
+                        else
+                        {
+                            // Firefox requires the link to be added to the DOM
+                            // before it can be clicked.
+                            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                            downloadLink.onclick = destroyClickedElement;
+                            downloadLink.style.display = "none";
+                            document.body.appendChild(downloadLink);
+                        }
+                        downloadLink.click();
+                    }
+                }               
+                function destroyClickedElement(event) {
+                    document.body.removeChild(event.target);
+                }
+                // end file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
+
+                // choose a source vocabulary from a list of heritagedata vocabularies
+                $("#chooseSourceVocabulary:first").on("click", function (e) {
+                    var element = $("<div class='usw-skosconceptschemes' title='Source vocabularies'></div>")
+                        .skosconceptschemes().css({ width: "100%", height: "100%", "overflow-y": "scroll"})
+                        .on("selected", function (e, data) {
+                            $(".usw-skossearch:first").skossearch({ schemeURI: data.uri });
+                            var anchor = $("#sourceVocabularyName a:first")
+                                .attr("target", "_blank")
+                                .attr("href", data.uri)
+                                .text(data.label);
+                            //alert(data.uri);
+                        });
+                    $(element).dialog({
+                        modal: true,
+                        position: { my: "center top", at: "center top" }                        
+                    });
+                    e.preventDefault();
+                });               
+
+                // when a language is selected, configure all controls to use that language (not used yet)
+                $("select#language").change(function () {
+                    var lang = $("option:selected", this).first().val();
+                    $(".usw-aatsearch:first").aatsearch("option", "language", lang);
+                    $(".usw-skossearch:first").skossearch("option", "language", lang);
+                    $(".usw-aatconceptdetails:first").aatconceptdetails("option", "language", lang);
+                    $(".usw-skosconceptdetails:first").skosconceptdetails("option", "language", lang);
+                });
+
+                // when a concept is selected from the source vocabulary search results, use it as source concept
+                $(".usw-skossearch, .usw-skosconceptdetails").on("selected", function (e, data) {
+                    $(".usw-skosconceptdetails").skosconceptdetails("option", "conceptURI", data.uri);                    
+                    $(".usw-skosmapping:first").skosmapping({ sourceURI: data.uri, sourceLabel: data.label });
+                });
+
+                // when a concept is selected from the target vocabulary search results, use it as target concept
+                $(".usw-aatsearch, .usw-aatconceptdetails").on("selected", function (e, data) {
+                    //alert("selected: " + data.label);
+                    $(".usw-aatconceptdetails").aatconceptdetails("option", "conceptURI", data.uri);
+                    //$("#targetConcept").html("<a href='" + data.uri + "'>" + data.label + "</a>");
+
+                    $(".usw-skosmapping:first").skosmapping({ targetURI: data.uri, targetLabel: data.label });
+                });
+               
+                // add a mapping to the table
+                $(".usw-skosmapping:first").on("selected", function (e, data) {
+                    $('.usw-mappingstable:first').mappingstable("add", data);
+                });
+
+                // clear all current mappings from the table 
+                $("#clearMappings").on("click", function () {
+                    var response = confirm('Clear all current mappings - are you sure?');
+                    if(response === true)
+                        $('.usw-mappingstable:first').mappingstable("clear");
+                });
+
+                // save the current set of mappings to an external (JSON) file
+                $("#saveMappings").on("click", function () {
+                    var json = $('.usw-mappingstable:first').mappingstable("toJSON");
+                    // construct fileName from timestamp
+                    var fileName = moment().format('YYYYMMDDhhmmss') + ".json";                    
+                    saveTextAsFile(json, fileName);
+                    alert("data saved to '" + fileName + "'");                    
+                });
+
+                // export the current set of mappings to a TriG (RDF) format external file
+                $("#exportTRIG").on("click", function () {
+                    var rdf = $('.usw-mappingstable:first').mappingstable("toTRIG");
+                    // construct fileName from timestamp
+                    var fileName = moment().format('YYYYMMDDhhmmss') + ".trig";
+                    saveTextAsFile(rdf, fileName);
+                    alert("data exported to '" + fileName + "'");
+                });
+
+                // export the current set of mappings to a delimited text (CSV) format external file
+                $("#exportCSV").on("click", function () {
+                    var csv = $('.usw-mappingstable:first').mappingstable("toCSV");
+                    // construct fileName from timestamp
+                    var fileName = moment().format('YYYYMMDDhhmmss') + ".csv";
+                    saveTextAsFile(csv, fileName);
+                    alert("data exported to '" + fileName + "'");
+                });
+                
+                // load a set of mappings from an external (JSON) file
+                $("#loadMappings").on("change", function (evt) {
+                    //alert(evt.target.files[0].name); //filename minus path 
+                    //replace the input with a new clone to ensure the change event
+                    // fires again if the same file is selected twice in succession
+                    var control = $("input#loadMappings:first");
+                    control.replaceWith(control = control.clone(true));
+                                    
+                    // input:file may return multiple selected files,
+                    // but we are only actually reading the first one
+                    var selectedFile = evt.target.files[0];
+                    // and only processing text/plain files?? *.json seems to have a blank .type
+                    //if (!selectedFile.type.match('text/plain')) return;
+
+                    // read the selected file's contents
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        // clear and populate the mappings table with the file contents
+                        $('.usw-mappingstable:first').mappingstable("clear");
+                        $('.usw-mappingstable:first').mappingstable("import", e.target.result);
+                    }
+                    reader.readAsText(selectedFile);
+                });
+              
+            }); // end of $(document).ready
+        })(jQuery); // end of main jquery closure
+    </script>
+
+	<!-- Favicon
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<link rel="icon" type="image/png" href="img/favicon.png">
+	
+</head>
+<body>
+
+	<!-- Primary Page Layout
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="container">
+        <!-- .container is main centered wrapper -->
+
+        <section class="header">
+            <h2 class="title">Vocabulary Matching Tool</h2>
+        </section>
+
+        <div class="row">
+            <!--source vocabulary-->
+            <div id="sourceVocabulary" class="one-half column">
+                <fieldset>
+                    <legend>Source Vocabulary (<a href="#" id='chooseSourceVocabulary'>select</a>)</legend>
+                    <div id="sourceVocabularyName" title="source vocabulary">(<a href="#">Not selected</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#sourceVocabulary"></a></div>
+                    <div class="usw-skossearch"></div>
+                    <div class="usw-skosconceptdetails"></div>
+                </fieldset>
+            </div>            
+
+            <!--target vocabulary-->
+            <div id="targetVocabulary" class="one-half column">                
+                <fieldset>
+                    <legend>Target Vocabulary</legend>
+                    <div id="targetVocabularyName" title="target vocabulary">(<a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/">Getty Art &amp; Architecture Thesaurus</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#targetVocabulary"></a></div>
+                    <!--<select id="language" style='{width:50px;}'>
+                        <option value="de">German</option>
+                        <option selected value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="nl">Dutch</option>
+                    </select>-->
+                    <div class="usw-aatsearch"></div>
+                    <div class="usw-aatconceptdetails"></div>
+                </fieldset>
+            </div>
+
+        </div><!--end row-->        
+       
+        <div class="row">
+            <div id="mappings" class="u-full-width">
+                <fieldset>
+                    <legend>Concept Matching</legend>
+                    <div class="usw-skosmapping"></div>
+                    <hr />
+                    <input type="button" class='button button-primary' id="clearMappings" value="Clear" title="Clear all current mappings from the table">
+                    <span id="loadMappings" class="usw-fileselect" data-label="Load" title="Load mappings from a saved file"></span>
+                    <input type="button" class='button button-primary' id="saveMappings" value="Save" title="Save current mappings to a file">
+                    <input type="button" class='button button-primary' id="exportTRIG" value="Export (TriG)" title="Export all current mappings as TriG (RDF) format"> 
+                    <input type="button" class='button button-primary' id="exportCSV" value="Export (CSV)" title="Export all curent mappings as CSV format">
+                    <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#clearMatches"></a>                      
+                    <div class="usw-mappingstable"></div>
+                </fieldset>
+            </div>
+        </div><!--end row-->
+
+        <section class="footer">
+            <hr/>
+            <small>Vocabulary Matching Tool, University of South Wales 2015</small>            
+        </section>
+
+    </div> <!-- End of .container -->
+
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+a {
+	text-decoration: none;   
+    color: deepskyblue;
+    background: whitesmoke; 
+}
+a:hover {
+    color: red;
+    background: lightyellow;
+    text-decoration: underline;
+}
+
+.usw-aatlist, .usw-skoslist, .usw-aatconceptdetails, .usw-skosconceptdetails {
+      background: whitesmoke; 
+}
+
+.usw-aatlist ul, .usw-skoslist ul {
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+    display:inline-block;
+    border: 0px;   
+}
+
+.usw-aatlist ul li, .usw-skoslist ul li {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    display: inline-block;
+    margin: 0px 3px;        
+}
+
+/*.usw-aatlist ul li a:hover, .usw-skoslist ul li a:hover {
+    color: red;
+    background: lightyellow;
+    text-decoration: underline;
+}*/
+
+.usw-aatsearch, .usw-skossearch {
+    border: 1px solid gray;
+}
+
+.usw-aatsearch ul li, .usw-skossearch ul li, .usw-skosconceptschemes ul li {
+    display: block;
+}
+
+
+
