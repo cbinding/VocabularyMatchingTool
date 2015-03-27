@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<title>Vocabulary Matching Tool</title>
 	<meta name="description" content="For creating matches between SKOS concepts in different vocabularies">
-	<meta name="author" content="Ceri Binding, University of South Wales">
+	<meta name="author" content="Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk">
 
 	<!-- Mobile Specific Metas
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -65,8 +65,8 @@
     -->
 
     <!--minified, versioned composite script-->
-    <script src="lib/usw.vocabularymatchingtool.20150326-min.js"></script>
-	
+    <script src="lib/usw.vocabularymatchingtool.20150327-min.js"></script>
+    
     <script type="text/javascript">
         (function ($) { // start of main jquery closure
             "use strict"; // strict	mode pragma
@@ -114,7 +114,7 @@
                 // end file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
 
                 // choose a source vocabulary from a list of heritagedata vocabularies
-                $("#chooseSourceVocabulary:first").on("click", function (e) {
+                /*$("#chooseSourceVocabulary:first").on("click", function (e) {
                     var element = $("<div class='usw-skosconceptschemes' title='Source vocabularies'></div>")
                         .skosconceptschemes().css({ width: "100%", height: "100%", "overflow-y": "scroll"})
                         .on("selected", function (e, data) {
@@ -130,15 +130,21 @@
                         position: { my: "center top", at: "center top" }                        
                     });
                     e.preventDefault();
-                });               
+                });       */        
 
-                // when a language is selected, configure all controls to use that language (not used yet)
-                $("select#language").change(function () {
-                    var lang = $("option:selected", this).first().val();
-                    $(".usw-aatsearch:first").aatsearch("option", "language", lang);
-                    $(".usw-skossearch:first").skossearch("option", "language", lang);
-                    $(".usw-aatconceptdetails:first").aatconceptdetails("option", "language", lang);
-                    $(".usw-skosconceptdetails:first").skosconceptdetails("option", "language", lang);
+                // when a scheme is selected, configure SKOS search control to use that scheme
+                $(".usw-schemeselect:first").on("selected", function (e, data) {
+                    $(".usw-skossearch:first").skossearch({ schemeURI: data.uri });
+                    $("#sourceVocabularyName a:first")
+                        .attr("target", "_blank")
+                        .attr("href", data.uri)
+                        .text(data.label);
+                });
+
+                // when a language is selected, configure AAT controls to use that language
+                $(".usw-languageselect:first").on("selected", function (e, data) {
+                    $(".usw-aatsearch:first").aatsearch("option", "language", data.language);
+                    $(".usw-aatconceptdetails:first").aatconceptdetails("option", "language", data.language);                   
                 });
 
                 // when a concept is selected from the source vocabulary search results, use it as source concept
@@ -243,8 +249,8 @@
             <!--source vocabulary-->
             <div id="sourceVocabulary" class="one-half column">
                 <fieldset>
-                    <legend>Source Vocabulary (<a href="#" id='chooseSourceVocabulary'>select</a>)</legend>
-                    <div id="sourceVocabularyName" title="source vocabulary">(<a href="#">Not selected</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#sourceVocabulary"></a></div>
+                    <legend>Source Vocabulary</legend> <!-- (<a href="#" id='chooseSourceVocabulary'>select</a>)</legend>-->
+                    <div id="sourceVocabularyName" title="source vocabulary">(<a href="http://purl.org/heritagedata/schemes/mda_obj">FISH Archaeological Objects Thesaurus</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#sourceVocabulary"></a><div class="usw-schemeselect"></div></div>
                     <div class="usw-skossearch"></div>
                     <div class="usw-skosconceptdetails"></div>
                 </fieldset>
@@ -254,13 +260,7 @@
             <div id="targetVocabulary" class="one-half column">                
                 <fieldset>
                     <legend>Target Vocabulary</legend>
-                    <div id="targetVocabularyName" title="target vocabulary">(<a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/">Getty Art &amp; Architecture Thesaurus</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#targetVocabulary"></a></div>
-                    <!--<select id="language" style='{width:50px;}'>
-                        <option value="de">German</option>
-                        <option selected value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="nl">Dutch</option>
-                    </select>-->
+                    <div id="targetVocabularyName" title="target vocabulary">(<a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/">Getty Art &amp; Architecture Thesaurus</a>) <a target="help" title="What's this?" class="fa fa-question-circle" href="help.html#targetVocabulary"></a><div class="usw-languageselect"></div></div>                    
                     <div class="usw-aatsearch"></div>
                     <div class="usw-aatconceptdetails"></div>
                 </fieldset>

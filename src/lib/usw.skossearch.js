@@ -20,7 +20,7 @@ History :
 		
 		// default options
 	    options: {
-	        schemeURI: "http://purl.org/heritagedata/schemes/mda_obj", //example
+	        schemeURI: "", //example
 	        searchfor: "", 
            
 	    },	    
@@ -38,29 +38,8 @@ History :
 	        // build and attach the search form
 	        $("<form><input type='search' placeholder='Search...' autocomplete='on' /></form>")
                 .css({ margin: "0px" })
-                .appendTo(self.element);                
-
-            // buid and attach the config/settings button
-	       /* $("<div class='fa fa-cog' title='settings'></div>")
-                .css({
-                    position: "absolute",
-                    left: self.element.position().left + self.element.width() - 7,
-                    top: self.element.position().top - 7,
-                    width: "14px",
-                    height: "14px",
-                    //background: "red",
-                    margin: "0px",
-                    padding: "2px",
-                    border: "0px",
-                    cursor: "pointer"
-                })
-                .on("click", function (e) {
-                    alert("Cog clicked");
-                    e.preventDefault();
-                    return false;
-                })
-	            .appendTo(self.element);*/
-
+                .appendTo(self.element); 
+            
             // style the search box
 	        $("input[type='search']:first", self.element)
 				.css({
@@ -74,6 +53,7 @@ History :
 	            e.preventDefault(); // don't redirect on form submission
 	            var searchText = $("input[type='search']:first", self.element).val().trim();
 	            if (searchText !== self.options.placeholder && searchText !== "") {
+	               
 	                self._setOption("searchfor", searchText);	                
 	                self._refresh();	                
 	            }
@@ -91,12 +71,14 @@ History :
 
 	    getLocalStorageKey: function () {
 	        var self = this;
-	        var key = self.options.searchfor + "@" + self.options.language;
+	        var key = self.options.schemeURI + "@" + self.options.searchfor + "@" + self.options.language;
 	        return key;
 	    },
 		// redraw the control
 		_refresh: function() {
 		    var	self = this;		   
+
+		    $("ul:first", self.element).html(""); //clears any existing results
 
 		    // if nothing to search for, don't proceed
 		    if (self.options.searchfor.trim() == "")

@@ -22,7 +22,7 @@ copy usw.skoslist.js + usw.skosconceptschemes.js + usw.skosnarrower.js + usw.sko
 
 copy usw.skospreflabels.js + usw.skosaltlabels.js + usw.skosscopenotes.js + usw.skosconceptdetails.js + usw.skossearch.js %appname%.%datestamp%-4.js
 
-copy usw.skosmapping.js + usw.mappingstable.js + usw.fileselect.js %appname%.%datestamp%-5.js
+copy usw.skosmapping.js + usw.mappingstable.js + usw.fileselect.js + usw.languageselect.js + usw.schemeselect.js %appname%.%datestamp%-5.js
 
 copy %appname%.%datestamp%-1.js + %appname%.%datestamp%-2.js + %appname%.%datestamp%-3.js + %appname%.%datestamp%-4.js + %appname%.%datestamp%-5.js %appname%.%datestamp%.js
 
