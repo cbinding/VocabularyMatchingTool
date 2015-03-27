@@ -51,10 +51,11 @@ History :
                 });
 
             $("<select class='language'>"
-                + "<option value='de'>German</option>"
+                + "<option value='de'>Deutch</option>"
                 + "<option value='en' selected>English</option>"
-                + "<option value='es'>Spanish</option>"
-                + "<option value='nl'>Dutch</option>"
+                + "<option value='es'>Español</option>"
+                + "<option value='fr'>Français</option>"
+                + "<option value='nl'>Nederlands</option>"
                 + "</select>").hide()
                 .appendTo(cog)
                 .change(function () {

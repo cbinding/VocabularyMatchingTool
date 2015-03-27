@@ -20,7 +20,7 @@ History :
 		
 		// default options
 	    options: {
-	       searchfor: ""	       
+	        searchfor: ""           
 	    },	    
 
 	    _create: function (options) {
@@ -84,7 +84,7 @@ History :
 		    var limit = parseInt(self.options.limit, 10);
 		    var offset = parseInt(self.options.offset, 10);
 
-		    var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
+		    /*var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
 		        + " PREFIX luc: <http://www.ontotext.com/owlim/lucene#>"
                 + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
                 + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
@@ -94,7 +94,27 @@ History :
                 + " }"
                 + " ORDER BY ASC(str(?label))"
                 + (offset > 0 ? " OFFSET " + offset : "")
-                + (limit > 0 ? " LIMIT " + limit : "");                
+                + (limit > 0 ? " LIMIT " + limit : "");*/
+
+		    var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
+               + " PREFIX luc: <http://www.ontotext.com/owlim/lucene#>"
+               + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+               + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
+               + " SELECT DISTINCT ?uri ?label WHERE {"
+               + " ?uri skos:inScheme aat: ; luc:term '" + self.options.searchfor + "' ."
+               + " OPTIONAL {"
+               + " ?uri skosxl:prefLabel [skosxl:literalForm ?preferredLanguageLabel]"
+               + " FILTER(langMatches(lang(?preferredLanguageLabel),'" + self.options.language + "'))"
+               + " }"
+		       + " OPTIONAL {"
+               + " ?uri skosxl:prefLabel [skosxl:literalForm ?fallbackLanguageLabel]"
+               + " FILTER(langMatches(lang(?fallbackLanguageLabel),'" + self.options.fallback + "'))"
+               + " }"
+               + " BIND(COALESCE(?preferredLanguageLabel, ?fallbackLanguageLabel, '') AS ?label)"
+               + " }"
+               + " ORDER BY ASC(str(?label))"
+               + (offset > 0 ? " OFFSET " + offset : "")
+               + (limit > 0 ? " LIMIT " + limit : "");
 		    self._getData(sparql);
 		}	// end _refresh		
 

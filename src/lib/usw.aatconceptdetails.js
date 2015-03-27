@@ -22,7 +22,8 @@ History
 		//Default options
 		options: {
 		    //conceptURI: "http://vocab.getty.edu/aat/300193015", //example	
-		    conceptURI: "",  
+		    conceptURI: "",
+            language: "en"
 		},
 
 		// Called on initialization
