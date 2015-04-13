@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.skosmapping
 Version	: 20150205
 Summary	: Controls for submitting a mapping between 2 concepts
-Require	: jquery, jquery-ui
+Require	: jquery, jquery-ui usw.uri.js
 Example	: <div class="usw-skosmapping"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -188,4 +188,4 @@ History :
     });     
 
 })(jQuery);	//end of main jquery closure
-﻿
+ 

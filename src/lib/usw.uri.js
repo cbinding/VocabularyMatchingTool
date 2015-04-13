@@ -2,18 +2,22 @@
 ===============================================================================
 Creator : Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: Any
-Classes	: usw.usw.uri.RDF, usw.uri.RDFS, usw.uri.SKOS,  usw.uri.SKOSXL, 
+Classes	: usw.uri.RDF, usw.uri.RDFS, usw.uri.SKOS,  usw.uri.SKOSXL, 
           usw.uri.CRM, usw.uri.CRMEH, usw.uri.DC, usw.uri.DCTERMS, usw.uri.OWL
-Summary	: Global constants of common namespace, entity and property URIs 
-Example	: alert(usw.usw.uri.RDF.BAG) | alert(usw.usw.uri.RDF["BAG"])
-		  either call returns "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
+Summary	: Global constants defining case-sensitive entity and property URIs 
+Example	: alert(usw.uri.RDF.BAG) | alert(usw.uri.RDF["BAG"])
+		  both display "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
 License : http://creativecommons.org/publicdomain/zero/1.0/ 
 ===============================================================================
 History	:
-003 CFB 11/03/2015	Adapted from old STAR script. Added SKOS mapping properties
+001 CFB 11/03/2015 Adapted from old STAR script. Added SKOS mapping properties
+002 CFB 13/04/2015 Added FOAF, DCAM & DCMI URIs, missing DCTERMS properties,
+    DC Encoding Schemes and DCMI Type vocabulary, constants sorted alphabetically
 ===============================================================================
 */
-var usw = this.usw || {};
+
+// define base namespace
+var usw = this.usw || {};  
 usw.uri = usw.uri || {};
 
 // usw.uri.RDF
@@ -21,23 +25,24 @@ usw.uri = usw.uri || {};
 // either call returns "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
 usw.uri.RDF = { NS: "http://www.w3.org/1999/02/22-rdf-syntax-ns#" };
 usw.uri.RDF = {
+    NS: usw.uri.RDF.NS, // else it is overwritten
     // entities
-    XMLLITERAL: usw.uri.RDF.NS + "XMLLiteral",
-    PROPERTY: usw.uri.RDF.NS + "Property",
-    STATEMENT: usw.uri.RDF.NS + "Statement",
-    BAG: usw.uri.RDF.NS + "Bag",
-    SEQ: usw.uri.RDF.NS + "Seq",
     ALT: usw.uri.RDF.NS + "Alt",
+    BAG: usw.uri.RDF.NS + "Bag",
     LIST: usw.uri.RDF.NS + "List",
+    PROPERTY: usw.uri.RDF.NS + "Property",
+    SEQ: usw.uri.RDF.NS + "Seq",
+    STATEMENT: usw.uri.RDF.NS + "Statement",
+    XMLLITERAL: usw.uri.RDF.NS + "XMLLiteral",
     // properties
-    TYPE: usw.uri.RDF.NS + "type",
     FIRST: usw.uri.RDF.NS + "first",
-    REST: usw.uri.RDF.NS + "rest",
-    VALUE: usw.uri.RDF.NS + "value",
-    SUBJECT: usw.uri.RDF.NS + "subject",
-    PREDICATE: usw.uri.RDF.NS + "predicate",
+    ID: usw.uri.RDF.NS + "ID",
     OBJECT: usw.uri.RDF.NS + "object",
-    ID: usw.uri.RDF.NS + "ID"
+    PREDICATE: usw.uri.RDF.NS + "predicate",
+    REST: usw.uri.RDF.NS + "rest",
+    SUBJECT: usw.uri.RDF.NS + "subject",
+    TYPE: usw.uri.RDF.NS + "type",
+    VALUE: usw.uri.RDF.NS + "value"
 };
 
 // usw.uri.RDFS
@@ -45,23 +50,24 @@ usw.uri.RDF = {
 // either call returns "http://www.w3.org/2000/01/rdf-schema#Literal"
 usw.uri.RDFS = { NS: "http://www.w3.org/2000/01/rdf-schema#" };
 usw.uri.RDFS = {
+    NS: usw.uri.RDFS.NS, // else it is overwritten
     // entities
-    RESOURCE: usw.uri.RDFS.NS + "Resource",
-    LITERAL: usw.uri.RDFS.NS + "Literal",
     CLASS: usw.uri.RDFS.NS + "Class",
-    DATATYPE: usw.uri.RDFS.NS + "Datatype",
     CONTAINER: usw.uri.RDFS.NS + "Container",
     CONTAINERMEMBERSHIPPROPERTY: usw.uri.RDFS.NS + "ContainerMembershipProperty",
+    DATATYPE: usw.uri.RDFS.NS + "Datatype",
+    LITERAL: usw.uri.RDFS.NS + "Literal",
+    RESOURCE: usw.uri.RDFS.NS + "Resource",
     // properties
-    SUBCLASSOF: usw.uri.RDFS.NS + "subClassOf",
-    SUBPROPERTYOF: usw.uri.RDFS.NS + "subPropertyOf",
-    DOMAIN: usw.uri.RDFS.NS + "domain",
-    RANGE: usw.uri.RDFS.NS + "range",
-    LABEL: usw.uri.RDFS.NS + "label",
     COMMENT: usw.uri.RDFS.NS + "comment",
+    DOMAIN: usw.uri.RDFS.NS + "domain",
+    ISDEFINEDBY: usw.uri.RDFS.NS + "isDefinedBy",
+    LABEL: usw.uri.RDFS.NS + "label",
     MEMBER: usw.uri.RDFS.NS + "member",
+    RANGE: usw.uri.RDFS.NS + "range",
     SEEALSO: usw.uri.RDFS.NS + "seeAlso",
-    ISDEFINEDBY: usw.uri.RDFS.NS + "isDefinedBy"
+    SUBCLASSOF: usw.uri.RDFS.NS + "subClassOf",
+    SUBPROPERTYOF: usw.uri.RDFS.NS + "subPropertyOf"
 };
 
 // usw.uri.SKOS
@@ -69,6 +75,7 @@ usw.uri.RDFS = {
 // either call returns "http://www.w3.org/2004/02/skos/core#Concept"		
 usw.uri.SKOS = { NS: "http://www.w3.org/2004/02/skos/core#" };
 usw.uri.SKOS = {
+    NS: usw.uri.SKOS.NS, // else it is overwritten
     // entities
     COLLECTABLEPROPERTY: usw.uri.SKOS.NS + "CollectableProperty",
     COLLECTION: usw.uri.SKOS.NS + "Collection",
@@ -103,9 +110,9 @@ usw.uri.SKOS = {
     SUBJECTINDICATOR: usw.uri.SKOS.NS + "subjectIndicator",
     SYMBOL: usw.uri.SKOS.NS + "symbol",
     // mapping properties
-    EXACTMATCH: usw.uri.SKOS.NS + "exactMatch",
-    CLOSEMATCH: usw.uri.SKOS.NS + "closeMatch",
     BROADMATCH: usw.uri.SKOS.NS + "broadMatch",
+    CLOSEMATCH: usw.uri.SKOS.NS + "closeMatch",
+    EXACTMATCH: usw.uri.SKOS.NS + "exactMatch",
     NARROWMATCH: usw.uri.SKOS.NS + "narrowMatch",
     RELATEDMATCH: usw.uri.SKOS.NS + "relatedMatch"
 };
@@ -115,14 +122,15 @@ usw.uri.SKOS = {
 // either call returns "http://www.w3.org/2008/05/skos-xl#Label"		
 usw.uri.SKOSXL = { NS: "http://www.w3.org/2008/05/skos-xl#" };
 usw.uri.SKOSXL = {
+    NS: usw.uri.SKOSXL.NS, // else it is overwritten
     // entities
     LABEL: usw.uri.SKOSXL.NS + "Label",
     // properties
-    PREFLABEL: usw.uri.SKOSXL.NS + "prefLabel",
     ALTLABEL: usw.uri.SKOSXL.NS + "altLabel",
     HIDDENLABEL: usw.uri.SKOSXL.NS + "hiddenLabel",
     LABELRELATION: usw.uri.SKOSXL.NS + "labelRelation",
-    LITERALFORM: usw.uri.SKOSXL.NS + "literalForm"
+    LITERALFORM: usw.uri.SKOSXL.NS + "literalForm",
+    PREFLABEL: usw.uri.SKOSXL.NS + "prefLabel"
 };
 
 // usw.uri.CRMEH
@@ -130,6 +138,7 @@ usw.uri.SKOSXL = {
 // either call returns "http://purl.org/crmeh#EHE0001_EHProject"	
 usw.uri.CRMEH = { NS: "http://purl.org/crmeh#" };
 usw.uri.CRMEH = {
+    NS: usw.uri.CRMEH.NS, // else it is overwritten
     // entities
     EHE0001: usw.uri.CRMEH.NS + "EHE0001_EHProject",
     EHE0002: usw.uri.CRMEH.NS + "EHE0002_ArchaeologicalSite",
@@ -266,93 +275,165 @@ usw.uri.CRMEH = {
     EHP5F: usw.uri.CRMEH.NS + "EHP5F_is_thesaurus_concept",
     EHP1003B: usw.uri.CRMEH.NS + "EHP1003B_is_note_of",
     EXP1F: usw.uri.CRMEH.NS + "EXP1F_year_min",
-    EXP2F: usw.uri.CRMEH.NS + "EXP2F_.year_max",
+    EXP2F: usw.uri.CRMEH.NS + "EXP2F_year_max",
     EXP3F: usw.uri.CRMEH.NS + "EXP3F_spatial_x",
     EXP4F: usw.uri.CRMEH.NS + "EXP4F_spatial_y",
     EXP5F: usw.uri.CRMEH.NS + "EXP5F_spatial_z",
     EXP10F: usw.uri.CRMEH.NS + "EXP10F_is_represented_by"
 };
 
-// Dublin Core
-// usage: alert(usw.uri.DC.PROPERTY.TITLE) | alert(usw.uri.DC.PROPERTY["TITLE"])
+// usw.uri.DC - Dublin Core elements
+// usage: alert(usw.uri.DC.TITLE) | alert(usw.uri.DC["TITLE"])
 // either call returns "http://purl.org/dc/elements/1.1/title"	
 usw.uri.DC = { NS: "http://purl.org/dc/elements/1.1/" };
-usw.uri.DC.PROPERTY = {
+usw.uri.DC = {
+    NS: usw.uri.DC.NS, // else it is overwritten
     // properties
-    TITLE: usw.uri.DC.NS + "title",
-    CREATOR: usw.uri.DC.NS + "creator",
-    SUBJECT: usw.uri.DC.NS + "subject",
-    DESCRIPTION: usw.uri.DC.NS + "description",
-    PUBLISHER: usw.uri.DC.NS + "publisher",
     CONTRIBUTOR: usw.uri.DC.NS + "contributor",
+    COVERAGE: usw.uri.DC.NS + "coverage",
+    CREATOR: usw.uri.DC.NS + "creator",
     DATE: usw.uri.DC.NS + "date",
-    TYPE: usw.uri.DC.NS + "type",
+    DESCRIPTION: usw.uri.DC.NS + "description",
     FORMAT: usw.uri.DC.NS + "format",
     IDENTIFIER: usw.uri.DC.NS + "identifier",
-    SOURCE: usw.uri.DC.NS + "source",
     LANGUAGE: usw.uri.DC.NS + "language",
+    PUBLISHER: usw.uri.DC.NS + "publisher",
     RELATION: usw.uri.DC.NS + "relation",
-    COVERAGE: usw.uri.DC.NS + "coverage",
-    RIGHTS: usw.uri.DC.NS + "rights"
+    RIGHTS: usw.uri.DC.NS + "rights",
+    SOURCE: usw.uri.DC.NS + "source",
+    SUBJECT: usw.uri.DC.NS + "subject",
+    TITLE: usw.uri.DC.NS + "title",
+    TYPE: usw.uri.DC.NS + "type"
 };
 
-// usw.uri.DCTERMS
+// usw.uri.DCTERMS - Dublin Core terms
 // usage: alert(usw.uri.DCTERMS.SUBJECTSCHEME) | alert(usw.uri.DCTERMS["SUBJECTSCHEME"])
 // either call returns "http://purl.org/dc/terms/SubjectScheme"		
 usw.uri.DCTERMS = { NS: "http://purl.org/dc/terms/" };
 usw.uri.DCTERMS = {
+    NS: usw.uri.DCTERMS.NS, // else it is overwritten
     // entities
-    SUBJECTSCHEME: usw.uri.DCTERMS.NS + "SubjectScheme",
     DATESCHEME: usw.uri.DCTERMS.NS + "DateScheme",
     FORMATSCHEME: usw.uri.DCTERMS.NS + "FormatScheme",
-    LANGUAGESCHEME: usw.uri.DCTERMS.NS + "LanguageScheme",
-    SPATIALSCHEME: usw.uri.DCTERMS.NS + "SpatialScheme",
-    TEMPORALSCHEME: usw.uri.DCTERMS.NS + "TemporalScheme",
-    TYPESCHEME: usw.uri.DCTERMS.NS + "TypeScheme",
     IDENTIFIERSCHEME: usw.uri.DCTERMS.NS + "IdentifierScheme",
+    LANGUAGESCHEME: usw.uri.DCTERMS.NS + "LanguageScheme",
     RELATIONSCHEME: usw.uri.DCTERMS.NS + "RelationScheme",
     SOURCESCHEME: usw.uri.DCTERMS.NS + "SourceScheme",
+    SPATIALSCHEME: usw.uri.DCTERMS.NS + "SpatialScheme",
+    SUBJECTSCHEME: usw.uri.DCTERMS.NS + "SubjectScheme",
+    TEMPORALSCHEME: usw.uri.DCTERMS.NS + "TemporalScheme",
+    TYPESCHEME: usw.uri.DCTERMS.NS + "TypeScheme",
     // properties 
-    AUDIENCE: usw.uri.DCTERMS.NS + "audience",
-    ALTERNATIVE: usw.uri.DCTERMS.NS + "alternative",
-    TABLEOFCONTENTS: usw.uri.DCTERMS.NS + "tableOfContents",
     ABSTRACT: usw.uri.DCTERMS.NS + "abstract",
-    CREATED: usw.uri.DCTERMS.NS + "created",
-    VALID: usw.uri.DCTERMS.NS + "valid",
+    ACCESSRIGHTS: usw.uri.DCTERMS.NS + "accessRights",
+    ACCRUALMETHOD: usw.uri.DCTERMS.NS + "accrualMethod",
+    ACCRUALPERIODICITY: usw.uri.DCTERMS.NS + "accrualPeriodicity",
+    ACCRUALPOLICY: usw.uri.DCTERMS.NS + "accrualPolicy",
+    ALTERNATIVE: usw.uri.DCTERMS.NS + "alternative",
+    AUDIENCE: usw.uri.DCTERMS.NS + "audience",
     AVAILABLE: usw.uri.DCTERMS.NS + "available",
-    ISSUED: usw.uri.DCTERMS.NS + "issued",
-    MODIFIED: usw.uri.DCTERMS.NS + "modified",
-    EXTENT: usw.uri.DCTERMS.NS + "extent",
-    MEDIUM: usw.uri.DCTERMS.NS + "medium",
-    ISVERSIONOF: usw.uri.DCTERMS.NS + "isVersionOf",
-    HASVERSION: usw.uri.DCTERMS.NS + "hasVersion",
-    ISREPLACEDBY: usw.uri.DCTERMS.NS + "isReplacedBy",
-    REPLACES: usw.uri.DCTERMS.NS + "replaces",
-    ISREQUIREDBY: usw.uri.DCTERMS.NS + "isRequiredBy",
-    REQUIRES: usw.uri.DCTERMS.NS + "requires",
-    ISPARTOF: usw.uri.DCTERMS.NS + "isPartOf",
-    HASPART: usw.uri.DCTERMS.NS + "hasPart",
-    ISREFERENCEDBY: usw.uri.DCTERMS.NS + "isReferencedBy",
-    REFERENCES: usw.uri.DCTERMS.NS + "references",
-    ISFORMATOF: usw.uri.DCTERMS.NS + "isFormatOf",
-    HASFORMAT: usw.uri.DCTERMS.NS + "hasFormat",
+    BIBLIOGRAPHICCITATION: usw.uri.DCTERMS.NS + "bibliographicCitation",
     CONFORMSTO: usw.uri.DCTERMS.NS + "conformsTo",
-    SPATIAL: usw.uri.DCTERMS.NS + "spatial",
-    TEMPORAL: usw.uri.DCTERMS.NS + "temporal",
-    MEDIATOR: usw.uri.DCTERMS.NS + "mediator",
+    CONTRIBUTOR: usw.uri.DCTERMS.NS + "contributor", 
+    COVERAGE: usw.uri.DCTERMS.NS + "coverage", 
+    CREATED: usw.uri.DCTERMS.NS + "created",
+    CREATOR: usw.uri.DCTERMS.NS + "creator", 
+    DATE: usw.uri.DCTERMS.NS + "date", 
     DATEACCEPTED: usw.uri.DCTERMS.NS + "dateAccepted",
     DATECOPYRIGHTED: usw.uri.DCTERMS.NS + "dateCopyrighted",
     DATESUBMITTED: usw.uri.DCTERMS.NS + "dateSubmitted",
+    DESCRIPTION: usw.uri.DCTERMS.NS + "description", 
     EDUCATIONLEVEL: usw.uri.DCTERMS.NS + "educationLevel",
-    ACCESSRIGHTS: usw.uri.DCTERMS.NS + "accessRights",
-    BIBLIOGRAPHICCITATION: usw.uri.DCTERMS.NS + "bibliographicCitation",
-    LICENSE: usw.uri.DCTERMS.NS + "license",
-    RIGHTSHOLDER: usw.uri.DCTERMS.NS + "rightsHolder",
-    PROVENANCE: usw.uri.DCTERMS.NS + "provenance",
+    EXTENT: usw.uri.DCTERMS.NS + "extent",
+    FORMAT: usw.uri.DCTERMS.NS + "format", 
+    HASFORMAT: usw.uri.DCTERMS.NS + "hasFormat",
+    HASPART: usw.uri.DCTERMS.NS + "hasPart",
+    HASVERSION: usw.uri.DCTERMS.NS + "hasVersion",
+    IDENTIFIER: usw.uri.DCTERMS.NS + "identifier",
     INSTRUCTIONALMETHOD: usw.uri.DCTERMS.NS + "instructionalMethod",
-    ACCRUALMETHOD: usw.uri.DCTERMS.NS + "accrualMethod",
-    ACCRUALPERIODICITY: usw.uri.DCTERMS.NS + "accrualPeriodicity",
-    ACCRUALPOLICY: usw.uri.DCTERMS.NS + "accrualPolicy"
+    ISFORMATOF: usw.uri.DCTERMS.NS + "isFormatOf",
+    ISPARTOF: usw.uri.DCTERMS.NS + "isPartOf",
+    ISREFERENCEDBY: usw.uri.DCTERMS.NS + "isReferencedBy",
+    ISREPLACEDBY: usw.uri.DCTERMS.NS + "isReplacedBy",
+    ISREQUIREDBY: usw.uri.DCTERMS.NS + "isRequiredBy",
+    ISSUED: usw.uri.DCTERMS.NS + "issued",
+    ISVERSIONOF: usw.uri.DCTERMS.NS + "isVersionOf",
+    LANGUAGE: usw.uri.DCTERMS.NS + "language", 
+    LICENSE: usw.uri.DCTERMS.NS + "license",
+    MEDIATOR: usw.uri.DCTERMS.NS + "mediator",
+    MEDIUM: usw.uri.DCTERMS.NS + "medium",
+    MODIFIED: usw.uri.DCTERMS.NS + "modified",
+    PROVENANCE: usw.uri.DCTERMS.NS + "provenance",
+    PUBLISHER: usw.uri.DCTERMS.NS + "publisher",
+    REFERENCES: usw.uri.DCTERMS.NS + "references",
+    RELATION: usw.uri.DCTERMS.NS + "relation",
+    REPLACES: usw.uri.DCTERMS.NS + "replaces",
+    REQUIRES: usw.uri.DCTERMS.NS + "requires",
+    RIGHTS: usw.uri.DCTERMS.NS + "rights",
+    RIGHTSHOLDER: usw.uri.DCTERMS.NS + "rightsHolder",
+    SOURCE: usw.uri.DCTERMS.NS + "source", //new
+    SPATIAL: usw.uri.DCTERMS.NS + "spatial",
+    SUBJECT: usw.uri.DCTERMS.NS + "subject",
+    TABLEOFCONTENTS: usw.uri.DCTERMS.NS + "tableOfContents",
+    TEMPORAL: usw.uri.DCTERMS.NS + "temporal",
+    TITLE: usw.uri.DCTERMS.NS + "title",
+    TYPE: usw.uri.DCTERMS.NS + "type",
+    VALID: usw.uri.DCTERMS.NS + "valid",
+    // Vocabulary Encoding Schemes
+    DCMITYPE: usw.uri.DCTERMS.NS + "DCMIType",
+    DDC: usw.uri.DCTERMS.NS + "DDC",
+    IMT: usw.uri.DCTERMS.NS + "IMT",
+    LCC: usw.uri.DCTERMS.NS + "LCC",
+    LCSH: usw.uri.DCTERMS.NS + "LCSH",
+    MESH: usw.uri.DCTERMS.NS + "MESH",
+    NLM: usw.uri.DCTERMS.NS + "NLM",
+    TGN: usw.uri.DCTERMS.NS + "TGN",
+    UDC: usw.uri.DCTERMS.NS + "UDC",
+    // Syntax Encoding Schemes
+    BOX: usw.uri.DCTERMS.NS + "Box",
+    ISO3166: usw.uri.DCTERMS.NS + "ISO3166",
+    ISO6392: usw.uri.DCTERMS.NS + "ISO639-2",
+    ISO6393: usw.uri.DCTERMS.NS + "ISO639-3",
+    PERIOD: usw.uri.DCTERMS.NS + "Period",
+    POINT: usw.uri.DCTERMS.NS + "Point",
+    RFC1766: usw.uri.DCTERMS.NS + "RFC1766",
+    RFC3066: usw.uri.DCTERMS.NS + "RFC3066",
+    RFC4646: usw.uri.DCTERMS.NS + "RFC4646",
+    RFC5646: usw.uri.DCTERMS.NS + "RFC5646",
+    URI: usw.uri.DCTERMS.NS + "URI",
+    W3CDTF: usw.uri.DCTERMS.NS + "W3CDTF"
+};
+
+// usw.uri.DCMI - DCMI Type Vocabulary
+// usage: alert(usw.uri.DCMI.COLLECTION) | alert(usw.uri.DCMI["COLLECTION"])
+// either call returns "http://purl.org/dc/dcmitype/Collection"	
+usw.uri.DCMI = { NS: "http://purl.org/dc/dcmitype/" };
+usw.uri.DCMI = {
+    NS: usw.uri.DCMI.NS, // else it is overwritten
+    COLLECTION: usw.uri.DCMI.NS + "Collection",
+    DATASET: usw.uri.DCMI.NS + "Dataset",
+    EVENT: usw.uri.DCMI.NS + "Event",
+    IMAGE: usw.uri.DCMI.NS + "Image",
+    INTERACTIVERESOURCE: usw.uri.DCMI.NS + "InteractiveResource",
+    MOVINGIMAGE: usw.uri.DCMI.NS + "MovingImage",
+    PHYSICALOBJECT: usw.uri.DCMI.NS + "PhysicalObject",
+    SERVICE: usw.uri.DCMI.NS + "Service",
+    SOFTWARE: usw.uri.DCMI.NS + "Software",
+    SOUND: usw.uri.DCMI.NS + "Sound",
+    STILLIMAGE: usw.uri.DCMI.NS + "StillImage",
+    TEXT: usw.uri.DCMI.NS + "Text"
+};
+
+// usw.uri.DCAM - Dublin Core Abstract Model
+// usage: alert(usw.uri.DCAM.MEMBEROF) | alert(usw.uri.DCAM["MEMBEROF"])
+// either call returns "http://purl.org/dc/dcam/memberOf"	
+usw.uri.DCAM = { NS: "http://purl.org/dc/dcam/" };
+usw.uri.DCAM = {
+    NS: usw.uri.DCAM.NS, // else it is overwritten
+    // entities
+    VOCABULARYENCODINGSCHEME: usw.uri.DCAM.NS + "VocabularyEncodingScheme",
+    // properties
+    MEMBEROF: usw.uri.DCAM.NS + "memberOf"
 };
 
 // usw.uri.OWL
@@ -360,6 +441,7 @@ usw.uri.DCTERMS = {
 // either call returns "http://www.w3.org/2002/07/owl#AllDifferent"	
 usw.uri.OWL = { NS: "http://www.w3.org/2002/07/owl#" };
 usw.uri.OWL = {
+    NS: usw.uri.OWL.NS, // else it is overwritten
     // entities
     ALLDIFFERENT: usw.uri.OWL.NS + "AllDifferent",
     ANNOTATIONPROPERTY: usw.uri.OWL.NS + "AnnotationProperty",
@@ -407,6 +489,7 @@ usw.uri.OWL = {
 // usw.uri.CRM - represents version 5.0.4 of CIDOC CRM
 usw.uri.CRM = { NS: "http://www.cidoc-crm.org/cidoc-crm/" };
 usw.uri.CRM = {
+    NS: usw.uri.CRM.NS, // else it is overwritten
     // entities
     E1: usw.uri.CRM.NS + "E1_CRM_Entity",
     E2: usw.uri.CRM.NS + "E2_Temporal_Entity",
@@ -757,4 +840,285 @@ usw.uri.CRM = {
     P148i: usw.uri.CRM.NS + "P148i_is_component_of",
     P149: usw.uri.CRM.NS + "P149_is_identified_by",
     P149i: usw.uri.CRM.NS + "P149i_identifies"
+};
+
+// usw.uri.FOAF - Friend of a Friend
+// usage: alert(usw.uri.FOAF.PERSON) | alert(usw.uri.FOAF["PERSON"])
+// either call returns "http://xmlns.com/foaf/0.1/Person"
+usw.uri.FOAF = { NS: "http://xmlns.com/foaf/0.1/" };
+usw.uri.FOAF = {
+    NS: usw.uri.FOAF.NS, // else it is overwritten
+
+    // entities / classes
+    AGENT: usw.uri.FOAF.NS + "Agent",
+    DOCUMENT: usw.uri.FOAF.NS + "Document",
+    GROUP: usw.uri.FOAF.NS + "Group",
+    IMAGE: usw.uri.FOAF.NS + "Image",
+    ONLINEACCOUNT: usw.uri.FOAF.NS + "OnlineAccount",
+    ORGANIZATION: usw.uri.FOAF.NS + "Organization",
+    PERSON: usw.uri.FOAF.NS + "Person",
+    PERSONALPROFILEDOCUMENT: usw.uri.FOAF.NS + "PersonalProfileDocument",
+    PROJECT: usw.uri.FOAF.NS + "Project",    
+    // properties
+    ACCOUNT: usw.uri.FOAF.NS + "account",
+    ACCOUNTNAME: usw.uri.FOAF.NS + "accountName",
+    ACCOUNTSERVICEHOMEPAGE: usw.uri.FOAF.NS + "accountServiceHomepage",
+    AGE: usw.uri.FOAF.NS + "age",
+    BASEDNEAR: usw.uri.FOAF.NS + "basedNear",
+    CURRENTPROJECT: usw.uri.FOAF.NS + "currentProject",
+    DEPICTION: usw.uri.FOAF.NS + "depiction",
+    DEPICTS: usw.uri.FOAF.NS + "depicts",
+    FAMILYNAME: usw.uri.FOAF.NS + "familyName",
+    GIVENNAME: usw.uri.FOAF.NS + "givenName",
+    HOMEPAGE: usw.uri.FOAF.NS + "homePage",
+    IMG: usw.uri.FOAF.NS + "img",
+    INTEREST: usw.uri.FOAF.NS + "interest",
+    ISPRIMARYTOPICOF: usw.uri.FOAF.NS + "isPrimaryTopicOf",
+    JABBERID: usw.uri.FOAF.NS + "jabberID",
+    KNOWS: usw.uri.FOAF.NS + "knows",
+    LOGO: usw.uri.FOAF.NS + "logo",
+    MADE: usw.uri.FOAF.NS + "made",
+    MAKER: usw.uri.FOAF.NS + "maker",
+    MBOX: usw.uri.FOAF.NS + "mbox",
+    MBOXSHA1SUM: usw.uri.FOAF.NS + "mbox_sha1sum",
+    MEMBER: usw.uri.FOAF.NS + "member",
+    NAME: usw.uri.FOAF.NS + "name",
+    NICK: usw.uri.FOAF.NS + "nick",
+    OPENID: usw.uri.FOAF.NS + "openid",
+    PAGE: usw.uri.FOAF.NS + "page",
+    PASTPROJECT: usw.uri.FOAF.NS + "pastProject",
+    PRIMARYTOPIC: usw.uri.FOAF.NS + "primaryTopic",
+    PUBLICATIONS: usw.uri.FOAF.NS + "publications",
+    SCHOOLHOMEPAGE: usw.uri.FOAF.NS + "schoolHomepage",
+    SHA1: usw.uri.FOAF.NS + "sha1",
+    THUMBNAIL: usw.uri.FOAF.NS + "thumbnail",
+    TIPJAR: usw.uri.FOAF.NS + "tipjar",
+    TITLE: usw.uri.FOAF.NS + "title",
+    TOPIC: usw.uri.FOAF.NS + "topic",
+    TOPICINTEREST: usw.uri.FOAF.NS + "topic_interest",
+    WEBLOG: usw.uri.FOAF.NS + "weblog",
+    WORKINFOHOMEPAGE: usw.uri.FOAF.NS + "workInfoHomepage",
+    WORKPLACEHOMEPAGE: usw.uri.FOAF.NS + "workplaceHomepage"
+};
+
+// usw.uri.SCHEMA - schema.org entities and properties [NOTE: Incomplete]
+// usage: alert(usw.uri.SCHEMA.PERSON) | alert(usw.uri.SCHEMA["PERSON"])
+// either call returns "http://schema.org/Person"	
+usw.uri.SCHEMA = { NS: "http://schema.org/" };
+usw.uri.SCHEMA = {
+    NS: usw.uri.SCHEMA.NS, // else it is overwritten
+    // entities (top level only)
+    ACTION: usw.uri.SCHEMA.NS + "Action",
+    BROADCASTSERVICE: usw.uri.SCHEMA.NS + "BroadcastService",
+    CREATIVEWORK: usw.uri.SCHEMA.NS + "CreativeWork",
+    EVENT: usw.uri.SCHEMA.NS + "Event",
+    INTANGIBLE: usw.uri.SCHEMA.NS + "Intangible",
+    MEDICALENTITY: usw.uri.SCHEMA.NS + "MedicalEntity",
+    ORGANIZATION: usw.uri.SCHEMA.NS + "Organization",
+    PERSON: usw.uri.SCHEMA.NS + "Person",
+    PLACE: usw.uri.SCHEMA.NS + "Place",
+    PRODUCT: usw.uri.SCHEMA.NS + "Product",
+    THING: usw.uri.SCHEMA.NS + "Thing",
+    // properties (of top level entities only)
+    ABOUT: usw.uri.SCHEMA.NS + "about",
+    ACCESSIBILITYAPI: usw.uri.SCHEMA.NS + "accessibilityAPI",
+    ACCESSIBILITYCONTROL: usw.uri.SCHEMA.NS + "accessibilityControl",
+    ACCESSIBILITYFEATURE: usw.uri.SCHEMA.NS + "accessibilityFeature",
+    ACCESSIBILITYHAZARD: usw.uri.SCHEMA.NS + "accessibilityHazard",
+    ACCOUNTABLEPERSON: usw.uri.SCHEMA.NS + "accountablePerson",
+    ACTIONSTATUS: usw.uri.SCHEMA.NS + "actionStatus",
+    ADDITIONALNAME: usw.uri.SCHEMA.NS + "additionalName",
+    ADDITIONALTYPE: usw.uri.SCHEMA.NS + "additionalType",
+    ADDRESS: usw.uri.SCHEMA.NS + "address",
+    AFFILIATION: usw.uri.SCHEMA.NS + "affiliation",
+    AGENT: usw.uri.SCHEMA.NS + "agent",
+    AGGREGATERATING: usw.uri.SCHEMA.NS + "aggregateRating",
+    ALTERNATIVEHEADLINE: usw.uri.SCHEMA.NS + "alternativeHeadline",
+    ALTERNATENAME: usw.uri.SCHEMA.NS + "alternateName",
+    ALUMNIOF: usw.uri.SCHEMA.NS + "alumniOf",
+    AREA: usw.uri.SCHEMA.NS + "area",
+    ASSOCIATEDMEDIA: usw.uri.SCHEMA.NS + "associatedMedia",
+    ATTENDEE: usw.uri.SCHEMA.NS + "attendee",
+    AUDIENCE: usw.uri.SCHEMA.NS + "audience",
+    AUDIO: usw.uri.SCHEMA.NS + "audio",
+    AUTHOR: usw.uri.SCHEMA.NS + "author",
+    AWARD: usw.uri.SCHEMA.NS + "award",
+    BIRTHDATE: usw.uri.SCHEMA.NS + "birthDate",
+    BIRTHPLACE: usw.uri.SCHEMA.NS + "birthPlace",
+    BRAND: usw.uri.SCHEMA.NS + "brand",
+    BROADCASTER: usw.uri.SCHEMA.NS + "broadcaster",
+    CATEGORY: usw.uri.SCHEMA.NS + "category",
+    CHARACTER: usw.uri.SCHEMA.NS + "character",
+    CHARACTERATTRIBUTE: usw.uri.SCHEMA.NS + "characterAttribute",
+    CHILDREN: usw.uri.SCHEMA.NS + "children",
+    CITATION: usw.uri.SCHEMA.NS + "citation",
+    CODE: usw.uri.SCHEMA.NS + "code",
+    COLLEAGUE: usw.uri.SCHEMA.NS + "colleague",
+    COLLECTION: usw.uri.SCHEMA.NS + "collection",
+    COLOR: usw.uri.SCHEMA.NS + "color",
+    COMMENT: usw.uri.SCHEMA.NS + "comment",
+    COMMENTCOUNT: usw.uri.SCHEMA.NS + "commentCount",
+    CONTACTPOINT: usw.uri.SCHEMA.NS + "contactPoint",
+    CONTAINEDIN: usw.uri.SCHEMA.NS + "containedIn",
+    CONTENTLOCATION: usw.uri.SCHEMA.NS + "contentLocation",
+    CONTENTRATING: usw.uri.SCHEMA.NS + "contentRating",
+    CONTRIBUTOR: usw.uri.SCHEMA.NS + "contributor",
+    COPYRIGHTHOLDER: usw.uri.SCHEMA.NS + "copyrightHolder",
+    COPYRIGHTYEAR: usw.uri.SCHEMA.NS + "copyrightYear",
+    CREATOR: usw.uri.SCHEMA.NS + "creator",
+    DATECREATED: usw.uri.SCHEMA.NS + "dateCreated",
+    DATEMODIFIED: usw.uri.SCHEMA.NS + "dateModified",
+    DATEPUBLISHED: usw.uri.SCHEMA.NS + "datePublished",
+    DEATHDATE: usw.uri.SCHEMA.NS + "deathDate",
+    DEATHPLACE: usw.uri.SCHEMA.NS + "deathPlace",
+    DEFAULTVALUE: usw.uri.SCHEMA.NS + "defaultValue",
+    DEPARTMENT: usw.uri.SCHEMA.NS + "department",
+    DEPTH: usw.uri.SCHEMA.NS + "depth",
+    DESCRIPTION: usw.uri.SCHEMA.NS + "description",
+    DISCUSSIONURL: usw.uri.SCHEMA.NS + "discussionUrl",
+    DISSOLUTIONDATE: usw.uri.SCHEMA.NS + "dissolutionDate",
+    DOORTIME: usw.uri.SCHEMA.NS + "doorTime",
+    DUNS: usw.uri.SCHEMA.NS + "duns",
+    DURATION: usw.uri.SCHEMA.NS + "duration",
+    EDITOR: usw.uri.SCHEMA.NS + "editor",
+    EDUCATIONALALIGNMENT: usw.uri.SCHEMA.NS + "educationalAlignment",
+    EDUCATIONALUSE: usw.uri.SCHEMA.NS + "educationalUse",
+    ENCODING: usw.uri.SCHEMA.NS + "encoding",
+    ENDDATE: usw.uri.SCHEMA.NS + "endDate",
+    ENDTIME: usw.uri.SCHEMA.NS + "endTime",
+    EMAIL: usw.uri.SCHEMA.NS + "email",
+    EMPLOYEE: usw.uri.SCHEMA.NS + "employee",
+    ERROR: usw.uri.SCHEMA.NS + "error",
+    EVENTSTATUS: usw.uri.SCHEMA.NS + "eventStatus",
+    EXAMPLEOFWORK: usw.uri.SCHEMA.NS + "exampleOfWork",
+    FAMILYNAME: usw.uri.SCHEMA.NS + "familyName",
+    FAXNUMBER: usw.uri.SCHEMA.NS + "faxNumber",
+    FIRSTPERFORMANCE: usw.uri.SCHEMA.NS + "firstPerformance",
+    FOLLOWS: usw.uri.SCHEMA.NS + "follows",
+    FOUNDER: usw.uri.SCHEMA.NS + "founder",
+    FOUNDINGDATE: usw.uri.SCHEMA.NS + "foundingDate",
+    FOUNDINGLOCATION: usw.uri.SCHEMA.NS + "foundingLocation",
+    GAMEITEM: usw.uri.SCHEMA.NS + "gameItem",
+    GAMEPLATFORM: usw.uri.SCHEMA.NS + "gamePlatform",
+    GENRE: usw.uri.SCHEMA.NS + "genre",
+    GENDER: usw.uri.SCHEMA.NS + "gender",
+    GEO: usw.uri.SCHEMA.NS + "geo",
+    GIVENNAME: usw.uri.SCHEMA.NS + "givenName",   
+    GLOBALLOCATIONNUMBER: usw.uri.SCHEMA.NS + "globalLocationNumber",
+    GTIN13: usw.uri.SCHEMA.NS + "gtin13",
+    GTIN14: usw.uri.SCHEMA.NS + "gtin14",
+    GTIN8: usw.uri.SCHEMA.NS + "gtin8",
+    GUIDELINE: usw.uri.SCHEMA.NS + "guideline",
+    HASMAP: usw.uri.SCHEMA.NS + "hasMap",
+    HASPART: usw.uri.SCHEMA.NS + "hasPart",
+    HASPOS: usw.uri.SCHEMA.NS + "hasPOS",
+    HEADLINE: usw.uri.SCHEMA.NS + "headline",
+    HEIGHT: usw.uri.SCHEMA.NS + "height",
+    HOMELOCATION: usw.uri.SCHEMA.NS + "homeLocation",
+    HONORIFICPREFIX: usw.uri.SCHEMA.NS + "honorificPrefix",
+    HONORIFICSUFFIX: usw.uri.SCHEMA.NS + "honorificSuffix",
+    IMAGE: usw.uri.SCHEMA.NS + "image",
+    INLANGUAGE: usw.uri.SCHEMA.NS + "inLanguage",
+    INSTRUMENT: usw.uri.SCHEMA.NS + "instrument",
+    INTERACTIONCOUNT: usw.uri.SCHEMA.NS + "interactionCount",
+    INTERACTIVITYTYPE: usw.uri.SCHEMA.NS + "interactivityType",
+    ISACCESSORYORSPAREPARTFOR: usw.uri.SCHEMA.NS + "isAccessoryOrSparePartFor",
+    ISBASEDONURL: usw.uri.SCHEMA.NS + "isBasedOnUrl",
+    ISCONSUMABLEFOR: usw.uri.SCHEMA.NS + "isConsumableFor",
+    ISFAMILYFRIENDLY: usw.uri.SCHEMA.NS + "isFamilyFriendly",    
+    ISICV4: usw.uri.SCHEMA.NS + "isicV4",
+    ISPARTOF: usw.uri.SCHEMA.NS + "isPartOf",
+    ISRELATEDTO: usw.uri.SCHEMA.NS + "isRelatedTo",
+    ISSIMILARTO: usw.uri.SCHEMA.NS + "isSimilarTo",
+    ITEM: usw.uri.SCHEMA.NS + "item",
+    ITEMCONDITION: usw.uri.SCHEMA.NS + "itemCondition",
+    ITEMLISTELEMENT: usw.uri.SCHEMA.NS + "itemListElement",
+    ITEMREVIEWED: usw.uri.SCHEMA.NS + "itemReviewed",
+    JOBTITLE: usw.uri.SCHEMA.NS + "jobTitle",
+    KEYWORDS: usw.uri.SCHEMA.NS + "keywords",
+    KNOWS: usw.uri.SCHEMA.NS + "knows",
+    LEARNINGRESOURCETYPE: usw.uri.SCHEMA.NS + "learningResourceType",
+    LEGALNAME: usw.uri.SCHEMA.NS + "legalName",
+    LICENSE: usw.uri.SCHEMA.NS + "license",
+    LOCATION: usw.uri.SCHEMA.NS + "location",
+    LOGO: usw.uri.SCHEMA.NS + "logo",
+    MAKESOFFER: usw.uri.SCHEMA.NS + "makesOffer",
+    MANUFACTURER: usw.uri.SCHEMA.NS + "manufacturer",
+    MEDICINESYSTEM: usw.uri.SCHEMA.NS + "medicineSystem",
+    MEMBER: usw.uri.SCHEMA.NS + "member",
+    MEMBEROF: usw.uri.SCHEMA.NS + "memberOf",
+    MENTIONS: usw.uri.SCHEMA.NS + "mentions",
+    MODEL: usw.uri.SCHEMA.NS + "model",
+    MPN: usw.uri.SCHEMA.NS + "mpn",
+    NAICS: usw.uri.SCHEMA.NS + "naics",
+    NAME: usw.uri.SCHEMA.NS + "name",
+    NATIONALITY: usw.uri.SCHEMA.NS + "nationality",
+    NETWORTH: usw.uri.SCHEMA.NS + "netWorth",
+    OBJECT: usw.uri.SCHEMA.NS + "object",
+    OFFERS: usw.uri.SCHEMA.NS + "offers",
+    OPENINGHOURSSPECIFICATION: usw.uri.SCHEMA.NS + "openingHoursSpecification",
+    OPTION: usw.uri.SCHEMA.NS + "option",
+    ORGANIZER: usw.uri.SCHEMA.NS + "organizer",
+    OWNS: usw.uri.SCHEMA.NS + "owns",
+    PARENT: usw.uri.SCHEMA.NS + "parent",
+    PARENTSERVICE: usw.uri.SCHEMA.NS + "parentService",
+    PARTICIPANT: usw.uri.SCHEMA.NS + "participant",
+    PERFORMER: usw.uri.SCHEMA.NS + "performer",
+    PERFORMERIN: usw.uri.SCHEMA.NS + "performerIn",
+    PHOTO: usw.uri.SCHEMA.NS + "photo",
+    POSITION: usw.uri.SCHEMA.NS + "position",
+    POTENTIALACTION: usw.uri.SCHEMA.NS + "potentialAction",
+    PREVIOUSSTARTDATE: usw.uri.SCHEMA.NS + "previousStartDate",
+    PRODUCER: usw.uri.SCHEMA.NS + "producer",
+    PRODUCES: usw.uri.SCHEMA.NS + "produces",
+    PRODUCTID: usw.uri.SCHEMA.NS + "productID",
+    PROGRAMMINGLANGUAGE: usw.uri.SCHEMA.NS + "programmingLanguage",
+    PROVIDER: usw.uri.SCHEMA.NS + "provider",
+    PUBLISHEDON: usw.uri.SCHEMA.NS + "publishedOn",
+    PUBLISHER: usw.uri.SCHEMA.NS + "publisher",
+    PUBLISHINGPRINCIPLES: usw.uri.SCHEMA.NS + "publishingPrinciples",
+    PURPOSE: usw.uri.SCHEMA.NS + "purpose",
+    QUEST: usw.uri.SCHEMA.NS + "quest",
+    RECOGNIZINGAUTHORITY: usw.uri.SCHEMA.NS + "recognizingAuthority",
+    RECORDEDAT: usw.uri.SCHEMA.NS + "recordedAt",
+    RECORDEDIN: usw.uri.SCHEMA.NS + "recordedIn",
+    RELATEDTO: usw.uri.SCHEMA.NS + "relatedTo",
+    RELEASEDATE: usw.uri.SCHEMA.NS + "releaseDate",
+    RELEASEDEVENT: usw.uri.SCHEMA.NS + "releasedEvent",
+    RELEVANTSPECIALTY: usw.uri.SCHEMA.NS + "relevantSpecialty",
+    REPLACEE: usw.uri.SCHEMA.NS + "replacee",
+    REPLACER: usw.uri.SCHEMA.NS + "replacer",
+    REVIEW: usw.uri.SCHEMA.NS + "review",
+    RESERVATIONFOR: usw.uri.SCHEMA.NS + "reservationFor",
+    RESULT: usw.uri.SCHEMA.NS + "result",
+    SAMEAS: usw.uri.SCHEMA.NS + "sameAs",
+    SEEKS: usw.uri.SCHEMA.NS + "seeks",
+    SIBLING: usw.uri.SCHEMA.NS + "sibling",
+    SKU: usw.uri.SCHEMA.NS + "sku",
+    SOURCEORGANIZATION: usw.uri.SCHEMA.NS + "sourceOrganization",
+    SPOUSE: usw.uri.SCHEMA.NS + "spouse",
+    STARTDATE: usw.uri.SCHEMA.NS + "startDate",
+    STARTTIME: usw.uri.SCHEMA.NS + "startTime",
+    STUDY: usw.uri.SCHEMA.NS + "study",
+    SUBEVENT: usw.uri.SCHEMA.NS + "subEvent",
+    SUBORGANIZATION: usw.uri.SCHEMA.NS + "subOrganization",
+    SUPEREVENT: usw.uri.SCHEMA.NS + "superEvent",
+    TARGET: usw.uri.SCHEMA.NS + "target",
+    TAXID: usw.uri.SCHEMA.NS + "taxID",
+    TELEPHONE: usw.uri.SCHEMA.NS + "telephone",
+    TEXT: usw.uri.SCHEMA.NS + "text",
+    THUMBNAILURL: usw.uri.SCHEMA.NS + "thumbnailUrl",
+    TIMEREQUIRED: usw.uri.SCHEMA.NS + "timeRequired",
+    TRANSLATOR: usw.uri.SCHEMA.NS + "translator",
+    TYPICALAGERANGE: usw.uri.SCHEMA.NS + "typicalAgeRange",
+    URL: usw.uri.SCHEMA.NS + "url",
+    VATID: usw.uri.SCHEMA.NS + "vatID",
+    VERSION: usw.uri.SCHEMA.NS + "version",
+    VIDEO: usw.uri.SCHEMA.NS + "video",
+    WEIGHT: usw.uri.SCHEMA.NS + "weight",
+    WIDTH: usw.uri.SCHEMA.NS + "width",
+    WORKEXAMPLE: usw.uri.SCHEMA.NS + "workExample",
+    WORKLOCATION: usw.uri.SCHEMA.NS + "workLocation",
+    WORKPERFORMED: usw.uri.SCHEMA.NS + "workPerformed",
+    WORKSFOR: usw.uri.SCHEMA.NS + "worksFor"
 };

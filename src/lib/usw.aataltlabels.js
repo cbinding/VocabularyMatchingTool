@@ -1,3 +1,4 @@
+/*jslint nomen: true, vars: true, white: true */
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
@@ -5,7 +6,7 @@ Project	: ARIADNE
 Classes	: usw.aataltlabels
 Version	: 20150223
 Summary	: Alternate labels for a concept
-Require	: jquery, jquery-ui, usw.aatlist.js
+Require	: jquery, jquery-ui, usw.aatlist.js, usw.uri.js
 Example	: <div class="usw-aataltlabels"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -21,22 +22,21 @@ History
 		
 	    // default options
 	    options: {
-	        conceptURI: "http://vocab.getty.edu/aat/300193015", // for example
+	        conceptURI: "http://vocab.getty.edu/aat/300193015" // for example
 	    },
 
 	    // default, may be overriden in inherited widgets
 	    getLocalStorageKey: function () {
-	        var self = this;
-	        var key = self.options.conceptURI + "@" + self.options.language; //default
-	        return key;
+	        return this.options.conceptURI + "@" + this.options.language;
 	    },
 
 	    // redraw the control
 	    _refresh: function() {
 	        var self = this;
 
-	        if (self.options.conceptURI.trim() == "")
+	        if (self.options.conceptURI.trim() === "") {
 	            return;
+	        }
 
 	        // if we have cached data use that instead; don't do the ajax call 
 	        // (the browser cache doesn't seem to work with AAT SPARQL calls)
@@ -51,7 +51,7 @@ History
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 
-	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
 			+ " SELECT DISTINCT (\"\" AS ?uri) ?label WHERE {"
 			 + " OPTIONAL {"
 			+ " <" + self.options.conceptURI + "> skos:altLabel ?preferredLanguageLabel ."
@@ -68,7 +68,7 @@ History
             + (limit > 0 ? " LIMIT " + limit : "");
 
 	        self._getData(sparql);
-	    },
+	    }
 
 	});	// end of widget code
 

@@ -143,7 +143,7 @@ var usw	= this.usw || {};
             function pad(n) {
                 var s = n.toString();
                 return s.length < 2 ? '0'+s : s;
-            };
+            }
 
             var yyyy = date.getFullYear();
             var mm1  = pad(date.getMonth()+1);

@@ -61,6 +61,7 @@ History
 			// refresh controls if a concept is selected
 			$(".usw-aatbroader, .usw-aatnarrower, .usw-aatrelated").on("click", "a", function (e) {
 			    var uri = $(this).attr('href'), language = $(this).attr('xml:lang'), label = $(this).text();
+			    $(self.element).trigger("selected", { "uri": uri, "label": label, "language": language });
 			    self._setOption("conceptURI", uri);
 
 			    // don't follow links
@@ -92,7 +93,7 @@ History
 		_refresh: function() {
 		    var self = this;
 
-		    if (self.options.conceptURI.trim() == "")
+		    if (self.options.conceptURI.trim() === "")
 		        return;
 
 		    $(".usw-aatpreflabels:first", self.element).aatpreflabels(self.options);

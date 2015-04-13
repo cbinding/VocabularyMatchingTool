@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.skossearch
 Version	: 20150205
 Summary	: Search on AAT concepts
-Require	: jquery, jquery-ui, usw.aatlist.js
+Require	: jquery, jquery-ui, usw.skoslist.js usw.uri.js
 Example	: <div class="usw-skossearch"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -20,9 +20,8 @@ History :
 		
 		// default options
 	    options: {
-	        schemeURI: "", //example
-	        searchfor: "", 
-           
+	        schemeURI: "http://purl.org/heritagedata/schemes/mda_obj", // example
+	        searchfor: ""            
 	    },	    
 
 	    _create: function (options) {
@@ -69,11 +68,11 @@ History :
 	        this._super(options);
 	    },
 
+        // where to cache previously retrieved search results
 	    getLocalStorageKey: function () {
-	        var self = this;
-	        var key = self.options.schemeURI + "@" + self.options.searchfor + "@" + self.options.language;
-	        return key;
+	        return this.options.schemeURI + "@" + this.options.searchfor + "@" + this.options.language;	        
 	    },
+
 		// redraw the control
 		_refresh: function() {
 		    var	self = this;		   
@@ -81,7 +80,7 @@ History :
 		    $("ul:first", self.element).html(""); //clears any existing results
 
 		    // if nothing to search for, don't proceed
-		    if (self.options.searchfor.trim() == "")
+		    if (self.options.searchfor.trim() === "")
 		        return;
 
 		    // if we have cached data use that; don't do the ajax call 
@@ -92,12 +91,11 @@ History :
 		        return;
 		    }
 
-		    //	build a sparql query to get the data, filtering by language,
-		    // supplying a fallback if required language label is not present
+		    //	build a sparql query to get the data, filtering by language
 		    var limit = parseInt(self.options.limit, 10);
 		    var offset = parseInt(self.options.offset, 10);
 
-		    var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+		    var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
 		        + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " ?uri skos:inScheme <" + self.options.schemeURI + ">"
                 + " { ?uri skos:prefLabel ?label } UNION { ?uri skos:altLabel ?label }"					

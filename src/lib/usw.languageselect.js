@@ -3,7 +3,7 @@
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.languageselect
-Version	: 20150205
+Version	: 20150409
 Summary	: List of languages
 Require	: jquery, jquery-ui, fontawesome
 Example	: <div class="usw-languageselect"/>
@@ -11,6 +11,7 @@ License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
 13/02/2015	CFB	Initially created script
+09/04/2015 CFB Spell Deutsch correctly(!), force change event if unchanged but lost focus
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
@@ -47,11 +48,11 @@ History :
                 .appendTo(self.element)
                 .on("click", function () {
                     var element = $("select.language:first", self.element);
-                    if (element.is(':hidden')) $(element).show(300);                   
+                    if (element.is(':hidden')) $(element).show(300);
                 });
 
             $("<select class='language'>"
-                + "<option value='de'>Deutch</option>"
+                + "<option value='de'>Deutsch</option>"
                 + "<option value='en' selected>English</option>"
                 + "<option value='es'>Español</option>"
                 + "<option value='fr'>Français</option>"
@@ -62,9 +63,12 @@ History :
                     self.options.language = $("option:selected", this).first().val();               
                     $(self.element).trigger("selected", { "language": self.options.language });
                     $.data(self.element, "language", self.options.language);
-                    //alert(self.options.language);
-                    //$("select.language:first", self.element).hide(300);
                     $(this).hide(300);
+                })
+                // force change event if not changed but loses focus 
+                // (otherwise never hides itself unless changed!)
+                .blur(function () {
+                    $(this).change();
                 });
 
             // resize/reposition things when window resizes

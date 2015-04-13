@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.aatsearch
 Version	: 20150205
 Summary	: Search on AAT concepts
-Require	: jquery, jquery-ui, usw.aatlist.js
+Require	: jquery, jquery-ui, usw.aatlist.js usw.uri.js
 Example	: <div class="usw-aatsearch"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -69,7 +69,7 @@ History :
 		    var self = this;
 
             // if nothing to search for, don't proceed
-		    if (self.options.searchfor.trim() == "")
+		    if (self.options.searchfor.trim() === "")
 		        return;
 
 		    // if we have cached data use that; don't do the ajax call 
@@ -84,22 +84,10 @@ History :
 		    var limit = parseInt(self.options.limit, 10);
 		    var offset = parseInt(self.options.offset, 10);
 
-		    /*var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
-		        + " PREFIX luc: <http://www.ontotext.com/owlim/lucene#>"
-                + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-                + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
-                + " SELECT DISTINCT ?uri ?label WHERE {"
-                + " ?uri skos:inScheme aat: ; luc:term '" + self.options.searchfor + "'; skosxl:prefLabel [skosxl:literalForm ?label]"
-                + " FILTER(langMatches(lang(?label), '" + self.options.language + "'))"
-                + " }"
-                + " ORDER BY ASC(str(?label))"
-                + (offset > 0 ? " OFFSET " + offset : "")
-                + (limit > 0 ? " LIMIT " + limit : "");*/
-
 		    var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
                + " PREFIX luc: <http://www.ontotext.com/owlim/lucene#>"
-               + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-               + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
+               + " PREFIX skos: <" + usw.uri.SKOS.NS + ">"
+               + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
                + " SELECT DISTINCT ?uri ?label WHERE {"
                + " ?uri skos:inScheme aat: ; luc:term '" + self.options.searchfor + "' ."
                + " OPTIONAL {"

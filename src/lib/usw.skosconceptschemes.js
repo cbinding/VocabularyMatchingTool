@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.skosconceptschemes
 Version	: 20150205
 Summary	: List of all concept schemes at the sparql endpoint in use
-Require	: jquery, jquery-ui, usw.aatlist.js
+Require	: jquery, jquery-ui, usw.aatlist.js usw.uri.js
 Example	: <div class="usw-skosconceptschemes"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -46,8 +46,8 @@ History :
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 
-	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-                + " PREFIX dct: <http://purl.org/dc/terms/>"
+	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
+                + " PREFIX dct: <" + usw.uri.DCTERMS.NS + ">"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " ?uri a skos:ConceptScheme; dct:title ?label . "
 	            + " FILTER(langMatches(lang(?label), '" + self.options.language + "'))"

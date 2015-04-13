@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.aatrelated
 Version	: 20150205
 Summary	: List of related concepts
-Require	: jquery, jquery-ui, usw.aatlist.js
+Require	: jquery, jquery-ui, usw.aatlist.js usw.uri.js
 Example	: <div class="usw-aatrelated"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -28,7 +28,7 @@ History
 	    _refresh: function() {
 	        var self = this;
 
-	        if (self.options.conceptURI.trim() == "")
+	        if (self.options.conceptURI.trim() === "")
 	            return;
 
 	        // if we have cached data use that; don't do the ajax call 
@@ -44,7 +44,8 @@ History
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 
-	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
+	            + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " <" + self.options.conceptURI + ">  skos:related ?uri ."
                 + " OPTIONAL {"

@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.skosscopenotes
 Version	: 20150205
 Summary	: List of scope notes
-Require	: jquery, jquery-ui, usw.skoslist.js
+Require	: jquery, jquery-ui, usw.skoslist.js usw.uri.js
 Example	: <div class="usw-skosscopenotes"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -28,22 +28,24 @@ History :
 	    _refresh: function() {
 	        var self = this;
 
-	        if (self.options.conceptURI.trim() == "")
+            // if no concept is specified then we can't display anything
+	        if (self.options.conceptURI.trim() === "") {
 	            return;
+	        }
 
-	        // if we have cached data use that; don't do the ajax call 
-	        // (as the browser cache doesn't seem to work with AAT SPARQL calls)
-	        var key = self.getLocalStorageKey(); //var key = self.options.conceptURI + "@" + self.options.language;
+	        // if we have cached data use it; don't do expensive ajax call 
+	        // (browser cache doesn't seem to work with AAT SPARQL calls)
+	        var key = self.getLocalStorageKey(); 
 	        if ($.data(self.element, key)) {
 	            self.ajaxSuccess($.data(self.element, key), "from cache", {});
 	            return;
 	        }
 
 	        //	build a sparql query to get the data
-	       var limit = parseInt(self.options.limit, 10);
+	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 
-	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
                + " SELECT DISTINCT ?label WHERE {"
                + " <" + self.options.conceptURI + "> skos:scopeNote ?label ."
                + " FILTER(langMatches(lang(?label), '" + self.options.language + "'))"

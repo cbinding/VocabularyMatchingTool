@@ -5,7 +5,7 @@ Project	: ARIADNE
 Classes	: usw.skosconceptdetails
 Version	: 20150223
 Summary	: display details of a single concept based	on conceptURI
-Require	: jquery, jquery-ui, usw.uri.js
+Require	: jquery, jquery-ui
 Example	: <div class='usw-skosconceptdetails'></div>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
@@ -57,8 +57,10 @@ History :
 			$(".usw-skosrelated:first", self.element).skosrelated(self.options);
 
 			$(".usw-skosbroader, .usw-skosnarrower, .usw-skosrelated").on("click", "a", function (e) {
-			    var uri = $(this).attr('href'), language = $(this).attr('xml:lang'), label = $(this).text();
+			    var uri = $(this).attr('href'), label = $(this).text(), language = $(this).attr('xml:lang');
+			    $(self.element).trigger("selected", { "uri": uri, "label": label, "language": language });
 			    self._setOption("conceptURI", uri);
+
 			    // don't follow links
 			    e.preventDefault();
 			    return false;
@@ -88,7 +90,7 @@ History :
 		_refresh: function() {
 		    var self = this;
 
-		    if (self.options.conceptURI.trim() == "")
+		    if (self.options.conceptURI.trim() === "")
 		        return;
 
 		    $(".usw-skospreflabels:first", self.element).skospreflabels(self.options);

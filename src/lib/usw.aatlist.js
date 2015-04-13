@@ -50,6 +50,7 @@ History :
 
 	    // put this.element	back to	how	it was
 	    destroy: function () {
+	        var self = this;
 	        self.element.removeClass("usw-aatlist");
 	        //$.Widget.prototype.destroy.call(this);
 	    },
