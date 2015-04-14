@@ -1488,7 +1488,7 @@ History :
                         .appendTo(list); //.css({ "display": "inline", "margin": "0px 3px" });
 		        }
 		        else {
-		            $("<li><a href='" + item.uri.value + "' xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</a></li>")
+		            $("<li><a class='concept' href='" + item.uri.value + "' xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</a></li>")
 		                .appendTo(list);
                         /*.css({
                             "display": "inline",
@@ -2334,7 +2334,7 @@ History :
                         .appendTo(list); 
 	            }
 	            else {
-	                $("<li><a href='" + uri + "' xml:lang='" + language + "'>" + label + "</a></li>")
+	                $("<li><a class='concept' href='" + uri + "' xml:lang='" + language + "'>" + label + "</a></li>")
 		                .appendTo(list);	                
 	            }
 	        });
@@ -3111,7 +3111,7 @@ History :
 
             // todo: css layout for each element, + highlight on mouseover, image for delete button
 
-            $("#sourceConcept a:first", fields)
+            $("#sourceConcept", fields)
                 .css({
                     float: "left",            
                     border: "1px solid gray",
@@ -3120,7 +3120,7 @@ History :
                     height: "100%",
                     display: "inline",
                     background: "whitesmoke",
-                    padding: "2px 5px",
+                    //padding: "2px 5px",
                     margin: "0px 3px"
                 });            
 
@@ -3205,14 +3205,39 @@ History :
 
         _refresh: function () {
             var self = this;
-            $("#sourceConcept a:first", self.element)
-                .attr('href', self.options.sourceURI)
-                .text(self.options.sourceLabel);
-            $("#targetConcept a:first", self.element)
-                .attr('href', self.options.targetURI)
-                .text(self.options.targetLabel);
+
+            if (self.options.sourceURI === "" || self.options.sourceURI === "#")
+            {
+                $("#sourceConcept a:first", self.element)
+                   .removeClass("concept")
+                   .attr('href', '#')
+                   .text('(none)');
+            }
+            else
+            {
+                $("#sourceConcept a:first", self.element)
+                    .addClass("concept")
+                    .attr('href', self.options.sourceURI)
+                    .text(self.options.sourceLabel);
+            }
+
+            if (self.options.targetURI === "" || self.options.targetURI === "#")
+            {
+                $("#targetConcept a:first", self.element)
+                   .removeClass("concept")
+                   .attr('href', '#')
+                   .text('(none)');
+            }
+            else
+            {
+                $("#targetConcept a:first", self.element)
+                    .addClass("concept")
+                    .attr('href', self.options.targetURI)
+                    .text(self.options.targetLabel);                
+            }
+
             $(".matchTypes:first", self.element)
-                .val(self.options.matchType);
+                    .val(self.options.matchType);
         },
 
         // long winded - can we just return self.options??
@@ -3290,7 +3315,7 @@ History :
                         // "data": "source",
                         "defaultContent": "",
                         "render": function (data, type, row) {
-                            return "<a href='" + row['sourceURI'] + "'>" + row['sourceLabel'] + "</a>";
+                            return "<a class='source concept' href='" + row['sourceURI'] + "'>" + row['sourceLabel'] + "</a>";
                         }
                     },
                     {
@@ -3308,7 +3333,7 @@ History :
                         //"data": "target", 
                         "defaultContent": "",
                         "render": function (data, type, row) {
-                            return "<a href='" + row['targetURI'] + "'>" + row['targetLabel'] + "</a>";
+                            return "<a class='target concept' href='" + row['targetURI'] + "'>" + row['targetLabel'] + "</a>";
                         }
                     },
                     {
@@ -3343,8 +3368,15 @@ History :
                 e.preventDefault();
 
                 var uri = $(this).attr("href"), label = $(this).text();
-
-                $(self.element).trigger("selected", { "uri": uri, "label": label });
+                if ($(this).hasClass("source")) {
+                    $(self.element).trigger("sourceSelected", { "uri": uri, "label": label });
+                }
+                else if ($(this).hasClass("target")) {
+                    $(self.element).trigger("targetSelected", { "uri": uri, "label": label });
+                }
+                else {
+                    $(self.element).trigger("selected", { "uri": uri, "label": label });
+                }
                 //alert("clicked: '" + label + "'"); // for testing that events are fired
                 // don't follow URI links
                 return false;

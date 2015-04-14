@@ -128,7 +128,7 @@ History :
                         .appendTo(list); //.css({ "display": "inline", "margin": "0px 3px" });
 		        }
 		        else {
-		            $("<li><a href='" + item.uri.value + "' xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</a></li>")
+		            $("<li><a class='concept' href='" + item.uri.value + "' xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</a></li>")
 		                .appendTo(list);
                         /*.css({
                             "display": "inline",

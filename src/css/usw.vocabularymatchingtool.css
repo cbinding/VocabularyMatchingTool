@@ -1,12 +1,18 @@
 a {
 	text-decoration: none;   
-    color: deepskyblue;
-    background: whitesmoke; 
+    color: deepskyblue;    
 }
 a:hover {
-    color: red;
-    background: lightyellow;
-    text-decoration: underline;
+    color: red;       
+}
+a.concept {
+	background: #FFFFCC; 
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 2px 4px;
+}
+a.concept:hover {
+    background: white;    
 }
 
 .usw-aatlist, .usw-skoslist, .usw-aatconceptdetails, .usw-skosconceptdetails {
@@ -39,8 +45,19 @@ a:hover {
     border: 1px solid gray;
 }
 
-.usw-aatsearch ul li, .usw-skossearch ul li, .usw-skosconceptschemes ul li {
+.usw-skosconceptschemes ul li {
     display: block;
+}
+
+.usw-aatsearch ul li, .usw-skossearch ul li {
+    display: inline-block;
+}
+
+.usw-skospreflabels ul li, .usw-aatpreflabels ul li {
+    background: white;
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 2px 4px;
 }
 
 

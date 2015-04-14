@@ -48,7 +48,7 @@ History :
                         // "data": "source",
                         "defaultContent": "",
                         "render": function (data, type, row) {
-                            return "<a href='" + row['sourceURI'] + "'>" + row['sourceLabel'] + "</a>";
+                            return "<a class='source concept' href='" + row['sourceURI'] + "'>" + row['sourceLabel'] + "</a>";
                         }
                     },
                     {
@@ -66,7 +66,7 @@ History :
                         //"data": "target", 
                         "defaultContent": "",
                         "render": function (data, type, row) {
-                            return "<a href='" + row['targetURI'] + "'>" + row['targetLabel'] + "</a>";
+                            return "<a class='target concept' href='" + row['targetURI'] + "'>" + row['targetLabel'] + "</a>";
                         }
                     },
                     {
@@ -101,8 +101,15 @@ History :
                 e.preventDefault();
 
                 var uri = $(this).attr("href"), label = $(this).text();
-
-                $(self.element).trigger("selected", { "uri": uri, "label": label });
+                if ($(this).hasClass("source")) {
+                    $(self.element).trigger("sourceSelected", { "uri": uri, "label": label });
+                }
+                else if ($(this).hasClass("target")) {
+                    $(self.element).trigger("targetSelected", { "uri": uri, "label": label });
+                }
+                else {
+                    $(self.element).trigger("selected", { "uri": uri, "label": label });
+                }
                 //alert("clicked: '" + label + "'"); // for testing that events are fired
                 // don't follow URI links
                 return false;

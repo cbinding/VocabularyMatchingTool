@@ -59,7 +59,7 @@ History :
 
             // todo: css layout for each element, + highlight on mouseover, image for delete button
 
-            $("#sourceConcept a:first", fields)
+            $("#sourceConcept", fields)
                 .css({
                     float: "left",            
                     border: "1px solid gray",
@@ -68,7 +68,7 @@ History :
                     height: "100%",
                     display: "inline",
                     background: "whitesmoke",
-                    padding: "2px 5px",
+                    //padding: "2px 5px",
                     margin: "0px 3px"
                 });            
 
@@ -153,14 +153,39 @@ History :
 
         _refresh: function () {
             var self = this;
-            $("#sourceConcept a:first", self.element)
-                .attr('href', self.options.sourceURI)
-                .text(self.options.sourceLabel);
-            $("#targetConcept a:first", self.element)
-                .attr('href', self.options.targetURI)
-                .text(self.options.targetLabel);
+
+            if (self.options.sourceURI === "" || self.options.sourceURI === "#")
+            {
+                $("#sourceConcept a:first", self.element)
+                   .removeClass("concept")
+                   .attr('href', '#')
+                   .text('(none)');
+            }
+            else
+            {
+                $("#sourceConcept a:first", self.element)
+                    .addClass("concept")
+                    .attr('href', self.options.sourceURI)
+                    .text(self.options.sourceLabel);
+            }
+
+            if (self.options.targetURI === "" || self.options.targetURI === "#")
+            {
+                $("#targetConcept a:first", self.element)
+                   .removeClass("concept")
+                   .attr('href', '#')
+                   .text('(none)');
+            }
+            else
+            {
+                $("#targetConcept a:first", self.element)
+                    .addClass("concept")
+                    .attr('href', self.options.targetURI)
+                    .text(self.options.targetLabel);                
+            }
+
             $(".matchTypes:first", self.element)
-                .val(self.options.matchType);
+                    .val(self.options.matchType);
         },
 
         // long winded - can we just return self.options??

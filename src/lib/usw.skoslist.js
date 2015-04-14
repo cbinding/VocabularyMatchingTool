@@ -130,7 +130,7 @@ History :
                         .appendTo(list); 
 	            }
 	            else {
-	                $("<li><a href='" + uri + "' xml:lang='" + language + "'>" + label + "</a></li>")
+	                $("<li><a class='concept' href='" + uri + "' xml:lang='" + language + "'>" + label + "</a></li>")
 		                .appendTo(list);	                
 	            }
 	        });

@@ -101,8 +101,20 @@
                     $(".usw-aatconceptdetails").aatconceptdetails("option", "conceptURI", data.uri);                    
                     $(".usw-skosmapping:first").skosmapping({ targetURI: data.uri, targetLabel: data.label });
                 });
+
+                // when the source concept is selected from the mappingstable control, diplay that concept details
+                $(".usw-mappingstable").on("sourceSelected", function (e, data) {
+                    $(".usw-skosconceptdetails").skosconceptdetails("option", "conceptURI", data.uri);
+                    $(".usw-skosmapping:first").skosmapping({ sourceURI: data.uri, sourceLabel: data.label });
+                });
+
+                // when the target concept is selected from the mappingstable control, diplay that concept details
+                $(".usw-mappingstable").on("targetSelected", function (e, data) {
+                    $(".usw-aatconceptdetails").aatconceptdetails("option", "conceptURI", data.uri);
+                    $(".usw-skosmapping:first").skosmapping({ targetURI: data.uri, targetLabel: data.label });
+                });
                
-                // add a mapping to the table
+                // add a new mapping to the table
                 $(".usw-skosmapping:first").on("selected", function (e, data) {
                     $('.usw-mappingstable:first').mappingstable("add", data);
                 });
