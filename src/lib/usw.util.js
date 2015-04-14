@@ -52,7 +52,7 @@ var usw	= this.usw || {};
 		},	// end function 'isarray'
 
 		// include css or js into web page.	Function obtained from web, origin uncertain
-		// Ensure prerequisites will be present. Usage: usw.util.include(myscript.js);
+		// Ensures prerequisites will be present. Usage: usw.util.include(myscript.js);
 		include: function (url) {
 			var element, head;
 
@@ -165,7 +165,48 @@ var usw	= this.usw || {};
 					.replace(/\'/g, '&#39;')
 					.replace(/</g, '&lt;')
 					.replace(/>/g, '&gt;');
-		}
+		},
+
+	    // file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
+	    saveTextAsFile: function(textToWrite, fileName)
+	    {
+	        var textFileAsBlob = new Blob([textToWrite], {type:"text/plain"});
+	        //var browserName = navigator.appName;
+	        // if IE...
+	        if (window.navigator.msSaveBlob)
+	        {
+	            window.navigator.msSaveBlob(textFileAsBlob, fileName);
+	        }                    
+	        else
+	        {
+	            var downloadLink = document.createElement("a");
+	            downloadLink.download = fileName;
+	            downloadLink.innerHTML = "Download File";
+	            if (window.webkitURL != null)
+	            {
+	                // Chrome allows the link to be clicked
+	                // without actually adding it to the DOM.
+	                downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+	            }
+	            else
+	            {
+	                // Firefox requires the link to be added to the DOM
+	                // before it can be clicked.
+	                downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+	                //downloadLink.onclick = destroyClickedElement;
+	                downloadLink.onclick = function(event) {
+	                    document.body.removeChild(event.target);
+	                };
+	                downloadLink.style.display = "none";
+	                document.body.appendChild(downloadLink);
+	            }
+	            downloadLink.click();
+	        }
+	    }               
+        //function destroyClickedElement(event) {
+        // document.body.removeChild(event.target);
+        // }
+        // end file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
 
 	}; // end usw.seneschal.util
 

@@ -10,8 +10,8 @@ Example	: <div class="usw-languageselect"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-13/02/2015	CFB	Initially created script
-09/04/2015 CFB Spell Deutsch correctly(!), force change event if unchanged but lost focus
+13/02/2015 CFB Initially created script
+09/04/2015 CFB Spell Deutsch correctly(!), hide if unchanged but lost focus
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
@@ -48,7 +48,9 @@ History :
                 .appendTo(self.element)
                 .on("click", function () {
                     var element = $("select.language:first", self.element);
-                    if (element.is(':hidden')) $(element).show(300);
+                    if (element.is(':hidden')) {
+                        $(element).show(300).focus();
+                    }
                 });
 
             $("<select class='language'>"
@@ -67,9 +69,9 @@ History :
                 })
                 // force change event if not changed but loses focus 
                 // (otherwise never hides itself unless changed!)
-                .blur(function () {
+                .focusout(function () {
                     $(this).change();
-                });
+                });            
 
             // resize/reposition things when window resizes
             $(window).resize(function () {

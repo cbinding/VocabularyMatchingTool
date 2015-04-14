@@ -3,15 +3,16 @@
 Creator : Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: Any
 Classes	: usw.uri.RDF, usw.uri.RDFS, usw.uri.SKOS,  usw.uri.SKOSXL, 
-          usw.uri.CRM, usw.uri.CRMEH, usw.uri.DC, usw.uri.DCTERMS, usw.uri.OWL
-Summary	: Global constants defining case-sensitive entity and property URIs 
+          usw.uri.CRM, usw.uri.CRMEH, usw.uri.DC, usw.uri.DCTERMS, 
+          usw.uri.DCMI, usw.uri.DCAM, usw.uri.FOAF, usw.uri.OWL, usw.uri.SCHEMA
+Summary	: Constants defining case-sensitive entity and property URIs 
 Example	: alert(usw.uri.RDF.BAG) | alert(usw.uri.RDF["BAG"])
-		  both display "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
+		  both result in "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
 License : http://creativecommons.org/publicdomain/zero/1.0/ 
 ===============================================================================
 History	:
 001 CFB 11/03/2015 Adapted from old STAR script. Added SKOS mapping properties
-002 CFB 13/04/2015 Added FOAF, DCAM & DCMI URIs, missing DCTERMS properties,
+002 CFB 13/04/2015 Added FOAF, DCAM & DCMI URIs, missing DCTERMS properties, NS,
     DC Encoding Schemes and DCMI Type vocabulary, constants sorted alphabetically
 ===============================================================================
 */

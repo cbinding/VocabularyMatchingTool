@@ -37,7 +37,7 @@
     <script src="lib/papaparse.min.js"></script><!--for handling CSV correctly-->
 
     <!-- Local Scripts itemised for testing, but in deployment use minified versioned composite script -->
-   <!--<script src="lib/usw.uri.js"></script>
+    <!--<script src="lib/usw.uri.js"></script>
     <script src="lib/usw.util.js"></script>
 	<script src="lib/usw.aatlist.js"></script>
     <script src="lib/usw.aatnarrower.js"></script>
@@ -65,7 +65,7 @@
     <script src="lib/usw.fileselect.js"></script>-->
    
     <!--minified, versioned composite script-->
-    <script src="lib/usw.vocabularymatchingtool.20150413-min.js"></script>
+    <script src="lib/usw.vocabularymatchingtool.20150414-min.js"></script>
     
     <script type="text/javascript">
         (function ($) { // start of main jquery closure
@@ -74,45 +74,7 @@
 
             //debugger; // adding this breaks into the debugger at this point
             $(document).ready(function () {
-
-                // file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
-                function saveTextAsFile(textToWrite, fileName)
-                {
-                    var textFileAsBlob = new Blob([textToWrite], {type:"text/plain"});
-                    //var browserName = navigator.appName;
-                    // if IE...
-                    if (window.navigator.msSaveBlob)
-                    {
-                        window.navigator.msSaveBlob(textFileAsBlob, fileName);
-                    }                    
-                    else
-                    {
-                        var downloadLink = document.createElement("a");
-                        downloadLink.download = fileName;
-                        downloadLink.innerHTML = "Download File";
-                        if (window.webkitURL != null)
-                        {
-                            // Chrome allows the link to be clicked
-                            // without actually adding it to the DOM.
-                            downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-                        }
-                        else
-                        {
-                            // Firefox requires the link to be added to the DOM
-                            // before it can be clicked.
-                            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-                            downloadLink.onclick = destroyClickedElement;
-                            downloadLink.style.display = "none";
-                            document.body.appendChild(downloadLink);
-                        }
-                        downloadLink.click();
-                    }
-                }               
-                function destroyClickedElement(event) {
-                    document.body.removeChild(event.target);
-                }
-                // end file save code from https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
-                
+                                
                 // when a scheme is selected, configure SKOS search control to use that scheme
                 $(".usw-skosschemeselect:first").on("selected", function (e, data) {
                     $(".usw-skossearch:first").skossearch({ schemeURI: data.uri });
@@ -136,10 +98,7 @@
 
                 // when a concept is selected from the target vocabulary search results, use it as target concept
                 $(".usw-aatsearch, .usw-aatconceptdetails").on("selected", function (e, data) {
-                    //alert("selected: " + data.label);
-                    $(".usw-aatconceptdetails").aatconceptdetails("option", "conceptURI", data.uri);
-                    //$("#targetConcept").html("<a href='" + data.uri + "'>" + data.label + "</a>");
-
+                    $(".usw-aatconceptdetails").aatconceptdetails("option", "conceptURI", data.uri);                    
                     $(".usw-skosmapping:first").skosmapping({ targetURI: data.uri, targetLabel: data.label });
                 });
                
@@ -160,7 +119,7 @@
                     var json = $('.usw-mappingstable:first').mappingstable("toJSON");
                     // construct fileName from timestamp
                     var fileName = moment().format('YYYYMMDDhhmmss') + ".json";                    
-                    saveTextAsFile(json, fileName);
+                    usw.util.saveTextAsFile(json, fileName);
                     alert("data saved to '" + fileName + "'");                    
                 });
 
@@ -169,7 +128,7 @@
                     var rdf = $('.usw-mappingstable:first').mappingstable("toTRIG");
                     // construct fileName from timestamp
                     var fileName = moment().format('YYYYMMDDhhmmss') + ".trig";
-                    saveTextAsFile(rdf, fileName);
+                    usw.util.saveTextAsFile(rdf, fileName);
                     alert("data exported to '" + fileName + "'");
                 });
 
@@ -178,7 +137,7 @@
                     var csv = $('.usw-mappingstable:first').mappingstable("toCSV");
                     // construct fileName from timestamp
                     var fileName = moment().format('YYYYMMDDhhmmss') + ".csv";
-                    saveTextAsFile(csv, fileName);
+                    usw.util.saveTextAsFile(csv, fileName);
                     alert("data exported to '" + fileName + "'");
                 });
                 

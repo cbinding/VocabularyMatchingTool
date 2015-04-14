@@ -11,7 +11,7 @@ License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
 13/02/2015 CFB Initially created script
-13/04/2015 CFB Force change event if unchanged but lost focus
+13/04/2015 CFB Hide if unchanged but lost focus
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
@@ -54,7 +54,9 @@ History :
                 .appendTo(self.element)
                 .on("click", function () {
                     var element = $("select:first", self.element);
-                    if (element.is(':hidden')) $(element).show(300);                    
+                    if (element.is(':hidden')) {
+                        $(element).show(300).focus();                       
+                    }
                 });
 
             $("<select></select>").hide()
@@ -67,7 +69,7 @@ History :
                 })
                 // force change event if not changed but loses focus 
                 // (otherwise never hides itself unless changed!)
-                .blur(function () {
+                .focusout(function () {
                     $(this).change();
                 });
 
