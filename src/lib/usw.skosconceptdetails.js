@@ -10,7 +10,7 @@ Example	: <div class='usw-skosconceptdetails'></div>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-23/02/2015	CFB Script adapted from usw.seneschal.conceptdetails.js
+23/02/2015 CFB Script adapted from usw.seneschal.conceptdetails.js
 ===============================================================================
 */
 (function ($) {	// start of	main jQuery	closure

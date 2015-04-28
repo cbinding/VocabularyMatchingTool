@@ -1,17 +1,18 @@
+/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.aatfacets
-Version	: 20150205
 Summary	: List of top (root) concepts (facets) for AAT
-Require	: jquery, jquery-ui, usw.aatlist.js, usw.uri.js
+Require	: jquery, jquery-ui, usw.aatlist.js
 Example	: <div class="usw-aatfacets"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History
-
 05/02/2015	CFB	adapted from usw.seneschal.topconcepts.js
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
@@ -24,22 +25,11 @@ History
         options: {},
 
         getLocalStorageKey: function () {
-            var self = this;
-            var key = "aatfacets@" + self.options.language; 
-            return key;
+            return "aatfacets@" + this.options.language;           
         },
 
-        // redraw the control
-        _refresh: function() {
-            var self = this;    
-            
-            // if we have cached data use that; don't do the ajax call 
-            // (as the browser cache doesn't seem to work with AAT SPARQL calls)
-            var key = self.getLocalStorageKey(); // "aatfacets@" + self.options.language;
-            if ($.data(self.element, key)) {
-                self.ajaxSuccess($.data(self.element, key), "from cache", {});
-                return;
-            }
+        getSPARQL: function(){
+            var self = this;   
 
             //	build a sparql query to get the data, filtering by language,
             // supplying a fallback if required language label is not present
@@ -48,8 +38,8 @@ History
 
             var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
                 + " PREFIX gvp: <http://vocab.getty.edu/ontology#>"
-                + " PREFIX skos: <" + usw.uri.SKOS.NS + ">"
-                + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
+                + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+                + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " ?uri a gvp:Facet; skos:inScheme aat: ."
                 + " OPTIONAL {"
@@ -66,9 +56,8 @@ History
 	            + (offset > 0 ? " OFFSET " + offset : "")
                 + (limit > 0 ? " LIMIT " + limit : "");
 
-            self._getData(sparql);
-        }       
-
+            return sparql;
+        }
 	});	// end of widget code
 
 	// any elements of class usw-aat-facets automatically become one...
@@ -76,4 +65,4 @@ History
 	    $(".usw-aatfacets").aatfacets(); 
 	});
 
-})(jQuery);	//end of main jquery closure
+}(jQuery));	//end of main jquery closure

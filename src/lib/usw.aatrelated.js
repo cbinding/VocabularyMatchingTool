@@ -1,16 +1,18 @@
+/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.aatrelated
-Version	: 20150205
 Summary	: List of related concepts
-Require	: jquery, jquery-ui, usw.aatlist.js usw.uri.js
+Require	: jquery, jquery-ui, usw.aatlist.js
 Example	: <div class="usw-aatrelated"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History
-13/02/2015	CFB	Initially created script
+13/02/2015 CFB Initially created script
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
@@ -21,31 +23,19 @@ History
 		
 		// default options
 	    options: {
-	        conceptURI: "http://vocab.getty.edu/aat/300193015" // for example	         
-		},			
+	        conceptURI: "http://vocab.getty.edu/aat/300193015" // for example
+	    },
 
-	    // redraw the control
-	    _refresh: function() {
+	    getSPARQL: function () {
 	        var self = this;
-
-	        if (self.options.conceptURI.trim() === "")
-	            return;
-
-	        // if we have cached data use that; don't do the ajax call 
-	        // (as the browser cache doesn't seem to work with AAT SPARQL calls)
-	        var key = self.getLocalStorageKey(); 
-	        if ($.data(self.element, key)) {
-	            self.ajaxSuccess($.data(self.element, key), "from cache", {});
-	            return;
-	        }
 
 	        //	build a sparql query to get the data, filtering by language,
 	        // supplying a fallback if required language label is not present
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 
-	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
-	            + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
+	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+	            + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " <" + self.options.conceptURI + ">  skos:related ?uri ."
                 + " OPTIONAL {"
@@ -62,8 +52,8 @@ History
 	            + (offset > 0 ? " OFFSET " + offset : "")
                 + (limit > 0 ? " LIMIT " + limit : "");
 
-	        self._getData(sparql);
-	    }   
+	        return sparql;
+	    }
 			
 	});	// end of widget code
 
@@ -72,4 +62,4 @@ History
 	    $(".usw-aatrelated").aatrelated(); 
 	});
 
-})(jQuery);	//end of main jquery closure
+}(jQuery));	//end of main jquery closure

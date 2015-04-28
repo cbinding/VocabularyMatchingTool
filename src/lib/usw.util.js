@@ -1,3 +1,4 @@
+/*global escape:false, unescape:false, window:false, document: false*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South	Wales
@@ -121,7 +122,7 @@ var usw	= this.usw || {};
 			var utf=iso;
 			try{
 				utf=decodeURIComponent(escape(iso));
-			} catch(e){ }
+			} catch(ignore){ }
 
 			return utf;
 		},
@@ -131,10 +132,35 @@ var usw	= this.usw || {};
 			var iso=utf;
 			try{
 				iso = unescape(encodeURIComponent(utf));
-			} catch(e){ }
+			} catch(ignore){ }
 
 			return iso;
 		},
+		
+		// convert r,g,b values to hex representation
+		rgb2hex: function(r, g, b) {
+			var hexify = function(number) {
+				number = Math.round(Math.abs(number));
+				if (number > 255) { number = 255; }
+				
+				var digits = '0123456789ABCDEF',
+				    lsd = number % 16,
+				    msd = (number - lsd) / 16,
+				    hexified = digits.charAt(msd) + digits.charAt(lsd);
+				return hexified;
+			};
+			return "#" + hexify(r) + hexify(g) + hexify(b);
+		},
+		
+		// returns 3 item array representing [r,g,b] 
+		hex2rgb: function(hex) {
+			hex = (hex.charAt(0)==="#" ? hex.substring(1,7) : hex);
+			var a = [0, 0, 0];
+			a[0] = parseInt(hex.substring(0,2),16);
+			a[1] = parseInt(hex.substring(2,4),16);
+			a[2] = parseInt(hex.substring(4,6),16);
+			return a;
+		},		
 
 	    // convert a javascript date to an xsd:dateTime value
         // deprecated - use instead: new Date().toISOString()
@@ -145,12 +171,12 @@ var usw	= this.usw || {};
                 return s.length < 2 ? '0'+s : s;
             }
 
-            var yyyy = date.getFullYear();
-            var mm1  = pad(date.getMonth()+1);
-            var dd   = pad(date.getDate());
-            var hh   = pad(date.getHours());
-            var mm2  = pad(date.getMinutes());
-            var ss   = pad(date.getSeconds());
+            var yyyy = date.getFullYear(),
+                mm1  = pad(date.getMonth()+1),
+                dd   = pad(date.getDate()),
+                hh   = pad(date.getHours()),
+                mm2  = pad(date.getMinutes()),
+                ss   = pad(date.getSeconds());
 
             return yyyy +'-' +mm1 +'-' +dd +'T' +hh +':' +mm2 +':' +ss;
         },
@@ -182,7 +208,7 @@ var usw	= this.usw || {};
 	            var downloadLink = document.createElement("a");
 	            downloadLink.download = fileName;
 	            downloadLink.innerHTML = "Download File";
-	            if (window.webkitURL != null)
+	            if (window.webkitURL !== null)
 	            {
 	                // Chrome allows the link to be clicked
 	                // without actually adding it to the DOM.
@@ -233,3 +259,4 @@ var usw	= this.usw || {};
 	};
 
 }()); // end of	main javascript	closure
+

@@ -1,22 +1,24 @@
+/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.skoslist
-Version	: 20150205
-Summary	: Base list widget - used by many others...
+Summary	: Base SKOS concept list
 Require	: jquery, jquery-ui
 Example	: <div class="usw-skoslist"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-13/02/2015	CFB	Initially created script
+13/02/2015 CFB Initially created script
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
 	"use strict"; // strict	mode pragma	
 	
-	$.widget("usw.skoslist", {	// start of widget code 
+	$.widget("usw.skoslist", $.usw.waitable, { // start of widget code 
 		
 	    // default options
 	    options: {
@@ -31,7 +33,7 @@ History :
 	    // initialization code (runs once only)
 	    _create: function (options) {
 	        var self = this;
-	        self.options = $.extend(self.options, options);
+	        self.options = $.extend({}, self.options, options);
 
 	        self.element.addClass("usw-skoslist");
 
@@ -51,7 +53,7 @@ History :
 
 	    // put this.element	back to	how	it was
 	    destroy: function () {
-	        self.element.removeClass("usw-aatlist");
+	        self.element.removeClass("usw-skoslist");
 	        //$.Widget.prototype.destroy.call(this);
 	    },
 
@@ -73,43 +75,63 @@ History :
 	        self._refresh();
 	    },
 
-	    // override _refresh() in widgets 
-	    _refresh: function () { },
-	        
-	    // expecting sparql query to get: uri, label
-	    _getData: function(sparql) {
+	    _refresh: function () {
 	        var self = this;
-	        
-	        // make the call
-	        $.support.cors = true;
-	        $.ajax({
-	            method: "GET",	            
-	            url: self.options.endpointURI,
-	            crossDomain: true,
-                dataType: "jsonp",
-	            data: { output: "json", query: sparql },
-	            context: self,
-	            cache: self.options.useCache,             
-	            success: self.ajaxSuccess, 
-	            error: self.ajaxError, 
-	            complete: self.ajaxComplete,
-	        }); // end ajax call		    
+
+	        // if we have cached data use that instead; don't do the ajax call 
+	        // (the browser cache doesn't seem to work with AAT SPARQL calls)
+	        var key = self.getLocalStorageKey();
+	        if (!key) {
+	            return;
+	        }
+	        if ($.data(self.element, key)) {
+	            self.ajaxSuccess($.data(self.element, key), "from cache", {});
+	            return;
+	        }
+	        else {
+
+	            // appear blocked while refereshing results
+	            //self.element.waitable({ waiting: true });
+
+	            // build the SPARQL query and execute the AJAX the call
+	            var sparql = self.getSPARQL();
+
+	            $.support.cors = true;
+	            $.ajax({
+	                method: "GET",
+	                url: self.options.endpointURI,
+	                crossDomain: true,
+	                dataType: "jsonp",
+	                //data: { output: "json", query: sparql },
+	                data: { format: "json", query: sparql },
+	                context: self,
+	                cache: self.options.useCache,
+	                success: self.ajaxSuccess,
+	                error: self.ajaxError,
+	                complete: self.ajaxComplete,
+	            }); // end ajax call
+	        }
 	    },
 
-        // default, may be overriden in inherited widgets
+	    // default key, but may be overriden by inherited widgets
 	    getLocalStorageKey: function () {
-	        var self = this;
-	        var key = self.options.conceptURI + "@" + self.options.language; //default
-	        return key;
+	        if ($.trim(this.options.conceptURI) !== "") {
+	            return this.options.conceptURI + "@" + this.options.language;
+	        }
+	        else {
+	            return null;
+	        }
 	    },
 
 	    // expecting data to contain uri, label, language
 	    ajaxSuccess: function (data, textStatus, jqXHR) {
 	        var self = this;
 	
-	        // cache the retrieved data for next time...
-	        var key = self.getLocalStorageKey(); // self.options.conceptURI + "@" + self.options.language;
-	        $.data(self.element, key, data);
+	        // cache retrieved data for next time...
+	        var key = self.getLocalStorageKey();
+	        if (key) {
+	            $.data(self.element, key, data);
+	        }
 
 	        // items may already be sorted, but ensure (case insensitive) sorting prior to display
 	        data.results.bindings.sort(function (a, b) {
@@ -143,7 +165,7 @@ History :
 
 	    ajaxComplete: function (jqXHR, textStatus) {
 	        var	self = this;
-	        //$(self.element).waitable({ "waiting": false });
+	        $(self.element).waitable({ "waiting": false });
 	        //$(self.element).unblock();
 	    }        
 

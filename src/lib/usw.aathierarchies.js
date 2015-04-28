@@ -3,15 +3,14 @@
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.aathierarchies
-Version	: 20150205
 Summary	: List of AAT hierarchies for specified AAT facet
-Require	: jquery, jquery-ui, usw.aatlist.js, usw.uri.js
+Require	: jquery, jquery-ui, usw.aatlist.js
 Example	:<div class="usw-aathierarchies"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History
-
-05/02/2015	CFB	adapted from usw.seneschal.topconcepts.js
+05/02/2015 CFB adapted from usw.seneschal.topconcepts.js
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function($) { //start of main jquery closure
@@ -26,35 +25,21 @@ History
 	    },
 	    
 	    getLocalStorageKey: function () {
-	        var self = this;
-	        var key = self.options.facetURI + "@" + self.options.language;
-	        return key;
+	       return this.options.facetURI + "@" + this.options.language;
 	    },
 
-		// redraw the control
-		_refresh: function() {
-		    var self = this;
+	    getSPARQL: function(){
+	        var self = this;
 
-		    if (self.options.facetURI.trim() === "")
-		        return;
+	        //	build a sparql query to get the data, filtering by language,
+	        // supplying a fallback if required language label is not present
+	        var limit = parseInt(self.options.limit, 10);
+	        var offset = parseInt(self.options.offset, 10);            			
 		    
-		    // if we have cached data use that; don't do the ajax call 
-		    // (as the browser cache doesn't seem to work with AAT SPARQL calls at the moment)
-		    var key = self.getLocalStorageKey(); // self.options.facetURI + "@" + self.options.language;
-			if ($.data(self.element, key)) {
-			    self.ajaxSuccess($.data(self.element, key), "from cache", {});
-			    return;
-			}
-
-		    //	build a sparql query to get the data, filtering by language,
-            // supplying a fallback if required language label is not present
-			var limit = parseInt(self.options.limit, 10);
-			var offset = parseInt(self.options.offset, 10);            			
-		    
-			var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
+	        var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
                 + " PREFIX gvp: <http://vocab.getty.edu/ontology#>"
-                + " PREFIX skos: <" + usw.uri.SKOS.NS + ">"
-                + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
+                + " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+                + " PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " ?uri a gvp:Hierarchy; skos:inScheme aat: ;"
                 + " gvp:broaderGeneric|gvp:broaderPreferred <" + self.options.facetURI + "> ."
@@ -72,8 +57,8 @@ History
 	            + (offset > 0 ? " OFFSET " + offset : "")
                 + (limit > 0 ? " LIMIT " + limit : "");
 
-			self._getData(sparql);
-		}
+	        return sparql;
+	    }		
 	});	// end of widget code
 
     // any elements of class usw-aat-hierarchies automatically become one...

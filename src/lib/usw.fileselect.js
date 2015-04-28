@@ -1,4 +1,6 @@
-﻿/*
+﻿/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
+/*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
@@ -41,7 +43,7 @@ History :
                     var control = $("input#file-select:first");
                     control.replaceWith(control = control.clone(true));                   
                 });            
-        },
+        }
 
     });	// end widget usw.fileselect
 

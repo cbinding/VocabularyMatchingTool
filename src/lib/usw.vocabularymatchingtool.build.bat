@@ -14,13 +14,13 @@ set appname=usw.vocabularymatchingtool
 
 REM combine scripts into single (datestamped) file 
 REM done in stages as longer command fell over (probably because of 256 char limit??) 
-copy usw.uri.js + usw.util.js + usw.aatlist.js + usw.aatnarrower.js + usw.aatbroader.js + usw.aatrelated.js %appname%.%datestamp%-1.js
+copy usw.uri.js + usw.util.js + usw.waitable.js + usw.searchform.js + usw.aatlist.js + usw.aatnarrower.js + usw.aatbroader.js + usw.aatrelated.js %appname%.%datestamp%-1.js
 
-copy usw.aatpreflabels.js + usw.aataltlabels.js + usw.aatscopenotes.js + usw.aatconceptdetails.js + usw.aatsearch.js %appname%.%datestamp%-2.js
+copy usw.aatpreflabels.js + usw.aataltlabels.js + usw.aatscopenotes.js + usw.aatconceptdetails.js + usw.aatsearchresult.js + usw.aatsearch.js %appname%.%datestamp%-2.js
 
 copy usw.skoslist.js + usw.skosconceptschemes.js + usw.skosnarrower.js + usw.skosbroader.js + usw.skosrelated.js %appname%.%datestamp%-3.js
 
-copy usw.skospreflabels.js + usw.skosaltlabels.js + usw.skosscopenotes.js + usw.skosconceptdetails.js + usw.skossearch.js %appname%.%datestamp%-4.js
+copy usw.skospreflabels.js + usw.skosaltlabels.js + usw.skosscopenotes.js + usw.skosconceptdetails.js + usw.skossearchresult.js + usw.skossearch.js %appname%.%datestamp%-4.js
 
 copy usw.skosmapping.js + usw.mappingstable.js + usw.fileselect.js + usw.languageselect.js + usw.skosschemeselect.js %appname%.%datestamp%-5.js
 

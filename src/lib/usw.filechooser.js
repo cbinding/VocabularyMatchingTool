@@ -1,4 +1,6 @@
-﻿(function($) { //start of main jQuery closure
+﻿/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
+(function ($) { //start of main jQuery closure
     "use strict"; // strict	mode pragma
 
     $.widget('usw.fileselect', {
@@ -23,7 +25,7 @@
                     padding: "6px 12px",
                     cursor: "pointer"
                 });            
-        },
+        }
 
     });	// end widget usw.mappingsexport
 

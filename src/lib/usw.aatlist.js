@@ -1,22 +1,24 @@
+/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.aatlist
-Version	: 20150205
-Summary	: List of AAT concepts - base widget for many others...
+Summary	: Base AAT concept list 
 Require	: jquery, jquery-ui
 Example	: <div class="usw-aatlist"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-13/02/2015	CFB	Initially created script
+13/02/2015 CFB Initially created script
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
 	"use strict"; // strict	mode pragma	
 	
-	$.widget("usw.aatlist", {	// start of widget code 
+	$.widget("usw.aatlist", $.usw.waitable, { // start of widget code 
 		
 	    // default options
 	    options: {
@@ -43,6 +45,7 @@ History :
 	            var uri = $(this).attr('href'), language = $(this).attr('xml:lang'), label = $(this).text();
 	            $(self.element).trigger("selected", { "uri": uri, "label": label, "language": language });
 	            e.preventDefault();  // don't follow links
+	            return false;
 	        });
 	        
 	        self._refresh();
@@ -73,83 +76,92 @@ History :
 	        self._refresh();
 	    },
 
-	    // expecting sparql query to get: uri, label
-	    _getData: function(sparql) {
-	        var	self = this;    	   
-
-	        // make the call
-	        $.support.cors = true;
-	        $.ajax({
-	            method: "GET",
-	            crossDomain: true,
-	            url: self.options.endpointURI,
-	            data: { format: "json", query: sparql },
-	            context: self,
-	            cache: self.options.useCache,             
-	            success: self.ajaxSuccess, 
-	            error: self.ajaxError, 
-	            complete: self.ajaxComplete,
-	        }); // end ajax call		    
-	    },       
-
-		// override _refresh() in widgets 
-	    _refresh: function () { },
-
-	    // default, may be overriden in inherited widgets
-	    getLocalStorageKey: function () {
+		_refresh: function () {
 	        var self = this;
-	        var key = self.options.conceptURI + "@" + self.options.language; //default
-	        return key;
+
+	        // if we have cached data use that instead; don't do the ajax call 
+	        // (the browser cache doesn't seem to work with AAT SPARQL calls)
+	        var key = self.getLocalStorageKey();
+	        if (!key) {
+	            return;
+	        }
+	        if ($.data(self.element, key)) {
+	            self.ajaxSuccess($.data(self.element, key), "from cache", {});
+	            return;
+	        }
+	        else {
+	            // appear blocked while refereshing results
+	            //self.element.waitable({ waiting: true });
+
+	            // build the SPARQL query and execute the AJAX the call
+	            var sparql = self.getSPARQL();
+
+	            $.support.cors = true;
+	            $.ajax({
+	                method: "GET",
+	                url: self.options.endpointURI,
+	                crossDomain: true,
+	                data: { format: "json", query: sparql },
+	                context: self,
+	                cache: self.options.useCache,
+	                success: self.ajaxSuccess,
+	                error: self.ajaxError,
+	                complete: self.ajaxComplete
+	            }); // end ajax call
+	        }
+	    },
+
+	    // default key, but may be overriden by inherited widgets
+	    getLocalStorageKey: function () {
+	        if ($.trim(this.options.conceptURI) !== "") {
+	            return this.options.conceptURI + "@" + this.options.language;
+	        }
+	        else {
+	            return null;
+	        }
 	    },
 
         // expecting data to contain uri, label, language
 		ajaxSuccess: function (data, textStatus, jqXHR) {
 		    var self = this;
 		    
-		    // cache the retrieved data for next time...
-		    var key = self.options.conceptURI + "@" + self.options.language;
-		    $.data(self.element, key, data);
+		    // cache retrieved data for next time...
+		    var key = self.getLocalStorageKey();
+		    if (key) {
+		        $.data(self.element, key, data);
+		    }
 
-		    // items may already be sorted, but ensure (case insensitive) sorting prior to display
+		    // result items may already be sorted, but ensure case insensitive sorting prior to display
 		    data.results.bindings.sort(function (a, b) {
 		        return a.label.value.toLowerCase() < b.label.value.toLowerCase() ? -1 : 1;
 		    });
 
-            // get reference to the results list and clear it
+            // clear the results list 
 		    var list = $("ul:first", self.element).html("");
 
-		    // add each item to the list as a listitem
-		    $(data.results.bindings).each(function (index, item) {		         
-		        // GVP server returns iso-8859-1 strings even if we ask for utf-8: so converting here to utf-8
-		        var value = usw.util.iso2utf(item.label.value);
+		    // add each result to the list as a new listitem
+		    $(data.results.bindings).each(function (index, item) {
+		        var uri = item.uri ? item.uri.value : "";
+		        // GVP server returned iso-8859-1 strings even if we asked for utf-8: so force conversion to utf-8
+		        var label = usw.util.htmlEscape(usw.util.iso2utf(item.label.value));
+		        var language = item.label["xml:lang"];
+
 		        // if uri is blank it's a literal value, otherwise create a link
-		        if (item.uri.value === "") {
-		            $("<li xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</li>")
-                        .appendTo(list); //.css({ "display": "inline", "margin": "0px 3px" });
+		        if (uri === "") {
+		            $("<li xml:lang='" + language + "'>" + label + "</li>").appendTo(list); 
 		        }
 		        else {
-		            $("<li><a class='concept' href='" + item.uri.value + "' xml:lang='" + item.label["xml:lang"] + "'>" + usw.util.htmlEscape(value) + "</a></li>")
-		                .appendTo(list);
-                        /*.css({
-                            "display": "inline",
-                            "margin": "0px 3px",
-                            "background": "whitesmoke"
-                        });*/
+		            $("<li><a class='concept' href='" + uri + "' xml:lang='" + language + "'>" + label + "</a></li>")
+		                .appendTo(list);                        
 		        }
 		    });
 		} ,     
 
-		ajaxError: function (jqXHR, textStatus, errorThrown) {
-		    var self = this;
-		    //$("<p>" + usw.util.htmlEscape(errorThrown) + "<p>").prependTo(self.element);
-            //log errorThrown?
-		},
-
+		ajaxError: function (jqXHR, textStatus, errorThrown) {},
 		ajaxComplete: function (jqXHR, textStatus) {
-	        var	self = this;
-	        //$(self.element).waitable({ "waiting": false });
-	        //$(self.element).unblock();
-	    }
+		    var self = this;
+		    self.element.waitable({ waiting: false });
+		}
 
 	});	// end of widget code
 
@@ -158,4 +170,4 @@ History :
 	    $(".usw-aatlist").aatlist(); 
 	});
 
-})(jQuery);	//end of main jquery closure
+}(jQuery));	//end of main jquery closure

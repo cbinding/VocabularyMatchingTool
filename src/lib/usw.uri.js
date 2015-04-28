@@ -1,16 +1,16 @@
 ﻿/*
 ===============================================================================
 Creator : Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
-Project	: Any
-Classes	: usw.uri.RDF, usw.uri.RDFS, usw.uri.SKOS,  usw.uri.SKOSXL, 
+Project : Any
+Classes : usw.uri.RDF, usw.uri.RDFS, usw.uri.SKOS,  usw.uri.SKOSXL, 
           usw.uri.CRM, usw.uri.CRMEH, usw.uri.DC, usw.uri.DCTERMS, 
           usw.uri.DCMI, usw.uri.DCAM, usw.uri.FOAF, usw.uri.OWL, usw.uri.SCHEMA
-Summary	: Constants defining case-sensitive entity and property URIs 
-Example	: alert(usw.uri.RDF.BAG) | alert(usw.uri.RDF["BAG"])
-		  both result in "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
+Summary : Constants defining case-sensitive entity and property URIs 
+Example : alert(usw.uri.RDF.BAG) | alert(usw.uri.RDF["BAG"])
+          both result in "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
 License : http://creativecommons.org/publicdomain/zero/1.0/ 
 ===============================================================================
-History	:
+History :
 001 CFB 11/03/2015 Adapted from old STAR script. Added SKOS mapping properties
 002 CFB 13/04/2015 Added FOAF, DCAM & DCMI URIs, missing DCTERMS properties, NS,
     DC Encoding Schemes and DCMI Type vocabulary, constants sorted alphabetically
@@ -73,7 +73,7 @@ usw.uri.RDFS = {
 
 // usw.uri.SKOS
 // usage: alert(usw.uri.SKOS.CONCEPT)OR alert(usw.uri.SKOS["CONCEPT"])
-// either call returns "http://www.w3.org/2004/02/skos/core#Concept"		
+// either call returns "http://www.w3.org/2004/02/skos/core#Concept"        
 usw.uri.SKOS = { NS: "http://www.w3.org/2004/02/skos/core#" };
 usw.uri.SKOS = {
     NS: usw.uri.SKOS.NS, // else it is overwritten
@@ -120,7 +120,7 @@ usw.uri.SKOS = {
 
 // usw.uri.SKOSXL
 // usage: alert(usw.uri.SKOSXL.PREFLABEL)OR alert(usw.uri.SKOSXL["PREFLABEL"])
-// either call returns "http://www.w3.org/2008/05/skos-xl#Label"		
+// either call returns "http://www.w3.org/2008/05/skos-xl#Label"        
 usw.uri.SKOSXL = { NS: "http://www.w3.org/2008/05/skos-xl#" };
 usw.uri.SKOSXL = {
     NS: usw.uri.SKOSXL.NS, // else it is overwritten
@@ -136,7 +136,7 @@ usw.uri.SKOSXL = {
 
 // usw.uri.CRMEH
 // usage: alert(usw.uri.CRMEH.EHE0001) | alert(usw.uri.CRMEH["EHE0001"])
-// either call returns "http://purl.org/crmeh#EHE0001_EHProject"	
+// either call returns "http://purl.org/crmeh#EHE0001_EHProject"    
 usw.uri.CRMEH = { NS: "http://purl.org/crmeh#" };
 usw.uri.CRMEH = {
     NS: usw.uri.CRMEH.NS, // else it is overwritten
@@ -285,7 +285,7 @@ usw.uri.CRMEH = {
 
 // usw.uri.DC - Dublin Core elements
 // usage: alert(usw.uri.DC.TITLE) | alert(usw.uri.DC["TITLE"])
-// either call returns "http://purl.org/dc/elements/1.1/title"	
+// either call returns "http://purl.org/dc/elements/1.1/title"  
 usw.uri.DC = { NS: "http://purl.org/dc/elements/1.1/" };
 usw.uri.DC = {
     NS: usw.uri.DC.NS, // else it is overwritten
@@ -309,10 +309,11 @@ usw.uri.DC = {
 
 // usw.uri.DCTERMS - Dublin Core terms
 // usage: alert(usw.uri.DCTERMS.SUBJECTSCHEME) | alert(usw.uri.DCTERMS["SUBJECTSCHEME"])
-// either call returns "http://purl.org/dc/terms/SubjectScheme"		
+// either call returns "http://purl.org/dc/terms/SubjectScheme"     
 usw.uri.DCTERMS = { NS: "http://purl.org/dc/terms/" };
 usw.uri.DCTERMS = {
     NS: usw.uri.DCTERMS.NS, // else it is overwritten
+	
     // entities
     DATESCHEME: usw.uri.DCTERMS.NS + "DateScheme",
     FORMATSCHEME: usw.uri.DCTERMS.NS + "FormatScheme",
@@ -324,6 +325,7 @@ usw.uri.DCTERMS = {
     SUBJECTSCHEME: usw.uri.DCTERMS.NS + "SubjectScheme",
     TEMPORALSCHEME: usw.uri.DCTERMS.NS + "TemporalScheme",
     TYPESCHEME: usw.uri.DCTERMS.NS + "TypeScheme",
+	
     // properties 
     ABSTRACT: usw.uri.DCTERMS.NS + "abstract",
     ACCESSRIGHTS: usw.uri.DCTERMS.NS + "accessRights",
@@ -380,6 +382,7 @@ usw.uri.DCTERMS = {
     TITLE: usw.uri.DCTERMS.NS + "title",
     TYPE: usw.uri.DCTERMS.NS + "type",
     VALID: usw.uri.DCTERMS.NS + "valid",
+	
     // Vocabulary Encoding Schemes
     DCMITYPE: usw.uri.DCTERMS.NS + "DCMIType",
     DDC: usw.uri.DCTERMS.NS + "DDC",
@@ -390,6 +393,7 @@ usw.uri.DCTERMS = {
     NLM: usw.uri.DCTERMS.NS + "NLM",
     TGN: usw.uri.DCTERMS.NS + "TGN",
     UDC: usw.uri.DCTERMS.NS + "UDC",
+	
     // Syntax Encoding Schemes
     BOX: usw.uri.DCTERMS.NS + "Box",
     ISO3166: usw.uri.DCTERMS.NS + "ISO3166",
@@ -407,7 +411,7 @@ usw.uri.DCTERMS = {
 
 // usw.uri.DCMI - DCMI Type Vocabulary
 // usage: alert(usw.uri.DCMI.COLLECTION) | alert(usw.uri.DCMI["COLLECTION"])
-// either call returns "http://purl.org/dc/dcmitype/Collection"	
+// either call returns "http://purl.org/dc/dcmitype/Collection" 
 usw.uri.DCMI = { NS: "http://purl.org/dc/dcmitype/" };
 usw.uri.DCMI = {
     NS: usw.uri.DCMI.NS, // else it is overwritten
@@ -427,7 +431,7 @@ usw.uri.DCMI = {
 
 // usw.uri.DCAM - Dublin Core Abstract Model
 // usage: alert(usw.uri.DCAM.MEMBEROF) | alert(usw.uri.DCAM["MEMBEROF"])
-// either call returns "http://purl.org/dc/dcam/memberOf"	
+// either call returns "http://purl.org/dc/dcam/memberOf"   
 usw.uri.DCAM = { NS: "http://purl.org/dc/dcam/" };
 usw.uri.DCAM = {
     NS: usw.uri.DCAM.NS, // else it is overwritten
@@ -439,7 +443,7 @@ usw.uri.DCAM = {
 
 // usw.uri.OWL
 // usage: alert(usw.uri.OWL.ALLDIFFERENT) | alert(usw.uri.OWL["ALLDIFFERENT"])
-// either call returns "http://www.w3.org/2002/07/owl#AllDifferent"	
+// either call returns "http://www.w3.org/2002/07/owl#AllDifferent" 
 usw.uri.OWL = { NS: "http://www.w3.org/2002/07/owl#" };
 usw.uri.OWL = {
     NS: usw.uri.OWL.NS, // else it is overwritten
@@ -904,7 +908,7 @@ usw.uri.FOAF = {
 
 // usw.uri.SCHEMA - schema.org entities and properties [NOTE: Incomplete]
 // usage: alert(usw.uri.SCHEMA.PERSON) | alert(usw.uri.SCHEMA["PERSON"])
-// either call returns "http://schema.org/Person"	
+// either call returns "http://schema.org/Person"   
 usw.uri.SCHEMA = { NS: "http://schema.org/" };
 usw.uri.SCHEMA = {
     NS: usw.uri.SCHEMA.NS, // else it is overwritten
@@ -1123,3 +1127,4 @@ usw.uri.SCHEMA = {
     WORKPERFORMED: usw.uri.SCHEMA.NS + "workPerformed",
     WORKSFOR: usw.uri.SCHEMA.NS + "worksFor"
 };
+

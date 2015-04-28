@@ -3,59 +3,45 @@
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.skosscopenotes
-Version	: 20150205
 Summary	: List of scope notes
-Require	: jquery, jquery-ui, usw.skoslist.js usw.uri.js
+Require	: jquery, jquery-ui, usw.skoslist.js
 Example	: <div class="usw-skosscopenotes"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-13/02/2015	CFB	Initially created script
+13/02/2015 CFB Initially created script
+27/04/2015 CFB Code refactored to reduce duplication
 ===============================================================================
 */
 (function ($) { // start of main jquery closure    
 	"use strict"; // strict	mode pragma	
 	
-	//$.widget("usw.skosscopenotes", $.usw.skosfile, {	
 	$.widget("usw.skosscopenotes", $.usw.skoslist, {	// start of widget code 
 		
 	    // default options
 	    options: {
 	        conceptURI: "http://purl.org/heritagedata/schemes/agl_et/concepts/145131" // for example	       
-	    },	    
-	   
-	    // redraw the control
-	    _refresh: function() {
+	    },
+
+	    getSPARQL: function(){
 	        var self = this;
-
-            // if no concept is specified then we can't display anything
-	        if (self.options.conceptURI.trim() === "") {
-	            return;
-	        }
-
-	        // if we have cached data use it; don't do expensive ajax call 
-	        // (browser cache doesn't seem to work with AAT SPARQL calls)
-	        var key = self.getLocalStorageKey(); 
-	        if ($.data(self.element, key)) {
-	            self.ajaxSuccess($.data(self.element, key), "from cache", {});
-	            return;
-	        }
-
+            
 	        //	build a sparql query to get the data
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
+	        var language = $.trim(self.options.language);
 
-	        var sparql = "PREFIX skos: <" + usw.uri.SKOS.NS + ">"
+	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
                + " SELECT DISTINCT ?label WHERE {"
                + " <" + self.options.conceptURI + "> skos:scopeNote ?label ."
-               + " FILTER(langMatches(lang(?label), '" + self.options.language + "'))"
+               + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "'))" : "")
                + " }"
                + " ORDER BY ASC(str(?label))"
 	           + (offset > 0 ? " OFFSET " + offset : "")
                + (limit > 0 ? " LIMIT " + limit : "");
 
-	        self._getData(sparql);
-	    }    
+	        return sparql;
+	    }
 
 	});	// end of widget code
 

@@ -37,8 +37,10 @@
     <script src="lib/papaparse.min.js"></script><!--for handling CSV correctly-->
 
     <!-- Local Scripts itemised for testing, but in deployment use minified versioned composite script -->
+    <!--IF(DEBUG) - can we do this?-->
     <!--<script src="lib/usw.uri.js"></script>
     <script src="lib/usw.util.js"></script>
+    <script src="lib/usw.waitable.js"></script>
 	<script src="lib/usw.aatlist.js"></script>
     <script src="lib/usw.aatnarrower.js"></script>
     <script src="lib/usw.aatbroader.js"></script>
@@ -47,6 +49,8 @@
     <script src="lib/usw.aataltlabels.js"></script>
     <script src="lib/usw.aatscopenotes.js"></script>
     <script src="lib/usw.aatconceptdetails.js"></script>
+    <script src="lib/usw.searchform.js"></script>
+    <script src="lib/usw.aatsearchresult.js"></script>
     <script src="lib/usw.aatsearch.js"></script>
     <script src="lib/usw.languageselect.js"></script>
     <script src="lib/usw.skoslist.js"></script>
@@ -59,13 +63,14 @@
     <script src="lib/usw.skosaltlabels.js"></script>
     <script src="lib/usw.skosscopenotes.js"></script>
     <script src="lib/usw.skosconceptdetails.js"></script>
+    <script src="lib/usw.skossearchresult.js"></script>
     <script src="lib/usw.skossearch.js"></script>
     <script src="lib/usw.skosmapping.js"></script>
     <script src="lib/usw.mappingstable.js"></script>
     <script src="lib/usw.fileselect.js"></script>-->
    
     <!--minified, versioned composite script-->
-    <script src="lib/usw.vocabularymatchingtool.20150414-min.js"></script>
+    <script src="lib/usw.vocabularymatchingtool.20150428-min.js"></script>
     
     <script type="text/javascript">
         (function ($) { // start of main jquery closure
@@ -74,13 +79,20 @@
 
             //debugger; // adding this breaks into the debugger at this point
             $(document).ready(function () {
-                                
-                // when a scheme is selected, configure SKOS search control to use that scheme
+                // initialize skosconceptdetails control to use same SPARQL endpoint as skossearch control
+                //$(".usw-skosconceptdetails:first").skosconceptdetails();
+                //var schemeURI = $(".usw-skossearch:first").skossearch("option", "schemeURI");
+                //$(".usw-skosconceptdetails:first").skosconceptdetails({ schemeURI: schemeURI });
+
+                // when a scheme is selected, configure all controls to use that scheme
                 $(".usw-skosschemeselect:first").on("selected", function (e, data) {
-                    $(".usw-skossearch:first").skossearch({ schemeURI: data.uri });
+                    var endpointURI = $(".usw-skosschemeselect:first").skosschemeselect("option", "endpointURI");
+                    var schemeURI = $(".usw-skosschemeselect:first").skosschemeselect("option", "schemeURI");
+                    $(".usw-skossearch:first").skossearch({ endpointURI: endpointURI, schemeURI: schemeURI });
+                    $(".usw-skosconceptdetails:first").skosconceptdetails({ endpointURI: endpointURI, schemeURI: schemeURI });
+                    // display the selected scheme name
                     $("#sourceVocabularyName a:first")
-                        .attr("target", "_blank")
-                        .attr("href", data.uri)
+                        .attr({ target: "_blank", href: schemeURI })
                         .text(data.label);
                 });
 

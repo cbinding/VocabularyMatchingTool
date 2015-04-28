@@ -1,116 +1,117 @@
+﻿/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
 Classes	: usw.aatsearch
-Version	: 20150205
 Summary	: Search on AAT concepts
-Require	: jquery, jquery-ui, usw.aatlist.js usw.uri.js
-Example	: <div class="usw-aatsearch"/>
+Require	: jquery, jquery-ui, usw.aatlist.js, usw.searchform.js, usw.aatsearchresult.js
+Example	: <div class="usw-aatsearch2"/>
 License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History :
-05/02/2015	CFB	created script
+05/02/2015 CFB created script
+28/04/2015 CFB Converted to composite (as aatsearchform and aatsearchresult) 
 ===============================================================================
 */
 (function ($) { // start of main jquery closure
     "use strict"; // strict	mode pragma
-    
-	$.widget("usw.aatsearch", $.usw.aatlist, {	// start of widget code 
-		
-		// default options
-	    options: {
-	        searchfor: ""           
-	    },	    
 
-	    _create: function (options) {
-	        var self = this;
-	        self.options = $.extend(self.options, options);
+    $.widget("usw.aatsearch", {	// start of widget code 
 
-	        $(self.element).css({
-	            "overflow-y": "scroll",
-	            "padding": "3px",
-	            "height": "150px"
-	        });
-	       
-	        // build the search	form and results box
-	        $("<form><input type='search' placeholder='Search...' autocomplete='on' /></form>").appendTo(self.element).css({margin: "0px"});
+        // default options
+        options: {
+            searchfor: ""
+        },
 
-            // style the search box
-	        $("input[type='search']:first", self.element)
-				.css({
-				    padding: "2px",
-				    width: "99%",
-				    border: "1px solid lightgray"
-				});
-	       
-	        // what	to do when form	is submitted
-	        $("form:first", self.element).submit(function (e) {
-	            e.preventDefault(); // don't redirect on form submission
-	            var searchText = $("input[type='search']:first", self.element).val().trim();
-	            if (searchText !== self.options.placeholder && searchText !== "") {
-	                self._setOption("searchfor", searchText);	                
-	                self._refresh();	                
-	            }
-	            return false;
-	        });
-	       
+        // override default key
+        getLocalStorageKey: function () {
+            if (this.options.searchfor.trim() !== "") {
+                return this.options.searchfor + "@" + this.options.language;
+            }
+            return null;
+        },
+
+        _create: function (options) {
+            var self = this;
+
+            // override	default	options	with any passed	in
+            self.options = $.extend(self.options, options);
+
+            // style the widget
+            $(self.element).css({
+                //"overflow-y": "scroll",
+                "margin": "0px",
+                "padding": "0px",
+                "border": "0px",
+                //"height": "150px",
+                width: self.element.parent().width()
+            });
+
+            // build the composite control
+            var searchForm = $("<div class='usw-searchform'/>").appendTo(self.element);
+            var searchResult = $("<div class='usw-aatsearchresult'/>").appendTo(self.element);
+
+            // set up the individual controls
+            $(searchForm).searchform(self.options);
+            $(searchResult).aatsearchresult(self.options);
+
+            // what to do if a search is submitted
+            $(searchForm).on("submit", function (e, data) {
+                e.preventDefault(); // don't redirect on form submission
+                $(searchResult).aatsearchresult({ searchfor: data.searchfor });
+                return false;
+            });
+
+            // pass on the 'selected' event 
+            $(searchResult).on("selected", function (e, data) {
+                //e.preventDefault(); // don't redirect 
+                $(this.element).trigger("selected", data);
+                //return false;
+            });
+
             // resize internal controls when window resizes
-	        $(window).resize(function () {
-	            $("form:first", self.element).css({ "width": "99%" });	            
-	        });
+            $(window).resize(function () {
+                $("usw-searchform:first", self.element).css({ "width": "100%" });
+                $("usw-aatsearchresult:first", self.element).css({ "width": "100%" });
+            });
 
-	        // overridden base "create" function, so call that now
-	        this._super(options);
-	    },	   
+            // overridden base "create" function, so call that now
+            this._super(options);
+        },
 
-		// redraw the control
-		_refresh: function() {
-		    var self = this;
+        // set an option after control has loaded
+        _setOption: function (key, value) {
+            var self = this;
 
-            // if nothing to search for, don't proceed
-		    if (self.options.searchfor.trim() === "")
-		        return;
+            // clean up input
+            key = $.trim(key || '');
+            value = $.trim(value || '');
 
-		    // if we have cached data use that; don't do the ajax call 
-		    // (as the browser cache doesn't seem to work with AAT SPARQL calls)
-		    if ($.data(self.element, self.options.searchfor)) {
-		        self.ajaxSuccess($.data(self.element, self.options.searchfor), "from cache", {});
-		        return;
-		    }
+            if (value === self.options[key]) {
+                // do nothing if same value	is passed for key
+                return;
+            }
 
-		    //	build a sparql query to get the data, filtering by language,
-		    // supplying a fallback if required language label is not present
-		    var limit = parseInt(self.options.limit, 10);
-		    var offset = parseInt(self.options.offset, 10);
+            // change the option value 
+            self.options[key] = value;
+            self._refresh();
+        },
 
-		    var sparql = "PREFIX aat: <http://vocab.getty.edu/aat/>"
-               + " PREFIX luc: <http://www.ontotext.com/owlim/lucene#>"
-               + " PREFIX skos: <" + usw.uri.SKOS.NS + ">"
-               + " PREFIX skosxl: <" + usw.uri.SKOSXL.NS + ">"
-               + " SELECT DISTINCT ?uri ?label WHERE {"
-               + " ?uri skos:inScheme aat: ; luc:term '" + self.options.searchfor + "' ."
-               + " OPTIONAL {"
-               + " ?uri skosxl:prefLabel [skosxl:literalForm ?preferredLanguageLabel]"
-               + " FILTER(langMatches(lang(?preferredLanguageLabel),'" + self.options.language + "'))"
-               + " }"
-		       + " OPTIONAL {"
-               + " ?uri skosxl:prefLabel [skosxl:literalForm ?fallbackLanguageLabel]"
-               + " FILTER(langMatches(lang(?fallbackLanguageLabel),'" + self.options.fallback + "'))"
-               + " }"
-               + " BIND(COALESCE(?preferredLanguageLabel, ?fallbackLanguageLabel, '') AS ?label)"
-               + " }"
-               + " ORDER BY ASC(str(?label))"
-               + (offset > 0 ? " OFFSET " + offset : "")
-               + (limit > 0 ? " LIMIT " + limit : "");
-		    self._getData(sparql);
-		}	// end _refresh		
+        // redraw the control
+        _refresh: function () {
+            var self = this;
+            
+            $(".usw-searchform:first", self.element).searchform(self.options);
+            $(".usw-aatsearchresult:first", self.element).aatsearchresult(self.options);            
+        }
 
-	});	// end of widget code
+    });	// end of widget code
 
-	// any elements of class usw-aatsearch automatically become one...
-	$(window).load(function () {
-	    $(".usw-aatsearch").aatsearch(); 
-	});
+    // any elements of class usw-aatsearch2 automatically become one...
+    $(window).load(function () {
+        $(".usw-aatsearch").aatsearch();
+    });
 
-})(jQuery);	//end of main jquery closure
+}(jQuery));	//end of main jquery closure

@@ -1,3 +1,5 @@
+/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
 /*
 ===============================================================================
 Creator	: Ceri Binding,	University of South	Wales ceri.binding@southwales.ac.uk
@@ -82,19 +84,17 @@ History
 		        // do nothing if same value	is passed for key
 		        return;
 		    }
-		    else {
-		        // change the option value 
-		        self.options[key] = value;
-		        self._refresh();
-		    }
+
+		    // change the option value 
+		    self.options[key] = value;
+		    self._refresh();		    
 		},
 
 	    // redraw the control
 		_refresh: function() {
 		    var self = this;
 
-		    if (self.options.conceptURI.trim() === "")
-		        return;
+		    if (self.options.conceptURI.trim() === "") { return; }
 
 		    $(".usw-aatpreflabels:first", self.element).aatpreflabels(self.options);
 		    $(".usw-aataltlabels:first", self.element).aataltlabels(self.options);
@@ -102,7 +102,7 @@ History
 		    $(".usw-aatbroader:first", self.element).aatbroader(self.options);
 		    $(".usw-aatnarrower:first", self.element).aatnarrower(self.options);
 		    $(".usw-aatrelated:first", self.element).aatrelated(self.options);
-		},
+		}
 		
 	});	//end of usw.aatconceptdetails
 

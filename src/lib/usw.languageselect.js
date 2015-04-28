@@ -1,4 +1,6 @@
-﻿/*
+﻿/*jslint nomen: true, vars: true, white: true */
+/*global $, jQuery, alert*/
+/*
 ===============================================================================
 Creator	: Ceri Binding, University of South Wales ceri.binding@southwales.ac.uk
 Project	: ARIADNE
@@ -88,4 +90,4 @@ History :
         $(".usw-languageselect").languageselect();
     });
 
-})(jQuery);	//end of main jquery closure
+}(jQuery));	//end of main jquery closure
