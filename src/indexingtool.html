@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>AAT indexing tool</title>
+    <meta name="Author" content="Ceri Binding, University of South Wales">
+    <meta name="Description" content="Test of aatindexingtool script">
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/usw.aatindexingtool.css">
+    <style type="text/css">
+        .container {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .example {
+            width: 300px;
+            background: whitesmoke;
+        }
+        .example form {
+            width: 100%;
+        }
+        .example label {
+            font-weight: bold;
+        }
+        .example input, .example div {
+            width: 100%;
+            margin: 2px 0px 10px 0px;
+            cursor: pointer;
+            -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+            -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
+            box-sizing: border-box;
+        }
+        .example div.usw-aatindexingtool {
+            border: 1px solid gray;
+            background: white;
+        }
+        
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+    <!--testing with jquery/jquery-ui version as used in ARIADNE registry pages-->
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!--separate local scripts - used during debugging only-->
+    <!--<script src="lib/usw.uri.js"></script>
+    <script src="lib/usw.util.js"></script>
+    <script src="lib/usw.waitable.js"></script>
+    <script src="lib/usw.searchform.js"></script>
+    <script src="lib/usw.aatlist.js"></script>
+    <script src="lib/usw.aatsearchresult.js"></script>
+    <script src="lib/usw.aatsearch.js"></script>
+    <script src="lib/usw.aatpreflabels.js"></script>
+    <script src="lib/usw.aataltlabels.js"></script>
+    <script src="lib/usw.aatscopenotes.js"></script>
+    <script src="lib/usw.aatbroader.js"></script>
+    <script src="lib/usw.aatnarrower.js"></script>
+    <script src="lib/usw.aatrelated.js"></script>
+    <script src="lib/usw.aatconceptdetails.js"></script>
+    <script src="lib/usw.aatindexingtool.js"></script>-->
+
+    <!--use concatenated minified script in production-->
+    <script src="lib/usw.aatindexingtool.20150506-min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+        <h2 class="title">AAT Indexing Tool</h2>
+        
+        <p>The AAT Indexing Tool utilizes the <a target="_blank" href="http://vocab.getty.edu/">Getty Vocabulary Program</a> SPARQL endpoint to provide a search and browsing facility on the Getty Art &amp; Architecture Thesaurus (AAT) for specific form fields. The tool can be integrated into existing data entry forms to allow data records to be indexed using Getty AAT terms.
+        </p>
+
+        <p>
+        In the (live) example below the first two form fields are INPUT elements, the second two are DIV elements. Clicking on a field brings up the AAT Indexing tool at that location allowing AAT search (e.g. try searching for 'axe' or 'brooch'). Selecting any of the result concepts allows browsing of the AAT concept structure. The currently selected concept is shown near the bottom of the control. Once a suitable concept has been selected click 'save' to populate the original field with the selection. In the case of simple text input fields the currently selected term is used to populate the field as text. In the case of the DIV fields, the term plus a URI are used to populate the field as a link to the selected AAT concept.
+        </p>
+
+        <fieldset class="example">
+            <legend>Example</legend>
+            <form>
+                <div>
+                    <label for="dctsubject1">subject (1):</label><br />
+                    <input type="text" id="dctsubject1" name="dctsubject1" size=25 class="usw-aatindexingtool" value="[subject]" />
+                </div>
+                <div>
+                    <label for="dctsubject2">subject (2):</label><br />
+                    <input type="text" id="dctsubject2" name="dctsubject2" size=25 class="usw-aatindexingtool" value="[subject]" />
+                </div>
+                <div>
+                    <label for="dctsubject3">subject (3):</label>
+                    <div id="dctsubject3" class="usw-aatindexingtool">[subject]</div>
+                </div>
+                <div>
+                    <label for="dctsubject4">subject (4):</label>
+                    <div id="dctsubject4" class="usw-aatindexingtool">[subject]</div>
+                </div>
+            </form>
+        </fieldset>
+
+<p>
+    Form fields can then be populated with AAT terms. To deploy this on your own web page download the indexing tool stylesheet (usw.aatindexingtool.css) and latest minified script (usw.aatindexingtool.yyyymmdd-min.js) from <a target="_blank" href="https://github.com/cbinding/VocabularyMatchingTool">https://github.com/cbinding/VocabularyMatchingTool</a>. Include links to jquery and jquery-ui scripts (these are dependencies), and also links to the downloaded files within the head of your page:
+    </p>
+<pre>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="//code.jquery.com/jquery-1.9.1.min.js"&gt;&lt;/script&gt;
+        &lt;script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"&gt;&lt;/script&gt;
+        
+        &lt;link rel="stylesheet" href="css/usw.aatindexingtool.css"&gt;
+        &lt;script src="lib/usw.aatindexingtool.20150428-min.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+&lt;/html&gt;
+</pre>
+<p>Next add the class name 'usw-aatindexingtool' to any fields requiring AAT term/concept lookup. If in doubt just right click and 'view source' on this page to see how it has been done:</p>
+<pre>
+&lt;div&gt;
+    &lt;label for="subject"&gt;subject:&lt;/label&gt;
+    &lt;input type="text" id="subject" size=25 class="usw-aatindexingtool" value=""/&gt;
+&lt;/div&gt;
+</pre>
+<p>That's it. Clicking on that field will now pop up the AAT Indexing Tool at that location, allowing the field to be populated with the chosen AAT term.</p>
+
+</div><!--end div.container-->
+</body>
+</html>

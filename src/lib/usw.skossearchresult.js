@@ -66,7 +66,7 @@ History :
                 + " ?uri skos:inScheme <" + self.options.schemeURI + ">"
                 + " { ?uri skos:prefLabel ?label } UNION { ?uri skos:altLabel ?label }"
 				+ "	FILTER(REGEX(?label, '" + self.options.searchfor + "', 'i'))"
-                + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "'))" : "")
+                + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "') || lang(?label)='')" : "")
                 + " }";
             + " ORDER BY ASC(str(?label))"
             + (offset > 0 ? " OFFSET " + offset : "")

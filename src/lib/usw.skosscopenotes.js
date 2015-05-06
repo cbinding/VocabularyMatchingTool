@@ -34,7 +34,7 @@ History :
 	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
                + " SELECT DISTINCT ?label WHERE {"
                + " <" + self.options.conceptURI + "> skos:scopeNote ?label ."
-               + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "'))" : "")
+               + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "') || lang(?label)='')" : "")
                + " }"
                + " ORDER BY ASC(str(?label))"
 	           + (offset > 0 ? " OFFSET " + offset : "")

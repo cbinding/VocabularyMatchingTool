@@ -27,8 +27,7 @@ History :
 	    getSPARQL: function(){
 	        var self = this;
 
-	        //	build a sparql query to get the data, filtering by language,
-	        // supplying a fallback if required language label is not present
+	        //	build a sparql query to get the data, filtering by language
 	        var limit = parseInt(self.options.limit, 10);
 	        var offset = parseInt(self.options.offset, 10);
 	        var language = $.trim(self.options.language);
@@ -36,7 +35,7 @@ History :
 	        var sparql = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
                 + " SELECT DISTINCT ?uri ?label WHERE {"
                 + " ?uri skos:broader <" + self.options.conceptURI + "> ; skos:prefLabel ?label . "
-                + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "'))" : "")
+                + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "') || lang(?label)='')" : "")
                 + " }"
                 + " ORDER BY ASC(str(?label))"
 	            + (offset > 0 ? " OFFSET " + offset : "")

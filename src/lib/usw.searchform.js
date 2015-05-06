@@ -24,6 +24,17 @@ History :
 	        placeholder: "Search..."          
 	    },
 
+	    // resize controls
+	    resize: function () {
+	        var self = this;
+
+	        var searchForm = $("form:first", self.element);
+	        var searchBox = $("input[type='search']:first", searchForm);
+	        var searchButton = $("input[type='submit']:first", searchForm);
+	        searchForm.width($(self.element).parent().width());
+	        searchBox.width(searchForm.width() - (searchButton.outerWidth() + 6));
+	    },
+
 	    _create: function (options) {
 	        var self = this;
 	        self.options = $.extend(self.options, options);        
@@ -32,26 +43,15 @@ History :
 	       $("<form><input type='search'><input type='submit' value='Go'></form>")
                 .appendTo(self.element)
                 .css({
-                    width: self.element.parent().width(),
-                    padding: "2px",
+                    width: $(self.element).parent().width(),
+                    padding: "0px",
                     margin: "0px"
-                });
-
-            // set up the search input box
-	       var searchInput = $("input[type='search']:first", self.element)
-               .attr({
-                   placeholder: self.options.placeholder, //default text when empty
-                   autocomplete: "on",
-                   results: 5
-               })
-	           .css({ width: "100%" });
+                });          
 
 	        // set up the 'Go' button
 	        $("input[type='submit']:first", self.element)
                 .css({
                     position: "absolute",                    
-                    //height: searchInput.outerHeight(),
-                    width: 85,
                     margin: "0px 2px"
                 })
                 .click(function (e) {                    
@@ -64,6 +64,14 @@ History :
                     return false;
                 });
 
+	        // set up the search input box
+	        var searchInput = $("input[type='search']:first", self.element)
+                .attr({
+                    placeholder: self.options.placeholder, //default text when empty
+                    autocomplete: "on",
+                    results: 5
+                });                
+
 	        // initial resize for layout
 	        self.resize();
 
@@ -71,14 +79,11 @@ History :
 	        $(window).resize(function () {
 	            self.resize();
 	        });
+
+	        return self;
 	    },
 
-	    // resize controls
-	    resize: function () {
-	       var self = this;
-	       var searchForm = $("form:first", self.element);
-	       $("input[type='search']:first", searchForm).width(searchForm.width() - 100);
-	    }
+	    
 		
 	});	// end of widget code
 

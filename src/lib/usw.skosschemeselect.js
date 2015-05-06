@@ -146,7 +146,7 @@ History :
                  + " SELECT DISTINCT ?uri ?label WHERE {"
                  + " ?uri a skos:ConceptScheme ."
                  + " {{?uri dc:title ?label} UNION {?uri dct:title ?label} UNION {?uri rdfs:label ?label}}"
-                 + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "'))" : "")
+                 + (language !== "" ? " FILTER(langMatches(lang(?label),'" + language + "') || lang(?label)='')" : "")
                  + " }"
                  + " ORDER BY ASC(str(?label))"
                  + (offset > 0 ? " OFFSET " + offset : "")

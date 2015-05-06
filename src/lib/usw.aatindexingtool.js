@@ -11,6 +11,7 @@ License	: http://creativecommons.org/publicdomain/zero/1.0/
 ===============================================================================
 History
 22/04/2015 CFB initially created script
+29/04/2015 CFB Singleton pattern - only one aatindexingtool in document body
 ===============================================================================
 */
 (function ($) { //start of main jquery closure
@@ -26,53 +27,55 @@ History
             fallback: "en", // fallback language if chosen language label is not present
             limit: 100, // for restricting number of results (0 = no limit)
             offset: 0, // for future implementation of paging (0 = no offset)	
-            searchfor: ""
+            searchfor: "" // what to search for...
         },        
 
         _create: function (options) {
             var self = this;
             self.options = $.extend(self.options, options);
 
+            // singleton - if one already exists don't create another one
+            if ($("div#aatindexingtool", document.body).length) { return; }
+
             // container for the composite controls
             var container = $("<div/>")
-                .insertAfter(self.element)
+                .attr({ id: "aatindexingtool" })
+                .appendTo(document.body)
                 .css({
                     position: "absolute",
                     border: "1px solid gray",
                     background: "white",
-                    left: self.element.position().left,
                     padding: "2px",
                     width: "400px",
-                    height: "380px",
-                    display: "none" //initially hidden
+                    height: "400px",
+                    display: "none" // initially hidden
                 });
 
             // add all controls to the container
-            //$("<div class='usw-aatsearchform'/>").appendTo(container);
-            //$("<div class='usw-aatsearchresult'/>").appendTo(container);
-            $("<div class='usw-aatsearch'/>").appendTo(container);
+            $("<div class='usw-aatsearch'/>")
+                .appendTo(container)
+                .css({ "width": "400px" })
+                .aatsearch(self.options);
 
-            $("<div class='usw-aatconceptdetails'/>").appendTo(container);            
-            $("<div><label>Selected:</label><span class='usw-aatindexingtool-selected'></span></div>")
-                .css({ margin: 5 }).appendTo(container);
+            $("<div class='usw-aatconceptdetails'/>")
+                .appendTo(container)
+                .aatconceptdetails(self.options);
 
-            var controls = $("<div></div>").css({ margin: "5px", float: "right" }).appendTo(container);
-            $("<input type='button' class='usw-aatindexingtool-save' value='Save'/>").appendTo(controls);
-            $("<input type='button' class='usw-aatindexingtool-close' value='Close'/>").css({margin: 2}).appendTo(controls);
+            $("<div><label>Selected:</label><span class='usw-aatindexingtool-selected'>&nbsp;</span></div>")
+                .css({ margin: 5 })
+                .appendTo(container);
+
+            var controls = $("<div></div>")
+                .css({ margin: "5px", float: "right" })
+                .appendTo(container);
+
+            $("<input type='button' class='usw-aatindexingtool-save' value='Save'/>")
+                .appendTo(controls);
+
+            $("<input type='button' class='usw-aatindexingtool-close' value='Close'/>")
+                .css({ margin: 2 })
+                .appendTo(controls);
             
-
-            // set up individual controls
-            $(".usw-aatsearch:first", container).aatsearch(self.options);
-            //$(".usw-aatsearchform:first", container).aatsearchform(self.options);
-            //$(".usw-aatsearchresult:first", container).aatsearchresult(self.options);
-
-            $(".usw-aatconceptdetails:first", container).aatconceptdetails(self.options);
-                        
-           // refresh results if a new search is undertaken
-           // $(".usw-aatsearchform:first", container).on("submit", function (e, data) {
-           //   $(".usw-aatsearchresult:first", container).aatsearchresult({ searchfor: data.searchfor });
-           //  });
-
           // refresh displayed concept if a concept is selected from search results
           // $(".usw-aatsearchresult:first", container).on("selected", function (e, data) {
           $(".usw-aatsearch:first", container).on("selected", function (e, data) {
@@ -81,7 +84,7 @@ History
                 // build and display element based on currently selected concept
                 var element = $("<a></a>")
                     .attr({ href: data.uri, target: "_blank" })
-                    .addClass("concept")
+                    .css({display: "inline"})
                     .text(data.label)
                     .on("click", function(e) {
                         e.preventDefault();
@@ -94,8 +97,8 @@ History
             
                 // build and display element based on currently selected concept
                 var element = $("<a></a>")
-                    .attr({ href: data.uri })
-                    .addClass("concept")
+                    .attr({ href: data.uri, target: "_blank" })
+                    .css({ display: "inline" })
                     .text(data.label)
                     .on("click", function (e) {
                         e.preventDefault();
@@ -111,8 +114,8 @@ History
                 $(self.element).trigger("selected", { "uri": uri, "label": label, "language": language });
 
                 // what type is original element? if its an input, set 'val'. if its a  div or span, set 'html'
-                if (self.element.is("input")) { $(self.element).val($(".usw-aatindexingtool-selected:first", container).text()); }
-                else if (self.element.is("div") || self.element.is("span")) { $(self.element).html($(".usw-aatindexingtool-selected:first", container).html()); }
+                if ($(self.element).is("input")) { $(self.element).val($(".usw-aatindexingtool-selected:first", container).text()); }
+                else if ($(self.element).is("div") || $(self.element).is("span")) { $(self.element).html($(".usw-aatindexingtool-selected:first", container).html()); }
                 else { $(self.element).text($(".usw-aatindexingtool-selected:first", container).text()); }
 
                 container.fadeOut("fast");
@@ -123,11 +126,22 @@ History
                 container.fadeOut("fast");
             });
 
-            // display the container control when main element is clicked
-            $(self.element).on("click", function (e, data) {
-                container.fadeIn("fast");
+            // display the control in approriate position when matching element is clicked
+            $(".usw-aatindexingtool", document.body).on("click", function (e, data) {
+                self.element = this; // set current element to be the one that was clicked
+                container.css({
+                    left: $(this).offset().left,
+                    top: parseInt($(this).offset().top) + $(this).outerHeight()
+                }).fadeIn("fast");
             });
-            
+
+            // reposition if necessary when window resizes
+            $(window).resize(function () {                
+                container.css({
+                    left: $(self.element).offset().left,
+                    top: parseInt($(self.element).offset().top) + $(self.element).outerHeight()
+                });
+            });            
         },
 
         // set an option after control has loaded
@@ -150,11 +164,7 @@ History
 
         // refresh the controls
         _refresh: function () {
-            var self = this;            
-
-            // $(".usw-aatsearchform:first", self.element).aatsearchform(self.options);
-            // $(".usw-aatsearchresult:first", self.element).aatsearchresult(self.options);
-            // $(".usw-aatconceptdetails:first", self.element).aatconceptdetails(self.options);
+            $(this).aatindexingtool(this.options);
         },
 
     });	// end of widget code

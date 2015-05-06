@@ -44,9 +44,7 @@ History :
             $(self.element).css({
                 "margin": "0px",
                 "padding": "0px",
-                "border": "0px",
-                //"height": "150px",
-                width: self.element.parent().width()
+                "border": "0px"                
             });
 
             // build the composite control
@@ -77,8 +75,8 @@ History :
 
             // resize internal controls if window resizes
             $(window).resize(function () {
-                $("usw-searchform:first", self.element).css({ "width": "100%" });
-                $("usw-skossearchresult:first", self.element).css({ "width": "100%" });
+                //$("usw-searchform:first", self.element).css({ "width": "100%" });
+                //$("usw-skossearchresult:first", self.element).css({ "width": "100%" });
             });
 
             // overridden base "create" function, so call that now

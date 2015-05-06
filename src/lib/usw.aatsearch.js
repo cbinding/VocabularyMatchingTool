@@ -41,22 +41,21 @@ History :
 
             // style the widget
             $(self.element).css({
-                //"overflow-y": "scroll",
                 "margin": "0px",
                 "padding": "0px",
-                "border": "0px",
-                //"height": "150px",
-                width: self.element.parent().width()
+                "border": "0px"               
             });
 
             // build the composite control
-            var searchForm = $("<div class='usw-searchform'/>").appendTo(self.element);
-            var searchResult = $("<div class='usw-aatsearchresult'/>").appendTo(self.element);
+            var searchForm = $("<div class='usw-searchform'/>")
+                .appendTo(self.element)
+                .css({ "margin-bottom": "2px"})
+                .searchform(self.options);
 
-            // set up the individual controls
-            $(searchForm).searchform(self.options);
-            $(searchResult).aatsearchresult(self.options);
-
+            var searchResult = $("<div class='usw-aatsearchresult'/>")
+                .appendTo(self.element)
+                .aatsearchresult(self.options);
+                        
             // what to do if a search is submitted
             $(searchForm).on("submit", function (e, data) {
                 e.preventDefault(); // don't redirect on form submission
@@ -66,16 +65,8 @@ History :
 
             // pass on the 'selected' event 
             $(searchResult).on("selected", function (e, data) {
-                //e.preventDefault(); // don't redirect 
-                $(this.element).trigger("selected", data);
-                //return false;
-            });
-
-            // resize internal controls when window resizes
-            $(window).resize(function () {
-                $("usw-searchform:first", self.element).css({ "width": "100%" });
-                $("usw-aatsearchresult:first", self.element).css({ "width": "100%" });
-            });
+                $(this.element).trigger("selected", data);               
+            });           
 
             // overridden base "create" function, so call that now
             this._super(options);
