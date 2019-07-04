@@ -1,0 +1,1260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Vocabulary Matching Tool</title>
+    <meta name="description" content="For creating matches from ARIADNEplus partner vocabularies to Getty AAT">
+    <meta name="author" content="Ceri Binding, University of South Wales, ceri.binding@southwales.ac.uk">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--favicon-->
+    <link href="img/favicon.ico" rel="Shortcut icon" type="image/x-icon">
+
+    <!-- CDN CSS -->   
+	<link rel="stylesheet" 
+		href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" 
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" 
+		crossorigin="anonymous">	   
+
+    <!-- local CSS -->
+    <!--<link rel="stylesheet" href="lib/fontawesome-free-5.8.2-web/css/all.min.css">-->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/tabulator.min.css">
+    <link rel="stylesheet" href="css/usw-vmt.css">
+    <link rel="stylesheet" href="css/usw-modal.css">
+
+    <!-- CDN scripts -->
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>-->	
+	
+    <script src="lib/jquery-3.4.0.min.js"></script>
+    <!--for download of tabulator data as XLSX-->
+    <!--<script src="http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js"></script>-->
+    <!--for download of tabulator data as PDF-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>-->
+
+    <!-- internationalization -->
+    <!--<script src="https://unpkg.com/i18next/i18next.min.js"></script>-->
+    <script src="lib/i18next-min.js"></script><!-- downloaded 2019-04-18 -->
+
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/css/tabulator.min.css">-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/js/tabulator.min.js"></script>-->
+    <!--local scripts-->
+    <script src="lib/tabulator.min.js"></script><!-- v4.2.3 downloaded 2019-04-02 -->
+    <script src="lib/moment-min.js"></script><!-- v2.9.0 -->
+
+    <!--vue based controls-->
+    <!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+    <script src="lib/vue.min.js"></script><!-- v2.6.10 downloaded 2019-04-18 -->
+
+
+    <!--<script src="lib/usw-aat-concept-details.js"></script>
+    <script src="lib/usw-aat-concept-hierarchy.js"></script>
+    <script src="lib/usw-aat-concept-labels.js"></script>
+    <script src="lib/usw-aat-concept-relations.js"></script>
+    <script src="lib/usw-aat-search-control.js"></script>
+    <script src="lib/usw-aat-search-results.js"></script>
+    <script src="lib/usw-aat-search.js"></script>
+    <script src="lib/usw-language-select.js"></script>
+    <script src="lib/usw-modal.js"></script>
+    <script src="lib/usw-vmt-api.js"></script>-->
+
+    <script src="lib/vmt-20190614-min.js"></script>
+
+</head>
+<body>
+    <!-- .container is main centered wrapper -->
+    <div class="container u-max-fullwidth" id="vuecontainer">
+        <!--u-max-fullwidth-->
+        <section class="row header">
+            <div class="two-thirds column">
+                <h3 id="app-title">Vocabulary Matching Tool</h3>
+            </div>
+            <div class="one-third u-pull-right">
+                <usw-language-select
+                    :selected="uilanguage"
+                    display-values="de,en,es,fr,it,nl"
+                    @change="changeLanguage($event)">
+                </usw-language-select>
+                <!--<div id="uilanguage" class="usw-languageselect"></div>-->
+            </div>
+        </section>
+
+        <div class="row">
+            <div class="two-thirds column">
+                <!--<button id="show-modal" @click="showModal = true">Show Modal</button>-->
+                <usw-modal v-if="showModal" @close="aatSearchCancel">
+                    <!--<h4 slot="header">AAT lookup</h4>-->
+                    <usw-aat-search slot="body" @select="aatSearchSelect" @cancel="aatSearchCancel"></usw-aat-search>
+                    <div slot="footer">&nbsp;</div>
+                </usw-modal>
+           </div>
+        </div>
+
+        <div class="row">
+            <div id="mappings-table"></div>
+        </div>
+
+        <div class="row">
+            <!-- control buttons -->
+            <button id="btn-import-json" class='button-primary' title="Import data from local JSON file">
+                <i class="fas fa-file-import"></i>&nbsp;<span>Import JSON</span>
+            </button>
+            <button id="btn-export-json" class='button-primary' title="Export data to JSON file">
+                <i class="fas fa-file-export"></i>&nbsp;<span>Export JSON</span>
+            </button>
+            <button id="btn-export-csv" class='button-primary' title="Export data to CSV file">
+                <i class="fas fa-file-csv"></i>&nbsp;<span>Export CSV</span>
+            </button>
+
+            <!--<button id="btn-export-rdf" class='button-primary' title="Export data to RDF file">
+                <i class="fas fa-file"></i>&nbsp;<span>Export RDF</span>
+            </button>-->
+
+            <!--<button id="btn-export-pdf" class='button-primary' title="Export data to PDF file">
+                <i class="fas fa-file-pdf"></i>&nbsp;<span>Export PDF</span>
+            </button>-->
+            <button id="btn-add-new-row" class='button-primary' title="Add a new row to bottom of table">
+                <i class="fas fa-plus"></i>&nbsp;<span>Add New Row</span>
+            </button>
+            <!--<button id="btn-undo-action" class='button-primary' title="Undo last action">
+                <i class="fas fa-undo"></i>&nbsp;<span>Undo Action</span>
+            </button>
+            <button id="btn-redo-action" class='button-primary' title="Redo last action">
+                <i class="fas fa-redo"></i>&nbsp;<span>Redo Action</span>
+            </button>-->
+            <button id="btn-clear-all" class='button-primary' title="Clear the table">
+                <i class="fas fa-trash-alt"></i>&nbsp;<span>Clear Rows</span>
+            </button>
+            <a id="btn-show-help" class="button button-primary" title="Show help" target="vmt-help" href="vmt-help.html">
+                <i class="fas fa-info"></i>&nbsp;<span>Show Help</span>
+            </a>
+
+        </div>
+
+        <section class="row footer">
+            <!--<hr />-->
+            <div class="one-third column">
+                <a target="_blank" href="https://ariadne-infrastructure.eu/"><img alt="ARIADNEplus" src="img/Ariadne_plus-Logo-500.png" width="250" /></a>
+                <small><p id="footer-app-project">ARIADNEplus is a Horizon 2020 project funded by the European Commission (Grant Agreement No 823914)</p></small>
+            </div>
+            <div class="two-thirds">
+                <small>
+                    <p>Created by <a id="footer-app-author" target="_blank" href="http://hypermedia.research.southwales.ac.uk/">University of South Wales - Hypermedia Research Group</a></p>
+                    <p>This application retrieves some information originating from Getty Art &amp; Architecture Thesaurus (AAT)&reg; which is made available under the <a target="aat" href="http://opendatacommons.org/licenses/by/1.0/">ODC Attribution License</a>. See <a target="aat" href="http://vocab.getty.edu/">http://vocab.getty.edu/</a> for further details.</p>
+
+                </small>
+            </div>
+        </section>
+    </div>
+    <script>
+
+        // internationalization (labels for multilingual UI)
+        i18next.init({
+            lng: "en", // default language
+            debug: false,
+            resources: {
+                "de": {
+                    translation: {
+                        "app-title-text": "Werkzeug zum passenden Vokabular",
+                        "app-author-text": "Universität von Südwales",
+                        "app-project-text": "ARIADNEplus ist ein von der Europäischen Kommission finanziertes Projekt 'Horizont 2020' (Finanzhilfevereinbarung Nr. 823914)",
+                        "btn-import-json-text": "Importieren Sie JSON",
+                        "btn-import-json-title": "Daten aus JSON-Datei importieren",
+                        "btn-export-json-text": "JSON exportieren",
+                        "btn-export-json-title": "Daten in JSON-Datei exportieren",
+                        "btn-export-csv-text": "CSV exportieren",
+                        "btn-export-csv-title": "Daten in CSV-Datei exportieren",
+                        "btn-export-pdf-text": "PDF exportieren",
+                        "btn-export-pdf-title": "Daten in eine PDF-Datei exportieren",
+                        "btn-export-rdf-text": "Exportieren Sie RDF",
+                        "btn-export-rdf-title": "Daten in eine RDF-Datei exportieren",
+                        "btn-undo-action-text": "Rückgängig machen",
+                        "btn-undo-action-title": "Letzte Aktion rückgängig machen",
+                        "btn-redo-action-text": "Wiederholen",
+                        "btn-redo-action-title": "Letzte Aktion wiederholen",
+                        "btn-add-new-row-text": "Neue Zeile hinzufügen",
+                        "btn-add-new-row-title": "Fügen Sie der Tabelle eine neue Zeile hinzu",
+                        "btn-clear-all-text": "Zeilen löschen",
+                        "btn-clear-all-title": "Alle Zeilen aus der Tabelle löschen",
+                        "btn-clear-all-confirm": "Klar den Tisch - bist du sicher?",
+                        "btn-show-help-text": "die Hilfe anzeigen",
+                        "btn-show-help-title": "Hilfe für die Anwendung anzeigen",
+                        "skos-exact-match": "Genaue Übereinstimmung",
+                        "skos-close-match": "Spiel schließen",
+                        "skos-broad-match": "Breites Spiel",
+                        "skos-narrow-match": "Schmale Übereinstimmung",
+                        "skos-related-match": "Verwandte Übereinstimmung",
+                        "table-placeholder": "Keine Daten",
+                        "table-row-count-label": "reihen",
+                        "table-delete-row-confirm": "Löschen Sie die ausgewählte Zeile. Sind Sie sicher?" // "Delete the selected row - are you sure?"
+                    }
+                },
+                "en": {
+                    translation: {
+                        "app-title-text": "Vocabulary Matching Tool",
+                        "app-author-text": "University of South Wales",
+                        "app-project-text": "ARIADNEplus is a Horizon 2020 project funded by the European Commission (Grant Agreement No 823914)",
+                        "btn-import-json-text": "Import JSON",
+                        "btn-import-json-title": "Import data from JSON file",
+                        "btn-export-json-text": "Export JSON",
+                        "btn-export-json-title": "Export data to JSON file",
+                        "btn-export-csv-text": "Export CSV",
+                        "btn-export-csv-title": "Export data to CSV file",
+                        "btn-export-pdf-text": "Export PDF",
+                        "btn-export-pdf-title": "Export data to PDF file",
+                        "btn-export-rdf-text": "Export RDF",
+                        "btn-export-rdf-title": "Export data to RDF file",
+                        "btn-undo-action-text": "Undo",
+                        "btn-undo-action-title": "Undo last action",
+                        "btn-redo-action-text": "Redo",
+                        "btn-redo-action-title": "Redo last action",
+                        "btn-add-new-row-text": "Add New Row",
+                        "btn-add-new-row-title": "Add a new row to the table",
+                        "btn-clear-all-text": "Clear rows",
+                        "btn-clear-all-title": "Clear all rows from the table",
+                        "btn-clear-all-confirm": "Clear the table - are you sure?",
+                        "btn-show-help-text": "Show help",
+                        "btn-show-help-title": "Display help for using the application",
+                        "skos-exact-match": "Exact Match",
+                        "skos-close-match": "Close Match",
+                        "skos-broad-match": "Broad Match",
+                        "skos-narrow-match": "Narrow Match",
+                        "skos-related-match": "Related Match",
+                        "table-placeholder": "No Data",
+                        "table-row-count-label": "rows",
+                        "table-delete-row-confirm": "Delete the selected row - are you sure?"
+                    }
+                },
+                "es": {
+                    translation: {
+                        "app-title-text": "Herramienta para emparejar el vocabulario",
+                        "app-author-text": "Universidad de Gales del Sur",
+                        "app-project-text": "ARIADNEplus es un proyecto Horizon 2020 financiado por la Comisión Europea (Acuerdo de subvención n. ° 823914)",
+                        "btn-import-json-text": "Importar JSON",
+                        "btn-import-json-title": "Importar datos desde el archivo JSON",
+                        "btn-export-json-text": "Exportar JSON",
+                        "btn-export-json-title": "Exportar datos a un archivo JSON",
+                        "btn-export-csv-text": "Exportar CSV",
+                        "btn-export-csv-title": "Exportar datos a un archivo CSV",
+                        "btn-export-pdf-text": "Exportar PDF",
+                        "btn-export-pdf-title": "Exportar datos a archivo PDF",
+                        "btn-export-rdf-text": "Exportar RDF",
+                        "btn-export-rdf-title": "Exportar datos a archivo RDF",
+                        "btn-undo-action-text": "Deshacer",
+                        "btn-undo-action-title": "Deshacer la última acción",
+                        "btn-redo-action-text": "Repetir",
+                        "btn-redo-action-title": "Rehacer la ultima accion",
+                        "btn-add-new-row-text": "Añadir nueva linea",
+                        "btn-add-new-row-title": "Agregar una nueva fila a la tabla",
+                        "btn-clear-all-text": "filas claras",
+                        "btn-clear-all-title": "Borrar todas las filas de la tabla",
+                        "btn-clear-all-confirm": "Borrar la mesa - ¿estás seguro?",
+                        "btn-show-help-text": "mostrar la ayuda",
+                        "btn-show-help-title": "Mostrar ayuda para la aplicación",
+                        "skos-exact-match": "Correspondencia exacta",
+                        "skos-close-match": "Cerrar correspondencia",
+                        "skos-broad-match": "Amplia correspondencia",
+                        "skos-narrow-match": "Correspondencia estrecha",
+                        "skos-related-match": "Correspondencia relacionada",
+                        "table-placeholder": "Sin datos",
+                        "table-row-count-label": "filas",
+                        "table-delete-row-confirm": "Eliminar la fila seleccionada, ¿estás seguro?"
+                    }
+                },
+                "fr": {
+                    translation: {
+                        "app-title-text": "Outil pour faire correspondre le vocabulaire",
+                        "app-author-text": "Université de Galles du Sud",
+                        "app-project-text": "ARIADNEplus est un projet Horizon 2020 financé par la Commission européenne (convention de subvention n ° 823914)",
+                        "btn-import-json-text": "Importer JSON",
+                        "btn-import-json-title": "Importer des données à partir d'un fichier JSON",
+                        "btn-export-json-text": "Exporter JSON",
+                        "btn-export-json-title": "Exporter des données dans un fichier JSON",
+                        "btn-export-csv-text": "Exporter au format CSV",
+                        "btn-export-csv-title": "Exporter des données dans un fichier CSV",
+                        "btn-export-pdf-text": "Exporter le PDF",
+                        "btn-export-pdf-title": "Exporter des données au format PDF",
+                        "btn-export-rdf-text": "Exporter RDF",
+                        "btn-export-rdf-title": "Exporter des données au format RDF",
+                        "btn-undo-action-text": "Annuler",
+                        "btn-undo-action-title": "Annuler la dernière action",
+                        "btn-redo-action-text": "Répétez",
+                        "btn-redo-action-title": "Refaire la dernière action",
+                        "btn-add-new-row-text": "Ajouter une nouvelle ligne",
+                        "btn-add-new-row-title": "Ajouter une nouvelle ligne à la table",
+                        "btn-clear-all-text": "lignes claires",
+                        "btn-clear-all-title": "effacer toutes les lignes de la table",
+                        "btn-clear-all-confirm": "Dégagez la table - êtes-vous sûr?",
+                        "btn-show-help-text": "afficher l'aide",
+                        "btn-show-help-title": "afficher l'aide pour l'application",
+                        "skos-exact-match": "Correspondance exacte",
+                        "skos-close-match": "Correspondance étroite",
+                        "skos-broad-match": "Correspondance large",
+                        "skos-narrow-match": "Correspondance étroite",
+                        "skos-related-match": "Correspondance liée",
+                        "table-placeholder": "Pas de données",
+                        "table-row-count-label": "rangées",
+                        "table-delete-row-confirm": "Supprimer la ligne sélectionnée, êtes-vous sûr?"
+                    }
+                },
+                "it": {
+                    translation: {
+                        "app-title-text": "Strumento per abbinare il vocabolario",
+                        "app-author-text": "Università del Galles del Sud",
+                        "app-project-text": "ARIADNEplus è un progetto Horizon 2020 finanziato dalla Commissione europea (convenzione di sovvenzione n. 823914)",
+                        "btn-import-json-text": "Importa JSON",
+                        "btn-import-json-title": "Importa dati dal file JSON",
+                        "btn-export-json-text": "Esporta JSON",
+                        "btn-export-json-title": "Esporta i dati nel file JSON",
+                        "btn-export-csv-text": "Esporta CSV",
+                        "btn-export-csv-title": "Esporta i dati nel file CSV",
+                        "btn-export-pdf-text": "Esporta PDF",
+                        "btn-export-pdf-title": "Esportare i dati in un file PDF",
+                        "btn-export-rdf-text": "Esporta RDF",
+                        "btn-export-rdf-title": "Esportare i dati in un file RDF",
+                        "btn-undo-action-text": "Annulla",
+                        "btn-undo-action-title": "Annulla l'ultima azione",
+                        "btn-redo-action-text": "Ripeti",
+                        "btn-redo-action-title": "Ripeti l'ultima azione",
+                        "btn-add-new-row-text": "Aggiungi una nuova linea",
+                        "btn-add-new-row-title": "Aggiungi una nuova riga alla tabella",
+                        "btn-clear-all-text": "cancella le righe",
+                        "btn-clear-all-title": "cancella tutte le righe dalla tabella",
+                        "btn-clear-all-confirm": "Cancella il tavolo - sei sicuro?",
+                        "btn-show-help-text": "mostra l'aiuto",
+                        "btn-show-help-title": "visualizza la guida per l'applicazione",
+                        "skos-exact-match": "Corrispondenza esatta",
+                        "skos-close-match": "Stretta corrispondenza",
+                        "skos-broad-match": "Ampia corrispondenza",
+                        "skos-narrow-match": "Stretta corrispondenza",
+                        "skos-related-match": "Corrispondenza correlata",
+                        "table-placeholder": "Nessun dato",
+                        "table-row-count-label": "righe",
+                        "table-delete-row-confirm": "Elimina la riga selezionata, sei sicuro?"
+                    }
+                },
+                "nl": {
+                    translation: {
+                        "app-title-text": "Woordenschat matching tool",
+                        "app-author-text": "Universiteit van Zuid-Wales",
+                        "app-project-text": "ARIADNEplus is een Horizon 2020-project gefinancierd door de Europese Commissie (Subsidieovereenkomst nr. 823914)",
+                        "btn-import-json-text": "JSON importeren",
+                        "btn-import-json-title": "Gegevens importeren uit JSON-bestand",
+                        "btn-export-json-text": "JSON exporteren",
+                        "btn-export-json-title": "Gegevens exporteren naar JSON-bestand",
+                        "btn-export-csv-text": "CSV exporteren",
+                        "btn-export-csv-title": "Gegevens exporteren naar CSV-bestand",
+                        "btn-export-pdf-text": "PDF exporteren",
+                        "btn-export-pdf-title": "Gegevens exporteren naar PDF-bestand",
+                        "btn-export-rdf-text": "RDF exporteren",
+                        "btn-export-rdf-title": "Gegevens exporteren naar RDF-bestand",
+                        "btn-undo-action-text": "ongedaan maken",
+                        "btn-undo-action-title": "Laatste actie ongedaan maken",
+                        "btn-redo-action-text": "Opnieuw doen",
+                        "btn-redo-action-title": "Laatste actie opnieuw uitvoeren",
+                        "btn-add-new-row-text": "Voeg een nieuwe regel toe",
+                        "btn-add-new-row-title": "Voeg een nieuwe rij toe aan de tabel",
+                        "btn-clear-all-text": "rijen wissen",
+                        "btn-clear-all-title": "wis alle rijen uit de tabel",
+                        "btn-clear-all-confirm": "Wis de tafel - weet je het zeker?",
+                        "btn-show-help-text": "toon de hulp",
+                        "btn-show-help-title": "help weergeven voor de toepassing",
+                        "skos-exact-match": "Exacte correspondentie",
+                        "skos-close-match": "Nauwe correspondentie",
+                        "skos-broad-match": "Brede correspondentie",
+                        "skos-narrow-match": "Smalle correspondentie",
+                        "skos-related-match": "Gerelateerde correspondentie",
+                        "table-placeholder": "Geen gegevens",
+                        "table-row-count-label": "rijen",
+                        "table-delete-row-confirm": "Verwijder de geselecteerde rij, weet je het zeker?"
+                    }
+                }
+            }
+        }, function (err, t) {
+            // initially set content
+            //updateContent();
+        });
+
+        function i18setText(selector, i18id) {
+            let txt = i18next.t(i18id);
+            document
+                .querySelectorAll(selector)
+                .forEach((element) => element.textContent = txt);
+        }
+        function i18setAttribute(selector, i18id, attribute) {
+            let txt = i18next.t(i18id);
+            document
+                .querySelectorAll(selector)
+                .forEach((element) => element.setAttribute(attribute, txt));
+        }
+        function i18setTitle(elementid, i18id) {
+            i18setAttribute(elementid, i18id, "title");
+        }
+
+        // set multilingual text for other elements when new UI language is selected (most table labels are handled in Tabulator)
+        i18next.on("languageChanged", function () {
+            i18setText("#app-title", "app-title-text");
+
+            i18setText("#btn-import-json span", "btn-import-json-text");
+            i18setTitle("#btn-import-json", "btn-import-json-title");
+
+            i18setText("#btn-export-json span", "btn-export-json-text");
+            i18setTitle("#btn-export-json", "btn-export-json-title");
+
+            i18setText("#btn-export-csv span", "btn-export-csv-text");
+            i18setTitle("#btn-export-csv", "btn-export-csv-title");
+
+            i18setText("#btn-export-pdf span", "btn-export-pdf-text");
+            i18setTitle("#btn-export-pdf", "btn-export-pdf-title");
+
+            i18setText("#btn-undo-action span", "btn-undo-action-text");
+            i18setTitle("#btn-undo-action", "btn-undo-action-title");
+
+            i18setText("#btn-redo-action span", "btn-redo-action-text");
+            i18setTitle("#btn-redo-action", "btn-redo-action-title");
+
+            i18setText("#btn-add-new-row span", "btn-add-new-row-text");
+            i18setTitle("#btn-add-new-row", "btn-add-new-row-title");
+
+            i18setText("#btn-clear-all span", "btn-clear-all-text");
+            i18setTitle("#btn-clear-all", "btn-clear-all-title");
+
+            i18setText("#btn-show-help span", "btn-show-help-text");
+            i18setTitle("#btn-show-help", "btn-show-help-title");
+
+            i18setText("#footer-app-author", "app-author-text");
+            i18setText("#footer-app-project", "app-project-text");
+
+            i18setText(".tabulator-placeholder span", "table-placeholder");
+            i18setText("#table-row-count-label", "table-row-count-label");
+        });
+
+        // VUE container
+        let vm = new Vue({
+            el: "#vuecontainer",
+            data: function () {
+                return {
+                    uilanguage: "en",
+                    showModal: false,
+                    lastGeneratedRowId: 0,
+                    selectedRowIndex: -1
+                }
+            },
+            mounted() {
+                // get cached settings from previous sessions
+                let lang = localStorage.getItem("vmt-uilanguage");
+                if(lang)
+                    this.uilanguage = lang;
+                this.changeLanguage(this.uilanguage);
+
+                if(localStorage.getItem("vmt-lastgeneratedrowid"))
+                    this.lastGeneratedRowId = localStorage.getItem("vmt-lastgeneratedrowid");
+            },
+            beforeDestroy() {
+                // save cached settings for future sessions
+                localStorage.setItem("vmt-uilanguage", this.uilanguage); // not saving though??
+                localStorage.setItem("vmt-lastgeneratedrowid", this.lastGeneratedRowId);
+            },
+            methods: {
+                changeLanguage: function (newValue) {
+                    //console.log(newValue);
+                    this.uilanguage = newValue;
+                    localStorage.setItem("vmt-uilanguage", newValue);
+                    if(table)
+                        table.setLocale(newValue);
+                    if(i18next)
+                        i18next.changeLanguage(newValue);
+                    // table.getRows().forEach(function (val, index, row) { val.reformat() });
+                },
+                aatSearchSelect: function (evt) {
+                    if (this.selectedRowIndex >= 0) {
+                        table.updateData([{
+                            id: this.selectedRowIndex,
+                            targetURI: evt.uri,
+                            targetLabel: evt.label ,
+                            updated: moment().toISOString()
+                        }], false);
+                        this.selectedRowIndex = -1;
+                        localStorage.tabulatordata = JSON.stringify(table.getData());
+                        //localStorage.setItem('vmt-tabulatordata', this.tabulatorData);
+                        this.showModal = false;
+                    }
+                },
+                aatSearchCancel: function (evt) {
+                    this.selectedRowIndex = -1;
+                    this.showModal = false;
+                }
+            },
+            computed: {
+                tableDataRowCount: function() {
+                    if(table && table.rowManager)
+                        return table.rowManager.rows.length;
+                    else
+                        return 0;
+                }
+            }
+        });
+
+        var uniqueIdMutator = function (value, data, type, params, component) {
+            vm.lastGeneratedRowId++;
+            return vm.lastGeneratedRowId;
+        }
+
+        // custom mutator to remove any surrounding single or double quotes from text values
+        var unquoteMutator = function(value, data, type, params, component) {
+            return (value || "").replace(/^["']|["']$/g, "");
+        };
+
+        // apply namespace alias to URI fields, and display as a navigable link
+        var uriFormatter = function (cell, formatterParams, onRendered) {
+            var value = cell.getValue();
+
+            const aliases = [
+                {
+                    ns: "skos", namespace: "http://www.w3.org/2004/02/skos/core#",
+                    ns: "aat", namespace: "http://vocab.getty.edu/aat/"
+                }
+            ];
+
+            let html = "";
+            if (value) {
+                var alias = aliases.find(element => value.startsWith(element.namespace));
+                if (alias) {
+                    html = `<a target='_blank' href='${ value }'><i class='fas fa-key'></i>&nbsp;${ value.replace(alias.namespace, alias.ns + ":") }</a>`;
+                }
+                else if (value.startsWith("http")) {
+                    html = `<a target='_blank' href='${ value }'><i class='fas fa-key'></i>&nbsp;${ value }</a>`;
+                }
+                else {
+                    html = `<i class='fas fa-key'></i>&nbsp;${ value }`;
+                }
+            }
+            return html;
+        };
+
+        // display label preceded by FontAwesome tag icon
+        var lblFormatter = function (cell, formatterParams, onRendered) {
+            let value = cell.getValue();
+            return (value ? `<i class='fas fa-tag'></i>&nbsp;${ value }` : "");
+		};
+
+        // AAT as link, instead of targetURI and targetLabel columns
+        var aatFormatter = function (cell, formatterParams, onRendered) {
+            let row = cell.getRow();
+            let data = row.getData();
+            let html = "";
+            if(data.targetURI) {
+                html = `<a target='aat' href='${ data.targetURI }'><i class='fas fa-tag'></i>&nbsp;${ data.targetLabel }</a>`;
+            }
+            else {
+                html = "";
+            }
+            return html;
+        };
+
+        // display language code with FontAwesome language icon, titled as language name in that language
+        var languageFormatter = function(cell, formatterParams, onRendered) {
+            let title = "";
+            let value = cell.getValue();
+            if(value) {
+                switch(value.trim()) {
+                    case "ar": title="عربى"; break;         // Arabic
+                    case "be": title="беларускі"; break;    // Belarusian
+                    case "zh": title="中文"; break;           // Chinese
+                    case "ja": title="日本人"; break;      // Japanese
+                    case "bg": title="български"; break;    // Bulgarian
+                    case "uk": title="Українська"; break;   // Ukrainian
+                    case "he": title="עברית"; break;        // Hebrew
+                    case "bs": title="Bosanski"; break;     // Bosnian
+                    case "cs": title="čeština"; break;      // Czech
+                    case "sr": title="Српски"; break;       // Serbian
+                    case "cy": title="Cymraeg"; break;      // Welsh
+                    case "da": title="Dansk"; break;        // Danish
+                    case "de": title="Deutsche"; break;     // German
+                    case "el": title="Ελληνικά"; break;     // Greek
+                    case "et": title="Eesti"; break;        // Estonian
+                    case "en": title="English"; break;      // English
+                    case "es": title="Español"; break;      // Spanish
+                    case "fr": title="Français"; break;     // French
+                    case "gd": title="Gàidhlig"; break;     // Gaelic (Scottish)
+                    case "ga": title="Gaeilge"; break;      // Gaelic (Irish)
+                    case "hr": title="Hrvatski"; break;     // Croatian
+                    case "is": title="Íslensku"; break;     // Icelandic
+                    case "it": title="Italiano"; break;     // Italian
+                    case "lv": title="Latviešu"; break;     // Latvian
+                    case "lt": title="Lietuvių"; break;     // Lithuanian
+                    case "hu": title="Magyar"; break;       // Hungarian
+                    case "mk": title="Македонски"; break;   // Macedonian
+                    case "nl": title="Nederlands"; break;   // Dutch
+                    case "no": title="Norsk"; break;        // Norwegian
+                    case "pl": title="Polski"; break;       // Polish
+                    case "pt": title="Português"; break;    // Portuguese
+                    case "ru": title="русский"; break;      // Russian
+                    case "ro": title="Română"; break;       // Romanian
+                    case "sq": title="Shqiptar"; break;     // Albanian
+                    case "sl": title="Slovenščina"; break;  // Slovenian
+                    case "sk": title="Slovensky"; break;    // Slovak
+                    case "fi": title="Suomalainen"; break;  // Finnish
+                    case "sv": title="Svenska"; break;      // Swedish
+                    case "tr": title="Türk"; break;         // Turkish
+                    default: title="[language not defined]"; break;
+                };
+                return `<span title='${ title }'><i class='fas fa-language'></i>&nbsp;${ value }</span>`;
+            }
+            else
+                return "";
+        };
+
+        function getLanguageEditorParams(cell) {
+            return {
+                values: {
+                    "": "[not defined]",    // no language defined
+                    "ar": "عربى",           // Arabic
+                    "be": "беларускі",      // Belarusian
+                    "zh": "中文",         // Chinese
+                    "ja": "日本人",            // Japanese
+                    "bg": "български",      // Bulgarian
+                    "uk": "Українська",     // Ukrainian
+                    "he": "עברית",          // Hebrew
+                    "bs": "Bosanski",       // Bosnian
+                    "cs": "čeština",        // Czech
+                    "sr": "Српски",         // Serbian
+                    "cy": "Cymraeg",        // Welsh
+                    "da": "Dansk",          // Danish
+                    "de": "Deutsche",       // German
+                    "el": "Ελληνικά",       // Greek
+                    "et": "Eesti",          // Estonian
+                    "en": "English",        // English
+                    "es": "Español",        // Spanish
+                    "fr": "Français",       // French
+                    "gd": "Gàidhlig",       // Gaelic (Scottish)
+                    "ga": "Gaeilge",        // Gaelic (Irish)
+                    "hr": "Hrvatski",       // Croatian
+                    "is": "Íslensku",       // Icelandic
+                    "it": "Italiano",       // Italian
+                    "lv": "Latviešu",       // Latvian
+                    "lt": "Lietuvių",       // Lithuanian
+                    "hu": "Magyar",         // Hungarian
+                    "mk": "Македонски",     // Macedonian
+                    "nl": "Nederlands",     // Dutch
+                    "no": "Norsk",          // Norwegian
+                    "pl": "Polski",         // Polish
+                    "pt": "Português",      // Portuguese
+                    "ru": "русский",        // Russian
+                    "ro": "Română",         // Romanian
+                    "sq": "Shqiptar",       // Albanian
+                    "sl": "Slovenščina",    // Slovenian
+                    "sk": "Slovensky",      // Slovak
+                    "fi": "Suomalainen",    // Finnish
+                    "sv": "Svenska",        // Swedish
+                    "tr": "Türk",           // Turkish
+                },
+                listItemFormatter: function (value, title) {
+                    return `<span title='${ (title || "") }'><i class='fas fa-language'></i>&nbsp;${ (title || "") }</span>`;
+                }
+            };
+        };
+
+        var noteEditor = function(cell, onRendered, success, cancel, editorParams){
+            //cell - the cell component for the editable cell
+            //onRendered - function to call when the editor has been rendered
+            //success - function to call to pass the successfuly updated value to Tabulator
+            //cancel - function to call to abort the edit and return to a normal cell
+            //editorParams - params object passed into the editorParams column definition property
+
+            //create and style editor
+            var editor = document.createElement("textarea");
+
+            editor.setAttribute("rows", "10");
+            editor.setAttribute("cols", "100");
+
+            //create and style input
+            editor.style.padding = "3px";
+            editor.style.width = "100%";
+            editor.style.boxSizing = "border-box";
+
+            //Set value of editor to the current value of the cell
+            editor.value = cell.getValue();
+
+            //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
+            onRendered(function(){
+                editor.focus();
+                editor.style.css = "200%";
+            });
+
+            //when the value has been set, trigger the cell to update
+            function successFunc(){
+                success(editor.value);
+            }
+
+            editor.addEventListener("change", successFunc);
+            editor.addEventListener("blur", successFunc);
+
+            //return the editor element
+            return editor;
+        };
+        // then in column definition:
+        // {title:"MyNotes", field:"notes", editor:noteEditor}}
+
+        var matchTypeFormatter = function(cell, formatterParams, onRendered) {
+            var value = cell.getValue();
+            return(formatMatchType(value));
+        };
+
+        var formatMatchType = function (value, title) {
+            var cssClass = "";
+            var i18Index = "";
+
+            switch((value || "").trim()) {
+				case "http://www.w3.org/2004/02/skos/core#exactMatch":
+					cssClass="fas fa-equals";
+                    i18Index = "skos-exact-match";
+                    break;
+                case "http://www.w3.org/2004/02/skos/core#closeMatch":
+                    cssClass = "fas fa-wave-square";
+                    i18Index = "skos-close-match";
+                    break;
+                case "http://www.w3.org/2004/02/skos/core#broadMatch":
+                    cssClass="far fa-hand-point-up";
+                    i18Index = "skos-broad-match";
+                    break;
+                case "http://www.w3.org/2004/02/skos/core#narrowMatch":
+                    cssClass="far fa-hand-point-down";
+                    i18Index = "skos-narrow-match";
+                    break;
+                case "http://www.w3.org/2004/02/skos/core#relatedMatch":
+                    cssClass="far fa-hand-point-right";
+                    i18Index = "skos-related-match";
+                    break;
+                default:
+                    cssClass="";
+                    i18Index = "";
+                    break;
+            }
+            let i18Title = i18next.t(i18Index);
+            return `<span title='${ i18Title }'><i class='${ cssClass }'></i>&nbsp;${ i18Title }</span>`;
+        };
+
+        function getMatchTypeEditorParams(cell) {
+            return {
+                values: {
+                    "http://www.w3.org/2004/02/skos/core#exactMatch": i18next.t("skos-exact-match"),
+                    "http://www.w3.org/2004/02/skos/core#closeMatch": i18next.t("skos-close-match"),
+                    "http://www.w3.org/2004/02/skos/core#broadMatch":  i18next.t("skos-broad-match"),
+                    "http://www.w3.org/2004/02/skos/core#narrowMatch": i18next.t("skos-narrow-match"),
+                    "http://www.w3.org/2004/02/skos/core#relatedMatch": i18next.t("skos-related-match")
+                },
+                listItemFormatter: formatMatchType
+            };
+        };
+
+        // custom column formatter definition - delete button for rows
+        var deleteIcon = function (cell, formatterParams, onRendered) {
+            return "<i class='fas fa-minus-circle' title='delete'></i>";
+        };
+
+        var suggestIcon = function (cell, formatterParams, onRendered) {
+            return "<i class='fas fa-search' title='suggest'></i>";
+        };
+
+        // ensure localStorage data item exists before we use it..
+        let tabulatorData = [];
+        if (localStorage.getItem("tabulatordata")) {
+            try {
+                tabulatorData = JSON.parse(localStorage.getItem("tabulatordata"));
+            } catch(e) {
+                 localStorage.removeItem("tabulatordata");
+            }
+        }
+
+        // Build Tabulator
+        var table = new Tabulator("#mappings-table", {
+            index: "id",                // identifies column providing unique row index values
+            height: "700px",
+            layout:"fitColumns",
+            pagination: "local",
+            persistenceMode: "local",   // table setup persisted to local storage
+            //reactiveData:true,        // turn on data reactivity
+            data: tabulatorData,        // load data into table from localStorage
+            placeholder: "No Data",     // display message on empty table
+            clipboard:true,             // Allow copy/paste into table
+            clipboardCopyConfig:{
+                columnHeaders:false,    // do not include column headers in clipboard output
+                rowGroups:false,        // do not include row groups in clipboard output
+                columnCalcs:false,      // do not include column calculation rows in clipboard output
+            },
+            columnVertAlign: "top",
+            footerElement: "<div class='tabulator-footer'><span id='table-row-count'>0</span>&nbsp;<span id='table-row-count-label'>rows</span></div>",
+            dataLoading: function (data) {
+                // data - the data loading into the table
+                let timestamp = moment().toISOString();
+                // ensure 'created' and 'updated' dates are present
+                if(data && data.forEach) {
+                    data.forEach(function (row) {
+                        if (!row.created)
+                            row.created = timestamp;
+                        if (!row.updated)
+                            row.updated = row.created;
+                    });
+                }
+            },
+            dataLoaded: function (data) {
+                // data - all data loaded into the table
+                $("#table-row-count").first().text(data.length);
+                localStorage.tabulatordata = JSON.stringify(data);
+            },
+            dataEdited: function (data) {
+                // data - the updated table data
+                $("#table-row-count").first().text(data.length);
+                localStorage.tabulatordata = JSON.stringify(data);
+            },
+            downloadConfig: {
+                columnGroups: false // don't include column groups in column headers for download
+            },
+            layout: "fitColumns",
+            langs: {
+                "en": {
+                    // English language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Source Concept'>Source Concept</span>",
+                        "sourceURI": "<span title='Source concept identifier'><i class='fas fa-key'></i> Identifier</span>",
+                        "sourceLabel": "<span title='Source concept label'><i class='fas fa-tag'></i> Label</span>",
+                        "sourceLabelLanguage": "<span title='Source concept label language'><i class='fas fa-language'></i></span>",
+                        "matchURI": "<span title='Match Type'><i class='fas fa-wave-square'></i> Match Type</span>",
+                        "targetURI": "<span title='Target concept identifier'><i class='fas fa-key'></i> Identifier</span>",
+                        "targetLabel": "<span title='Target Concept'>Target Concept</span>",
+                        "created": "Created",
+                        "updated": "Updated",
+                        "suggest": "<span title='Suggest'>Suggest</span>",
+                        "delete": "<span title='Delete Row'>Delete Row</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> First",
+                        "first_title":"First Page",
+                        "last":"Last <i class='fas fa-step-forward'></i>",
+                        "last_title":"Last Page",
+                        "prev":"<i class='fas fa-backward'></i> Prev",
+                        "prev_title":"Prev Page",
+                        "next":"Next <i class='fas fa-forward'></i>",
+                        "next_title":"Next Page",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filter column...",
+                            "targetLabel": "Filter column...",
+                        }
+                    }
+                },
+                "fr": {
+                    // French language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Concept d&apos;origine'>Concept d'origine</span>",
+                        "sourceURI": "<span title='Identifiant du concept source'><i class='fas fa-key'></i> identifiant</span>",
+                        "sourceLabel": "<span title='Label concept source'><i class='fas fa-tag'></i> étiquette</span>",
+                        "sourceLabelLanguage": "<span title='Langue de l&apos;étiquette du concept source'><i class='fas fa-language'></i></span>",
+                        "matchURI": "<span title='Type de correspondance'><i class='fas fa-wave-square'></i> Type de correspondance</span>",
+                        "targetURI": "<span title='Identifiant du concept cible'><i class='fas fa-key'></i> identifiant</span>",
+                        "targetLabel": "<span title='Concept cible'>Concept cible</span>",
+                        "created": "créé",
+                        "updated": "mis à jour",
+                        "suggest": "<span title='suggérer'>suggérer</span>",
+                        "delete": "<span title='Supprimer la ligne'>Supprimer la ligne</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> Premier",
+                        "first_title":"Première page",
+                        "last":"Dernier <i class='fas fa-step-forward'></i>",
+                        "last_title":"Dernière page",
+                        "prev":"<i class='fas fa-backward'></i> précédent",
+                        "prev_title":"Page précédente",
+                        "next":"Suivant <i class='fas fa-forward'></i>",
+                        "next_title":"Page suivante",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filtrer la colonne...",
+                            "targetLabel": "Filtrer la colonne...",
+                        }
+                    }
+                },
+                "de": {
+                    // German language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Quellkonzept'>Quellkonzept</span>",
+                        "sourceURI": "<span title='Kennung des Quellkonzepts'><i class='fas fa-key'></i> Kennung</span>",
+                        "sourceLabel": "<span title='Quellkonzept-Label'><i class='fas fa-tag'></i> beschriften</span>",
+                        "sourceLabelLanguage": "<span title='Beschriftungssprache des Quellkonzepts'><i class='fas fa-language' title='Sprache'></i></span>",
+                        "matchURI": "<span title='Art der Übereinstimmung'><i class='fas fa-wave-square'></i> Art der Übereinstimmung</span>",
+                        "targetURI": "<span title='Zielkonzept-ID'><i class='fas fa-key'></i> Kennung</span>",
+                        "targetLabel": "<span title='Zielkonzept'>Zielkonzept</span>",
+                        "created": "erstellt",
+                        "updated": "aktualisierte",
+                        "suggest": "<span title='vorschlagen'>vorschlagen</span>",
+                        "delete": "<span title='Zeile löschen'>Zeile löschen</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> Zuerst",
+                        "first_title":"Erste Seite",
+                        "last":"Zuletzt <i class='fas fa-step-forward'></i>",
+                        "last_title":"Letzte Seite",
+                        "prev":"<i class='fas fa-backward'></i> Bisherige",
+                        "prev_title":"Vorherige Seite",
+                        "next":"Nächster <i class='fas fa-forward'></i>",
+                        "next_title":"Nächste Seite",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filterspalte...",
+                            "targetLabel": "Filterspalte...",
+                        }
+                    }
+                },
+                "es": {
+                    // Spanish language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Concepto de fuente'>Concepto de fuente</span>",
+                        "sourceURI": "<span title='Identificador del concepto de fuente'><i class='fas fa-key'></i> Identificador</span>",
+                        "sourceLabel": "<span title='Etiqueta de concepto fuente'><i class='fas fa-tag'></i> Etiqueta</span>",
+                        "sourceLabelLanguage": "<span title='Lenguaje de la etiqueta del concepto fuente'><i class='fas fa-language' title='Idioma'></i></span>",
+                        "matchURI": "<span title='Tipo de concordancia'><i class='fas fa-wave-square'></i> Tipo de concordancia</span>",
+                        "targetURI": "<span title='Identificador del concepto objetivo'><i class='fas fa-key'></i> Identificador</span>",
+                        "targetLabel": "<span title='Concepto objetivo'>Concepto objetivo</span>",
+                        "created": "creado",
+                        "updated": "actualizado",
+                        "suggest": "<span title='sugerir'>sugerir</span>",
+                        "delete": "<span title='Borrar fila'>Borrar fila</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> primero",
+                        "first_title":"Primera página",
+                        "last":"Último <i class='fas fa-step-forward'></i>",
+                        "last_title":"Última página",
+                        "prev":"<i class='fas fa-backward'></i> Anterior",
+                        "prev_title":"Pagina anterior",
+                        "next":"Siguiente <i class='fas fa-forward'></i>",
+                        "next_title":"Siguiente página",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filtrar la columna...",
+                            "targetLabel": "Filtrar la columna...",
+                        }
+                    }
+                },
+                "it": {
+                    // Italian language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Concetto di origine'>Concetto di origine</span>",
+                        "sourceURI": "<span title='Identificatore del concetto di origine'><i class='fas fa-key'></i> identificatore</span>",
+                        "sourceLabel": "<span title='Etichetta concetto di origine'><i class='fas fa-tag'></i> Etichetta</span>",
+                        "sourceLabelLanguage": "<span title='Lingua dell&apos;etichetta concettuale di origine'><i class='fas fa-language'></i></span>",
+                        "matchURI": "<span title='Tipo di corrispondenza'><i class='fas fa-wave-square'></i> Tipo di corrispondenza</span>",
+                        "targetURI": "<span title='Identificatore del concetto di destinazione'><i class='fas fa-key'></i> identificatore</span>",
+                        "targetLabel": "<span title='Concetto di destinazione'>Concetto di destinazione</span>",
+                        "created": "creato",
+                        "updated": "aggiornato",
+                        "suggest": "<span title='suggerire'>suggerire</span>",
+                        "delete": "<span title='Elimina riga'>Elimina riga</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> Primo",
+                        "first_title":"Prima pagina",
+                        "last":"Scorso <i class='fas fa-step-forward'></i>",
+                        "last_title":"Ultima pagina",
+                        "prev":"<i class='fas fa-backward'></i> Precedente",
+                        "prev_title":"Pagina precedente",
+                        "next":"Il prossimo <i class='fas fa-forward'></i>",
+                        "next_title":"Pagina successiva",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filtra la colonna...",
+                            "targetLabel": "Filtra la colonna...",
+                        }
+                    }
+                },
+                "nl": {
+                    // Dutch language column definitions
+                    "columns": {
+                        "sourceConcept": "<span title='Bron concept'>Bron concept</span>",
+                        "sourceURI": "<span title='Bronconceptidentificatie'><i class='fas fa-key'></i> Identifier</span>",
+                        "sourceLabel": "<span title='Bron concept label'><i class='fas fa-tag'></i> etiket</span>",
+                        "sourceLabelLanguage": "<span title='Bronconcept labeltaal'><i class='fas fa-language'></i></span>",
+                        "matchURI": "<span title='correspondentietype'><i class='fas fa-wave-square'></i> correspondentietype</span>",
+                        "targetURI": "<span title='Target concept identifier'><i class='fas fa-key'></i> Identifier</span>",
+                        "targetLabel": "<span title='Doel concept'>Doel concept</span>",
+                        "created": "aangemaakt",
+                        "updated": "bijgewerkt",
+                        "suggest": "<span title='stel voor'>stel voor</span>",
+                        "delete": "<span title='Verwijder rij'>Verwijder rij</span>"
+                    },
+                    "pagination":{
+                        "first":"<i class='fas fa-step-backward'></i> Eerste",
+                        "first_title":"Eerste pagina",
+                        "last":"Laatste <i class='fas fa-step-forward'></i>",
+                        "last_title":"Laatste pagina",
+                        "prev":"<i class='fas fa-backward'></i> voorgaand",
+                        "prev_title":"Vorige pagina",
+                        "next":"volgende <i class='fas fa-forward'></i>",
+                        "next_title":"Volgende pagina",
+                    },
+                    "headerFilters":{
+                        columns: {
+                            "sourceLabel": "Filter de kolom...",
+                            "targetLabel": "Filter de kolom...",
+                        }
+                    }
+                }
+            },
+            // selectable: true,     // highlights rows when clicked
+            // reactiveData: true,     // turn on data reactivity
+            history: true,          // track changes for undo/redo functionality
+            // data: tabledata,        // load (reactive) data into table
+            columns: [
+                {
+                    //create source group
+                    field: "sourceConcept", title: "Source Concept",
+                    columns: [
+                        {
+                            title: "Source ID",
+                            field: "sourceURI",
+                            //width: 250,
+                            editor: "input",
+                            formatter: uriFormatter,
+                            headerFilter: false
+                        },
+                        {
+                            title: "Source Label",
+                            field: "sourceLabel",
+                            //width: 250,
+                            editor: "input",
+                            formatter: lblFormatter,
+                            mutator: unquoteMutator,
+                            headerFilter: true
+                        },
+                        //{title:"MyNotes", field:"notes", editor:noteEditor},
+                        //{title:"Example", field:"example", editor:"textarea", width: 60,},
+                        {
+                            title: "Language",
+                            field: "sourceLabelLanguage",
+                            width: 60,
+                            download: true,
+                            headerFilter: false,
+                            headerSort: true,
+                            formatter: languageFormatter,
+                            editor: "select",
+                            editorParams: getLanguageEditorParams(),
+                            //cellEditing:function(cell){
+                                //cell - cell component
+                                //alert("editing");
+                                //var element = cell.getElement();
+                                //var selected = element.options[element.selectedIndex];
+                                //var selected = element.querySelector("select option[selected]");
+                                //selected.scrollIntoView();
+
+                            //},
+                        }
+                    ]
+                },
+                {
+                    title: "Match Type",
+                    width: 120,
+                    field: "matchURI",
+                    formatter: matchTypeFormatter,
+                    editor: "select",
+                    editorParams: getMatchTypeEditorParams(),
+                },
+                //headerFilter: "select"
+
+                //},
+                {
+                    title: "Target URI",
+                    field: "targetURI",
+                    //width: 175,
+                    visible: false,
+                    download: true
+                },
+                {
+                    title: "Target Concept",
+                    field: "targetLabel",
+                    //width: 250,
+                    mutator: unquoteMutator,
+                    formatter: aatFormatter,
+                    headerFilter: true,
+                    headerFilterPlaceholder:"filter column...",
+                    headerFilterFunc: function(headerValue, rowValue, rowData, filterParams){
+                        let label = (rowData.targetLabel || "").toLowerCase();
+                        return label.includes(headerValue.toLowerCase());
+                    },
+                    visible: true,
+                    download: true
+                },
+                {
+                    title: "created",
+                    field: "created",
+                    formatter: "datetime",
+                    //mutator: unquoteMutator,
+                    visible: false,
+                    download: true // force hidden field to show in download
+                },
+                {
+                    title: "updated",
+                    field: "updated",
+                    formatter: "datetime",
+                    //mutator: unquoteMutator,
+                    visible: false,
+                    download: true // force hidden field to show in download
+                },
+                {
+                    field: "suggest",
+                    title: "Suggest",
+                    headerSort: false,
+                    headerVertical: "flip",
+                    download: false, // don't want this field in download
+                    formatter: suggestIcon,
+                    width: 30,
+                    align: "center",
+                    cellClick: function (e, cell) {
+                        vm.selectedRowIndex = cell.getRow().getIndex();
+                        vm.showModal = true;
+                    }
+                },
+                {
+                    field: "delete",
+                    title: "Delete Row",
+                    headerSort: false,
+                    align: "center",
+                    headerVertical: "flip",
+                    formatter: deleteIcon,
+                    download: false, // don't want this field in download
+                    width: 40,
+                    cellClick: function (e, cell) {
+                        var row = cell.getRow();
+                        table.selectRow(row);
+                        var result = confirm(i18next.t("table-delete-row-confirm")); // "Delete the selected row - are you sure?"
+                        if (result) { row.delete(); }
+                        else { table.deselectRow(row); }
+                    }
+                },
+                {
+                    field: "id",
+                    visible: false,
+                    download: false,
+                    mutator: uniqueIdMutator
+                },
+            ],
+            cellEdited: function (cell) {
+                // change colour of edited cell
+                // cell.getElement().style.backgroundColor = "pink";
+
+                // update timestamp whenever any cell is edited
+                //let timestamp = moment().toISOString();
+                let row = cell.getRow();
+                table.updateRow(row, { updated: moment().toISOString() });
+            },
+            rowUpdated: function (row) {
+                // change colour of any updated cells
+                row.getCells().forEach(cell => {
+                    let oldValue = cell.getOldValue();
+                    if(oldValue !== null && oldValue !== cell.getValue())
+                        cell.getElement().style.backgroundColor = "pink";
+                });
+            },
+        });
+
+        table.setLocale(vm.uilanguage);
+
+       //add row to top of table on button click
+        $("#btn-add-new-row").click(function () {
+            let timestamp = moment().toISOString();
+
+            table.addData([
+                {
+                    sourceURI: "",
+                    sourceLabel: "",
+                    sourceLabelLanguage: "",
+                    matchURI: "http://www.w3.org/2004/02/skos/core#closeMatch",
+                    targetURI: "",
+                    targetLabel: "",
+                    created: timestamp,
+                    updated: timestamp
+                }], true);
+        });
+
+        // trigger AJAX load on "Load Data via AJAX" button click
+        $("#btn-import-json").click(function () {
+            table
+                .setDataFromLocalFile()
+                .catch(function (error) {
+                    //handle error importing data
+                    alert(error);
+                });
+        });
+
+        // trigger download of data.json file
+        $("#btn-export-json").click(function () {
+            if (table.getDataCount() > 0) {
+                var fileName = `vmt-${ moment().local().format("YYYYMMDDHHmmss") }.json`;
+                table.download("json", fileName);
+            }
+        });
+
+        //trigger download of data.csv file
+        $("#btn-export-csv").click(function () {
+            if (table.getDataCount() > 0) {
+                var fileName = `vmt-${ moment().local().format("YYYYMMDDHHmmss") }.csv`;
+                table.download("csv", fileName, { bom: true }); //include BOM in output
+            }
+        });
+
+        /*$("#btn-export-pdf").click(function () {
+            if (table.getDataCount() > 0) {
+                var fileName = "vmt-" + moment().local().format('YYYYMMDDHHmmss') + ".pdf";
+                table.download("pdf", fileName);
+            }
+        });
+
+        $("#btn-export-rdf").click(function () {
+            if (table.getDataCount() > 0) {
+                var fileName = "vmt-" + moment().local().format('YYYYMMDDHHmmss') + ".ttl";
+                table.download(ttlFileFormatter, fileName); // using custom formatter - ttlFileFormatter
+            }
+        }); */
+
+        // undo button
+       /* $("#btn-undo-action").on("click", function () {
+            table.undo();
+        });
+
+        // redo button
+        $("#btn-redo-action").on("click", function () {
+            table.redo();
+        });*/
+
+        $("#btn-clear-all").on("click", function () {
+            if (table.getDataCount() > 0) {
+                var result = confirm(i18next.t("btn-clear-all-confirm")); // "Clear the table - are you sure?"
+                if (result) {
+                    table.clearData();
+                    localStorage.tabulatordata = JSON.stringify([]);
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+
+
+</html>
+
+
+
+
+

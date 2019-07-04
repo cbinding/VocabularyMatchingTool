@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Vocabulary Matching Tool - Help</title>
+    <meta name="description" content="For creating matches from ARIADNEplus partner vocabularies to Getty AAT">
+    <meta name="author" content="Ceri Binding, University of South Wales, ceri.binding@southwales.ac.uk">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--favicon-->
+    <link href="img/favicon.ico" rel="Shortcut icon" type="image/x-icon">
+
+    <!-- CDN CSS -->
+	<link rel="stylesheet" 
+		href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" 
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" 
+		crossorigin="anonymous">   
+
+    <!-- local CSS -->
+	<!--<link rel="stylesheet" href="lib/fontawesome-free-5.8.2-web/css/all.min.css">--> 
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css"> 
+	 <link rel="stylesheet" href="css/usw-vmt.css">
+	<style>
+		a:hover { color: red; } 
+		ul, li , a { margin: 0; padding: 0 }
+		#vmt a { border: 2px solid red; position: absolute; }
+		#vmt a:hover { border: 2px solid red; background: gray; opacity: 0.3;}		
+	</style>
+</head>
+<body>
+    <!-- Primary Page Layout
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div id="main" class="container">
+        <!-- .container is main centered wrapper -->
+        <section class="header">
+            <h2 class="title">Vocabulary Matching Tool - Help</h2>			
+        </section>
+		
+		<h3 id="contents">Table of Contents</h3>
+		<div class="row">
+		<div class="three columns">
+		<ul>
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#mainTable"><i class="fas fa-table"></i> Main Table</a>
+				<ul>
+					<li><a href="#uiLanguage"><i class='fas fa-language'></i> UI Language</a></li>			
+					<li><a href="#columnSorting"><i class='fas fa-sort-up'></i><i class='fas fa-sort-down'></i> Column Sorting</a></li>
+					<li><a href="#columnFiltering"><i class='fas fa-filter'></i> Column Filtering</a></li>	
+					<li><a href="#copyPasteEditing"><i class="far fa-copy"></i> Copy/Paste Editing</a></li>						
+				</ul>
+			</li>					
+			<li><span>Columns:</span>
+				<ul>						
+					<li><a href="#sourceConcept">Source Concept</a>
+						<ul>
+							<li><a href="#sourceConceptIdentifier"><i class="fas fa-key"></i> Identifier</a></li>
+							<li><a href="#sourceConceptLabel"><i class="fas fa-tag"></i> Label</a></li>
+							<li><a href="#sourceConceptLanguage"><i class='fas fa-language'></i> Language</a></li>
+						</ul>
+					</li>
+					<li><a href="#matchType"><i class="fas fa-equals"></i> Match Type</a></li>
+					<li><a href="#targetConcept"><i class="fas fa-tag"></i> Target Concept</a></li>
+					<li><a href="#suggestMatch"><i class='fas fa-search' title='suggest'></i> Suggest</a></li>
+					<li><a href="#deleteRow"><i class='fas fa-minus-circle' title='delete'></i> Delete</a></li>
+				</ul>
+			</li>
+			<li><span>Buttons:</span>
+				<ul>
+					<li><a href="#importJSON"><i class="fas fa-file-import"></i> Import JSON</a></li>
+					<li><a href="#exportJSON"><i class="fas fa-file-export"></i> Export JSON</a></li>
+					<li><a href="#exportCSV"><i class="fas fa-file-csv"></i> Export CSV</a></li>
+					<li><a href="#addNewRow"><i class="fas fa-plus"></i> Add New Row</a></li>
+					<li><a href="#clearRows"> <i class="fas fa-trash-alt"></i> Clear Rows</a></li>
+					<li><a href="#showHelp"> <i class="fas fa-info"></i> Show Help</a></li>
+				</ul>
+			</li>
+		</ul>
+		</div><!--.one-half column-->
+		<div class="nine columns">		
+			<div style="position: relative;" id="vmt">
+				<img src="img/vmt-app.png" style="position: relative; width: 100%; border: 1px solid lightgray; margin: 0; padding: 0"/>
+				<a href="#uiLanguage" title="User Interface Language" style="left: 89.4%; top: 0.6%; width: 10%; height:4%;"></a>	
+				<a href="#columnSorting" title="Column Sorting" style="left: 43.5%; top: 10.6%; width: 2.8%; height:2.8%;"></a>
+				<a href="#columnFiltering" title="Column Filtering" style="left: 23.8%; top: 14%; width: 22%; height:3.5%;"></a>
+				<a href="#columnFiltering" title="Column Filtering" style="left: 67.9%; top: 10.5%; width: 21.9%; height:3.5%;"></a>
+				<a href="#sourceConceptIdentifier" title="Source Concept Identifier" style="left: 0.2%; top: 20%; width: 22.9%; height:58%;"></a>
+				<a href="#sourceConceptLabel" title="Source Concept Label" style="left: 23.3%; top: 20%; width: 22.9%; height:58%;"></a>
+				<a href="#sourceConceptLanguage" title="Source Concept Language" style="left: 46.4%; top: 20%; width: 6.7%; height:58%;"></a>
+				<a href="#matchType" title="Match Type" style="left: 53.3%; top: 20%; width: 13.7%; height:58%;"></a>
+				<a href="#targetConcept" title="Target Concept" style="left: 67.2%; top: 20%; width: 22.9%; height:58%;"></a>
+				<a href="#suggestMatch" title="Suggest Match" style="left: 90.4%; top: 20%; width: 3.5%; height:58%;"></a>
+				<a href="#deleteRow" title="Delete Row" style="left: 94.1%; top: 20%; width: 3.4%; height:58%;"></a>
+				<a href="#importJSON" title="Import JSON" style="left: 0.2%; top: 82.8%; width: 14.4%; height:4%;"></a>
+				<a href="#exportJSON" title="Export JSON" style="left: 15.5%; top: 82.8%; width: 14.3%; height:4%;"></a>
+				<a href="#exportCSV" title="Export CSV" style="left: 30.6%; top: 82.8%; width: 13.3%; height:4%;"></a>
+				<a href="#addNewRow" title="Add New Row" style="left: 44.8%; top: 82.8%; width: 14.9%; height:4%;"></a>
+				<a href="#clearRows" title="Clear Rows" style="left: 60.6%; top: 82.8%; width: 13.6%; height:4%;"></a>
+				<a href="#showHelp" title="Show Help" style="left: 75%; top: 82.8%; width: 12.8%; height:4%;"></a>
+				<!--<div style="position: absolute; left: 30%; top: 20%; width: 10%; height:20%; border: black 1px solid; z-index: 0;"></div>-->
+			</div>			
+		</div><!--.one-half column-->
+		
+		</div><!--.row-->
+		<hr>	
+		
+        <h3 id="introduction">Introduction</h3>
+        <p>The Vocabulary Matching Tool builds on the tool originally developed during the first phase of the ARIADNE Project. It is intended to aid in the creation of mappings from locally used terms/concepts to the <a target="_blank" href="http://www.getty.edu/research/tools/vocabularies/aat/">Getty Art &amp; Architecture Thesaurus (AAT)</a>. The aim of the mapping exercise is to identify subject mappings from source terms/concepts to AAT concepts that are likely to be useful to assist subsequent browsing and searching of the data. The creation of mappings to a common spine vocabulary will enable improved opportunities for multilingual subject access and cross search in the finished system, by aggregating mappings from multiple data partners. The application presents an editable table of currently derived matches with a direct AAT lookup facility to make more informed mapping decisions. The set of mappings created may be exported to <a target="_blank" href="https://www.json.org/">JSON</a> or delimited text (CSV) format for use in other applications.</p>
+		<p>This tool requires a fairly modern web browser to function correctly. It has been tested on Google Chrome Version 74.0.3729.131 (64-bit) and on Safari 12.1. Unfortunately it does not yet work on Microsoft Internet Explorer or Edge browser.</p> 		 		
+		
+		<h3 id="uiLanguage"><i class='fas fa-language'></i> User Interface Language</h3>
+		<p>The tool has been developed with a multilingual user interface. Selecting the required UI language from the drop-down list will change the language of the title, table headers, button labels and footer description. The data within the table however will not be changed. Please bear in mind that due to time constraints there are only a limited number of UI languages currently available, and the initial translations have been made using Google Translate so there may be some odd mis-translations observed - we would be very grateful to receive feedback on any language issues identified, in order to improve the tool for yourselves and others.</p>
+	
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+		
+		<h3 id="mainTable"><i class="fas fa-table"></i> Main Table</h3>
+        <p>The main table holds the current set of matches compiled; the row count in the bottom right corner of the table gives the count of currently expressed matches. The data is completely private to you - although the table data is automatically saved between browser sessions it is only saved locally to your current device/browser, and this data can easily be lost if the browser cache is cleared. It is therefore advised to export your work to an external (JSON) file frequently in order to properly back it up (or to transfer it between machines/browsers). You can do this simply by clicking the '<a href="#exportJSON">export JSON</a>' button. Should the worst happen then you will have a recent copy of your data. If you want to use a different device/browser then export the current mappings to a JSON file, open this application on the new device/browser and import the previously saved file. Table cells edited during the current session (since the last data import or browser refresh) will appear temporarily highlighted so you can see what you have recently changed. If these highlights become distracting simply refresh the browser and these highlights will disappear.</p>	
+							
+		<h3 id="columnSorting"><i class='fas fa-sort-up'></i><i class='fas fa-sort-down'></i> Column Sorting</h3>
+		<p>A small grey triangle displayed within a column header indicates the table data can be sorted by the contents of this column; a black triangle indicates the current sort column. The current sort order is indicated by the orientation of the black triangle - upward pointing for ascending sort order; downward pointing for descending sort order. Clicking anywhere within the column header will toggle ascending / descending sorting on that column.</p>
+	 
+		<h3 id="columnFiltering"><i class='fas fa-filter'></i> Column Filtering</h3>
+		<p>Column filters allow restricting the display to a subset of the overall matches. Typing a text value into the filter box will interactively restrict the displayed matches to records having column contents that <em>contain</em> the typed value. If a filter is active when a data export (JSON/CSV) is performed then only the filtered data will be present in the exported file - this is useful should you wish to export a smaller subset of the data for discussion/dissemination purposes.</p>
+		
+		<h3 id="copyPasteEditing"><i class="far fa-copy"></i> Copy/Paste Editing</h3>
+		<p>It is possible to copy data from the table to the clipboard for use in other applications. First select the table - it is recommended to just click to the right hand side of the target concept field of any existing row (as this won't activate any other window or drop down). Typing CTRL+C will copy the entire table data to the clipboard (or in the browser menu select Edit - Copy). Note this will copy the <em>entire</em> table, not just the currently visible rows. If you would like to limit the data copied you can utilize the column filters described above to reduce the display to a subset of records - then only these records will be copied. The data is copied to the clipboard in tab-delimited text format. You may notice when pasting the data into another application (e.g. a spreadsheet) that there are a few additional columns present; these are internal timestamps of record creation and editing plus an internal record identifier. You may keep or discard this data as required.</p>
+		
+		<p>You can also paste data from the clipboard directly into the table by typing CTRL+V (or in the browser menu select Edit - Paste). This is particularly useful to kick-start your mapping exercise based on an external textual listing of identifiers/terms. Pasting requires at least one existing row to be present - so for an initially empty table just click the <a href="#addNewRow">'add new row'</a> button, click the empty grey area beneath the added row to ensure the table is selected, then press the CTRL+V characters on the keyboard. The pasting assumes the same column structure as the existing table - so if you only have a list of terms you would need some form of identifiers in the data copied to the clipboard, or just a blank column in order for the pasted data to go into the correct place in the table. Note that pasted data will be <em>appended</em> to any existing data already in the table. It is advisable to export any existing table data to a JSON file before attempting to perform this operation, if anything goes wrong then you can simply re-import the JSON file and restore the original data.</p>
+		
+		<p>It is possible to use a combination of copying and pasting to perform external bulk editing operations on the table data if required. For example setting the source language for each row may be cumbersome; you can copy the table data and paste it into a spreadsheet, fill in the appropriate values for the source language column, then copy and paste the spreadsheet data back into the table (remembering to clear the existing table first to avoid data duplication).</p>
+		
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+		
+        <h3 id="sourceConcept">Source Concept</h3>
+        <p>This section represents concept/terms originating from the source vocabulary. We say concepts/terms as there may well be no formally structured original source vocabulary with concept identifiers, preferred terms etc. The tool can flexibly deal with this case where the source vocabulary may consist of a flat list of terms. For consistency we refer to the source entity as a 'concept' even where we only have a term or phrase expressed.</p>
+
+		<h4 id="sourceConceptIdentifier"><i class="fas fa-key"></i> Identifier</h4>
+		<p>The local identifier of the source term/concept. Edit the value directly in the cell of the table. You should use a URI if one exists - identifiers entered as a URI will then display as a clickable link allowing you to navigate directly to that online address. This is useful in the case of Linked Open Data source vocabularies, allowing you to examine the context of the source concept in more detail - e.g. scope note, hierarchical structure etc. If no such URI exists, enter a unique concept identifier, and as a last resort if no such identifier exists you could just use the source concept label as an identifier.</p>
+		
+		<h4 id="sourceConceptLabel"><i class="fas fa-tag"></i> Label</h4>
+		<p>The source term itself, or the preferred label of an identified source concept where a more sophisticated structured source vocabulary exists (e.g. a thesaurus).</p>
+		
+		<h4 id="sourceConceptLanguage"><i class='fas fa-language'></i> Language</h4>
+		<p>Optionally state the native language of the source term by picking from the options in the drop down list. This information will assist the provision of multilingual search capabilities later in the project.</p>
+		
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+
+		<h3 id="matchType"><i class="fas fa-wave-square"></i> Match Type</h3>
+		<p>The purpose of the matching exercise idea is to make the most appropriate match from each concept/term in the source vocabulary to a concept in the AAT. Usually you will just make one match (the best one) for any given source concept - there is usually no need to express multiple relationships to AAT concepts as this is provided gratis via the AAT’s semantic structure. Thus if you make a match from a given source concept to an AAT target concept then there is no need to also make mappings to narrower AAT concepts for that given source concept. The exception is where the source concept relates to two genuinely different AAT concepts. In this case additional mappings are possible. The type of match between the source concept and the target concept will be one of the possible <a target="_blank" rel="noopener noreferrer" href="https://www.w3.org/TR/skos-reference/#mapping">SKOS mapping properties</a> (as defined by the SKOS reference document), listed here in order of preference:</p>
+		<ul>
+		<li><strong><i class="fas fa-equals"></i> Exact Match</strong> - this match type indicates that there is "a high degree of confidence that the concepts can be used interchangeably across a wide range of information retrieval applications".</li>
+		<li><strong><i class="fas fa-wave-square"></i> Close Match</strong> - can be used to link concepts "that are sufficiently similar that they can be used interchangeably in some information retrieval applications". It is a more approximate relationship between the source and target concepts.</li>
+		<li><strong><i class='far fa-hand-point-up'></i> Broad Match</strong> - expresses a <em>hierarchical</em> generic relationship between concepts. If a source concept is more specific in scope than any AAT available concept then you can make a Broad Match link to the AAT concept. This is useful for cases when a source vocabulary contains more detailed concepts. In this case the "all/some" rule should hold true e.g. <em>"coffee cups"</em> Broad Match <em>"cups"</em> - ALL <em>coffee cups</em> are <em>cups</em>; SOME <em>cups</em> are <em>coffee cups</em>.</li>
+		<li><strong><i class='far fa-hand-point-down'></i> Narrow Match</strong> - expresses a <em>hierarchical</em> generic relationship between concepts. It is not expected that you would need to make much use of Narrow Match relationships for ARIADNEplus vocabularies. The "some/all" rule should hold true e.g. <em>"cups"</em> Narrow Match <em>"coffee cups"</em> - SOME <em>cups</em> are <em>coffee cups</em>; ALL <em>coffee cups</em> are <em>cups</em>.</li>
+		<li><strong><i class='far fa-hand-point-right'></i> Related Match</strong> - expresses an <em>associative</em> relationship between concepts. The exact nature of the relationship is not specified, only that there is some "see also" type of connection between them. E.g. <em>bullets</em> Related Match <em>guns</em>. Bullets can be associated with guns, though you can see that this relationship is different to the other relationship types listed above. Preferably you would aim to (wherever possible) create a more direct concept mapping (e.g. to <a target="aat" rel="noopener noreferrer" href="http://vocab.getty.edu/aat/300201694"><i class="fas fa-tag"></i> bullets</a>).</li>
+		</ul>	
+		
+        <a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+		
+        <h3 id="targetConcept"><i class="fas fa-tag"></i> Target Concept</h3>
+        <p>The target vocabulary for subject mappings in the ARIADNEplus project is the <a target="_blank" rel="noopener noreferrer" href="http://www.getty.edu/research/tools/vocabularies/aat/">Getty Art &amp; Architecture Thesaurus (AAT)</a>. The displayed link is a concept from the <a target="aat" rel="noopener noreferrer" href="http://vocab.getty.edu/aat/">Getty Vocabulary Program AAT Linked Open Data (LOD)</a>. Clicking on the link will take you to a page displaying all LOD properties for that concept. The displayed label is the <em>preferred term</em> of the target concept (in English). Bear in mind there may be many other (multilingual) labels attached to the concept.</p>
+						
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+		
+		<div class="row">
+		<div class="one-half column">
+        <h3 id="suggestMatch"><i class='fas fa-search' title='suggest'></i> Suggest</h3>	
+		<p>This will display a search facility allowing you to search and display details of concepts present in the target AAT vocabulary. Typing into the search box and hitting the return key will display a list of matching concepts based on a preferred/alternate (multilingual) label match. By default ALL words in a phrase will be matched - e.g. searching for <em>axe money</em> will find <em>axe</em> and <em>money</em>. If you want to avoid this behaviour you can perform an exact phrase match by enclosing the search string in double quotes i.e. <em>"axe money"</em>. You can also perform partial matches using a wildcard character (*) e.g. <em>bullet*</em> will find both <em>bullets</em> and <em>bulletins</em></p>	
+		
+		<h3 id="aatSearchResults">Search Results</h3>	
+		<p>The results initially display the <em>preferred term</em> of the concept (in English), plus a shortened hierarchical ancestry for the concept giving further context. Hovering the cursor over any result will display the scope note for the concept. Note the actual match may be via one of the <em>alternate terms</em> (in any available language) rather than the displayed English term. It is generally advisable when making a mapping to take account of the full details of the AAT concept (such as the scope note and hierarchical context) rather than only relying on the match of the label.</p>
+		</div>		
+		<div class="one-half column">
+			<img src="img/vmt-aatsearch.png" style="position: relative; width: 100%; border: 1px solid lightgray; margin: 0; padding: 0"/>
+		</div>
+		</div><!--.row-->
+		
+		<h3 id="aatSearchDetails">Concept Details</h3>	
+		<p>Selecting any one of the results will display further details of the concept. These details include:</p>
+		<ul>
+		<li>Preferred term (English only) - the term used as a readable label for the concept in the application.</li>
+		<li>A persistent Linked Open Data (LOD) identifier for the currently displayed concept. This identifier (URI) can be used in datasets to uniquely reference AAT concepts. The URI also resolves to a page displaying various properties of the concept.</li>
+		<li>Navigable links to broader, narrower or related concepts. The hierarchical and associative structure of the AAT can be interactively explored and traversed via these links</li>
+		<li>The scope note for the concept. The described scope of the concept helps to explain the circumstances when you would and would not use the concept, and occasionally suggests alternative concepts.</li> 
+		<li>The full hierarchical ancestry for the concept, illustrating its position in the overall polyhierarhical structure.</li>
+		<li>Multilingual terms associated with the concept (grouped by language). You can search for concepts using any of these terms.</li>
+		</ul>
+		<p>Note it is possible when interactively explored and navigating around the AAT structure to select a <em>guide term</em>. These are identifiable in the application as their label is enclosed in angle brackets (e.g. <a target="aat" href="http://vocab.getty.edu/aat/300007494"><i class="fas fa-tag"></i> &lt;church buildings by location or context&gt;</a>. Guide terms are used for grouping purposes and should not be used in matches as they are not concepts, although the application will not currently prevent you from doing so.</p>
+		
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr>
+		
+		<h3 id="deleteRow"><i class='fas fa-minus-circle' title='delete'></i> Delete Row</h3>
+		<p>Clicking the 'delete' button located at the far right of any row will delete that particular row from the table. You will be prompted with an 'are you sure' message - to prevent accidental deletions.</p>		
+		
+		<h3 id="importJSON"><i class="fas fa-file-import"></i> Import JSON</h3>
+        <p>Import a set of matches from a previously saved external JSON file. This can be useful if you want to continue working on a set of matches you have previously saved, or sets of matches produced by other people.</p>
+		
+		<h3 id="exportJSON"><i class="fas fa-file-export"></i> Export JSON</h3>
+        <p>Export the current set of partial or complete matches from the table to an external (JSON) file. This is useful to save your work, or to send your matches to other people. The exported data file will incorporate the current (local) timestamp into the filename using the format "vmt-YYYYMMDDhhmmss.json" (e.g. "vmt-20190507122533.json"). Clicking the export JSON button occasionally during your work will create a trail of separate versioned backups, so you can easily go back to an earlier version and re-import that if required.</p>
+		
+		<h3 id="exportCSV"><i class="fas fa-file-csv"></i> Export CSV</h3>
+        <p>Export the current set of matches to a delimited text (CSV) format file, this is useful for subsequent import to e.g. a spreadsheet application. The exported data file will incorporate the current (local) timestamp into the filename using the format "vmt-YYYYMMDDhhmmss.csv" (e.g. "vmt-20190507122533.csv").</p>
+		
+		<h3 id="addNewRow"><i class="fas fa-plus"></i> Add New Row</h3>
+        <p>Adds a new empty row to the current set of matches. You can then edit the cells of the row directly in the table. The new row will be inserted as the first row of the table, so if you are not sure where your new row has gone, simply scroll to the top of the table.</p>
+				
+        <h3 id="clearRows"><i class="fas fa-trash-alt"></i> Clear Rows</h3>
+        <p>This will clear ALL current matches from the table. You may wish to save the current set of matches to an external (JSON) file prior to doing this, so they can be loaded back in on this or another machine at a later date to continue working, or communicated to other people. You will be prompted before the data actually disappears, to prevent accidental deletions.</p> 
+		
+		<h3 id="showHelp"><i class="fas fa-info"></i> Show Help</h3>
+        <p>Displays this help page in a separate browser tab.</p>
+		
+		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<hr />
+		<section class="row footer">
+           
+            <div class="one-third column">
+                <a target="_blank" href="https://ariadne-infrastructure.eu/"><img alt="ARIADNEplus" src="img/Ariadne_plus-Logo-500.png" width="250" /></a>
+				<small><p id="footer-app-project">ARIADNEplus is a Horizon 2020 project funded by the European Commission (Grant Agreement No 823914)</p></small>
+            </div>
+            <div class="two-thirds">
+                <small>
+                    <p>Created by <a id="footer-app-author" target="_blank" href="http://hypermedia.research.southwales.ac.uk/">University of South Wales - Hypermedia Research Group</a></p>
+					<p>This application retrieves some information originating from Getty Art &amp; Architecture Thesaurus (AAT)&reg; which is made available under the <a target="aat" href="http://opendatacommons.org/licenses/by/1.0/">ODC Attribution License</a>. See <a target="aat" href="http://vocab.getty.edu/">http://vocab.getty.edu/</a> for further details.</p>
+                    
+                </small>
+            </div>
+        </section>
+    </div><!--end div.container-->
+</body>
+</html>

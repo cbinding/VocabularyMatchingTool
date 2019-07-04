@@ -1,0 +1,47 @@
+body {	
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;  
+	-moz-osx-font-smoothing: grayscale;
+}
+a {
+	text-decoration: none;   
+    color: deepskyblue;    
+}
+a:hover {
+    color: red;       
+}
+a.concept {
+	background: #FFFFCC; 
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 2px 4px;
+}
+a.concept:hover {
+    background: white;    
+}
+
+.usw-aat-concept-details, .usw-aat-search-results {
+      background: whitesmoke; 
+}
+
+.language { 
+	background: gray; 
+	color: white; 
+	border-radius: 10px; 
+	padding: 2px 5px;
+}
+
+.usw-aat-concept-details ul { padding: 0px; margin: 0 0 0 3rem }
+.usw-aat-concept-details li { padding: 0px; margin: 0px }
+.usw-aat-concept-hierarchy ul { padding: 0px; margin: 0 0 0 3rem }
+.usw-aat-concept-hierarchy li { padding: 0px; margin: 0px; }		
+.usw-aat-search-results li { list-style-type: none; margin: 0; padding: 0 }
+
+
+.header {
+    background-image: url('../img/header.jpg');
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
+
