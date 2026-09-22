@@ -1,7 +1,42 @@
-# Vocabulary Matching Tool  
+# vmt
 
-The Vocabulary Matching Tool developed as part of the ARIADNE H2020 project builds on a tool originally developed during the ARIADNE FP7 Project. It is intended to aid in the creation of mappings from locally used terms/concepts to the Getty Art & Architecture Thesaurus (AAT). The aim of the mapping exercise is to identify subject mappings from source terms/concepts to AAT concepts that are likely to be useful to assist subsequent browsing and searching of the data. The creation of mappings to a common spine vocabulary will enable improved opportunities for multilingual subject access and cross search, by aggregating mappings from multiple data partners. The application presents an editable table of currently derived matches with a direct AAT lookup facility to make more informed mapping decisions. The set of mappings created may be exported to JSON or delimited text (CSV) format for use in other applications.
+This template should help get you started developing with Vue 3 in Vite.
 
-This tool requires a fairly modern web browser to function correctly. It has been tested on Google Chrome Version 74.0.3729.131 (64-bit) and on Safari 12.1. Unfortunately it does not yet work on Microsoft Internet Explorer or Edge browser. This application is (currently) deployed to https://vmt.ariadne.d4science.org/vmt/
+## Recommended IDE Setup
 
-All source code used in the deployed application is included here, and is made available under a Creative Commons zero (CC0) license. This source code also contains one external script sparql-proxy.php, which was obtained from https://github.com/AKSW/SparqlProxyPHP/blob/master/sparql-proxy.php, the script is made available there under the GNU General Public License v2.0.
+[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Recommended Browser Setup
+
+- Chromium-based browsers (Chrome, Edge, Brave, etc.):
+  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
+- Firefox:
+  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
+  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+
+## Type Support for `.vue` Imports in TS
+
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
