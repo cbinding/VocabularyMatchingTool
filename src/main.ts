@@ -2,7 +2,12 @@ import { createApp } from 'vue'
 import { createI18n } from "vue-i18n";
 import i18n_messages from "../i18n_messages.json";
 import App from '@/App.vue';
-//import { isAutoAccessorPropertyDeclaration } from 'typescript';
+
+import "@/styles/normalize.css";
+import "@/styles/skeleton.css";
+import "@/styles/tabulator.min.css";
+import "@/styles/usw-modal.css";
+import "@/styles/usw-vmt.css";
 
 const DEFAULT_LOCALE = "en";
 

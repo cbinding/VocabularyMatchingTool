@@ -84,9 +84,9 @@ const getDisplayLabel = (item: any, displayType: string) => {
 
 
 // persist current locale selection if changed
-watch(locale, (newValue, oldValue) => {
+watch(locale, (newValue) => {
   try {
-    localStorage.setItem("locale", locale.value)
+    localStorage.setItem("locale", newValue)
   } catch(e) {
     console.error("Local storage access denied:", e)
   }

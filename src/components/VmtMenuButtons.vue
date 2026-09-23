@@ -70,19 +70,7 @@
             :alt="`${t('btn-clear-all-title')}`"
             @click="menuItemSelected">
             <i class="fas fa-trash-alt"></i>&nbsp;<span>{{ $t("btn-clear-all-text") }}</span>
-         </button>
-
-        <a  id="btn-show-help" 
-            class="button button-primary" 
-            :lang="locale"
-            :disabled="disabled"
-            :title="`${t('btn-show-help-title')}`" 
-            :alt="`${t('btn-clear-all-title')}`"
-            target="vmt-help" 
-            href="/vmt-help.html">
-            <i class="fas fa-info"></i>&nbsp;<span>{{ $t("btn-show-help-text") }}</span>
-        </a>
-
+         </button>        
     </div>
 </template>
 
@@ -95,10 +83,10 @@
     const props = defineProps({
         disabled: { type: Boolean, default: false }
     })
-
+   
     
     const menuItemSelected = (e: Event) => {
-        console.log(`clicked ${(e.currentTarget as HTMLElement).id}`)
+        //console.log(`clicked ${(e.currentTarget as HTMLElement).id}`)
         switch ((e.currentTarget as HTMLElement)?.id.toLowerCase()) {            
             case "btn-import-json": emitter.emit("importJSON", {}); break;
             case "btn-export-json": emitter.emit("exportJSON", {}); break;
@@ -109,7 +97,6 @@
             case "btn-undo-action": emitter.emit("undoAction", {}); break;
             case "btn-redo-action": emitter.emit("redoAction", {}); break;
             case "btn-clear-all": emitter.emit("clearAll", {}); break;
-            //case "btn-show-help": emit("itemSelected", "showHelp"); break;
             default: break;
         } 
     }

@@ -49,7 +49,8 @@
                 </small>
             </div>
         </section>
-        <!--<AatSearch></AatSearch>  -->        
+        <br>
+        <VmtHelp></VmtHelp>     
     </div>
 </template>
 
@@ -62,42 +63,32 @@
     import emitter from "@/composables/useEventBus"
     import LocaleSelect from "@/components/LocaleSelect.vue"
     import MappingsTable from "@/components/MappingsTable.vue"
-    //import UswModal from "@/components/UswModal.vue"
     import AatSearchModal from "@/components/AatSearchModal.vue"
     import VmtMenuButtons from "@/components/VmtMenuButtons.vue"
+    import VmtHelp from "@/components/VmtHelp.vue"
           
     const { t, locale, fallbackLocale } = useI18n()
-    //const uilanguage = ref("en")
-    const showModal = ref(false)
-    const lastGeneratedRowId = ref(0)
     const selectedRowIndex = ref(-1)
 
     const modal = useModal()
     
-   /*const openSearchModal = () => {
-        modal.component.value = markRaw(AatSearch)
-        modal.showModal()
-    }
-
-    const closeSearchModal = () => {
-        modal.hideModal()
-    }*/
-
+   
     onMounted(() => { 
 
         modal.component.value = markRaw(AatSearchModal)
 
         // get cached settings from previous sessions 
-        // first remove legacy cache settings
-        localStorage.removeItem("vmt-uilanguage")  
-        localStorage.removeItem("vmt-lastgeneratedrowid")              
-        locale.value = localStorage.getItem("locale") || "en"        
+        // first remove legacy (deprecated) cache settings
+        try {
+            localStorage?.removeItem("vmt-uilanguage")  
+            localStorage?.removeItem("vmt-lastgeneratedrowid")              
+            locale.value = localStorage?.getItem("locale") || "en" 
+        } catch {}
     })
 
     onBeforeUnmount(() => {
         // save cached settings for future sessions
-        localStorage.setItem("locale", locale.value) 
-        //localStorage.setItem("vmt-lastgeneratedrowid", lastGeneratedRowId.value.toString())            
+        localStorage?.setItem("locale", locale.value) 
     })
 
                     
@@ -114,31 +105,8 @@
         selectedRowIndex.value = -1;
         modal.hideModal()
     }
-    
-    /*const menuItemSelected = (s) => {
-        switch (s) { 
-            case "importJSON": doSomething(s); break;
-            case "exportJSON": doSomething(s); break;
-            case "exportCSV": doSomething(s); break;
-            case "exportRDF": doSomething(s); break;
-            case "exportPDF": doSomething(s);break;
-            case "addNewRow": doSomething(s);break;
-            case "undoAction": doSomething(s);break;
-            case "redoAction": doSomething(s);break;
-            case "clearAll": doSomething(s);break;
-            case "showHelp": doSomething(s);break;
-            default: break;
-        }
-    }*/
-  
-
-    //temp..
-   //const  doSomething = (s) => console.log(`Menu item selected '${s}'`)
-
-    
 
 </script>
 
 
-<style scoped>    
-</style>
+<

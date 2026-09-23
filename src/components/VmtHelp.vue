@@ -1,44 +1,6 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Vocabulary Matching Tool - Help</title>
-    <meta name="description" content="For creating matches from ARIADNEplus partner vocabularies to Getty AAT">
-    <meta name="author" content="Ceri Binding, University of South Wales, ceri.binding@southwales.ac.uk">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--favicon-->
-    <link href="/favicon.ico" rel="Shortcut icon" type="image/x-icon">
-
-    <!-- CDN CSS -->
-	<link rel="stylesheet" 
-		href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" 
-		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" 
-		crossorigin="anonymous">   
-
-    <!-- local CSS -->
-	<!--<link rel="stylesheet" href="lib/fontawesome-free-5.8.2-web/css/all.min.css">--> 
-    <link rel="stylesheet" href="/styles/normalize.css">
-    <link rel="stylesheet" href="/styles/skeleton.css"> 
-	 <link rel="stylesheet" href="/styles/usw-vmt.css">
-	<style>
-		a:hover { color: red; } 
-		ul, li , a { margin: 0; padding: 0 }
-		#vmt a { border: 2px solid red; position: absolute; }
-		#vmt a:hover { border: 2px solid red; background: gray; opacity: 0.3;}		
-	</style>
-</head>
-<body>
-    <!-- Primary Page Layout
-    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <div id="main" class="container">
-        <!-- .container is main centered wrapper -->
-        <section class="header">
-            <h2 class="title">Vocabulary Matching Tool - Help</h2>			
-        </section>
+<template>
+    <h2 id="help" class="title">Help</h2>	    
 		
-		<h3 id="contents">Table of Contents</h3>
 		<div class="row">
 		<div class="three columns">
 		<ul>
@@ -72,8 +34,7 @@
 					<li><a href="#exportJSON"><i class="fas fa-file-export"></i> Export JSON</a></li>
 					<li><a href="#exportCSV"><i class="fas fa-file-csv"></i> Export CSV</a></li>
 					<li><a href="#addNewRow"><i class="fas fa-plus"></i> Add New Row</a></li>
-					<li><a href="#clearRows"> <i class="fas fa-trash-alt"></i> Clear Rows</a></li>
-					<li><a href="#showHelp"> <i class="fas fa-info"></i> Show Help</a></li>
+					<li><a href="#clearRows"> <i class="fas fa-trash-alt"></i> Clear Rows</a></li>					
 				</ul>
 			</li>
 		</ul>
@@ -96,9 +57,7 @@
 				<a href="#exportJSON" title="Export JSON" style="left: 15.5%; top: 82.8%; width: 14.3%; height:4%;"></a>
 				<a href="#exportCSV" title="Export CSV" style="left: 30.6%; top: 82.8%; width: 13.3%; height:4%;"></a>
 				<a href="#addNewRow" title="Add New Row" style="left: 44.8%; top: 82.8%; width: 14.9%; height:4%;"></a>
-				<a href="#clearRows" title="Clear Rows" style="left: 60.6%; top: 82.8%; width: 13.6%; height:4%;"></a>
-				<a href="#showHelp" title="Show Help" style="left: 75%; top: 82.8%; width: 12.8%; height:4%;"></a>
-				<!--<div style="position: absolute; left: 30%; top: 20%; width: 10%; height:20%; border: black 1px solid; z-index: 0;"></div>-->
+				<a href="#clearRows" title="Clear Rows" style="left: 60.6%; top: 82.8%; width: 13.6%; height:4%;"></a>				
 			</div>			
 		</div><!--.one-half column-->
 		
@@ -112,7 +71,7 @@
 		<h3 id="uiLanguage"><i class='fas fa-language'></i> User Interface Language</h3>
 		<p>The tool has been developed with a multilingual user interface. Selecting the required UI language from the drop-down list will change the language of the title, table headers, button labels and footer description. The data within the table however will not be changed. Please bear in mind that due to time constraints there are only a limited number of UI languages currently available, and the initial translations have been made using Google Translate so there may be some odd mis-translations observed - we would be very grateful to receive feedback on any language issues identified, in order to improve the tool for yourselves and others.</p>
 	
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a><hr>
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a><hr>
 		
 		<h3 id="mainTable"><i class="fas fa-table"></i> Main Table</h3>
         <p>The main table holds the current set of matches compiled; the row count in the bottom right corner of the table gives the count of currently expressed matches. The data is completely private to you - although the table data is automatically saved between browser sessions it is only saved locally to your current device/browser, and this data can easily be lost if the browser cache is cleared. It is therefore advised to export your work to an external (JSON) file frequently in order to properly back it up (or to transfer it between machines/browsers). You can do this simply by clicking the '<a href="#exportJSON">export JSON</a>' button. Should the worst happen then you will have a recent copy of your data. If you want to use a different device/browser then export the current mappings to a JSON file, open this application on the new device/browser and import the previously saved file. Table cells edited during the current session (since the last data import or browser refresh) will appear temporarily highlighted so you can see what you have recently changed. If these highlights become distracting simply refresh the browser and these highlights will disappear.</p>	
@@ -130,7 +89,7 @@
 		
 		<p>It is possible to use a combination of copying and pasting to perform external bulk editing operations on the table data if required. For example setting the source language for each row may be cumbersome; you can copy the table data and paste it into a spreadsheet, fill in the appropriate values for the source language column, then copy and paste the spreadsheet data back into the table (remembering to clear the existing table first to avoid data duplication).</p>
 		
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
 		<hr>
 		
         <h3 id="sourceConcept">Source Concept</h3>
@@ -145,7 +104,7 @@
 		<h4 id="sourceConceptLanguage"><i class='fas fa-language'></i> Language</h4>
 		<p>Optionally state the native language of the source term by picking from the options in the drop down list. This information will assist the provision of multilingual search capabilities later in the project.</p>
 		
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
 		<hr>
 
 		<h3 id="matchType"><i class="fas fa-wave-square"></i> Match Type</h3>
@@ -158,13 +117,13 @@
 		<li><strong><i class='far fa-hand-point-right'></i> Related Match</strong> - expresses an <em>associative</em> relationship between concepts. The exact nature of the relationship is not specified, only that there is some "see also" type of connection between them. E.g. <em>bullets</em> Related Match <em>guns</em>. Bullets can be associated with guns, though you can see that this relationship is different to the other relationship types listed above. Preferably you would aim to (wherever possible) create a more direct concept mapping (e.g. to <a target="aat" rel="noopener noreferrer" href="http://vocab.getty.edu/aat/300201694"><i class="fas fa-tag"></i> bullets</a>).</li>
 		</ul>	
 		
-        <a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+        <a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
 		<hr>
 		
         <h3 id="targetConcept"><i class="fas fa-tag"></i> Target Concept</h3>
         <p>The target vocabulary for subject mappings in the ARIADNEplus project is the <a target="_blank" rel="noopener noreferrer" href="http://www.getty.edu/research/tools/vocabularies/aat/">Getty Art &amp; Architecture Thesaurus (AAT)</a>. The displayed link is a concept from the <a target="aat" rel="noopener noreferrer" href="http://vocab.getty.edu/aat/">Getty Vocabulary Program AAT Linked Open Data (LOD)</a>. Clicking on the link will take you to a page displaying all LOD properties for that concept. The displayed label is the <em>preferred term</em> of the target concept (in English). Bear in mind there may be many other (multilingual) labels attached to the concept.</p>
 						
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
 		<hr>
 		
 		<div class="row">
@@ -192,7 +151,7 @@
 		</ul>
 		<p>Note it is possible when interactively explored and navigating around the AAT structure to select a <em>guide term</em>. These are identifiable in the application as their label is enclosed in angle brackets (e.g. <a target="aat" href="http://vocab.getty.edu/aat/300007494"><i class="fas fa-tag"></i> &lt;church buildings by location or context&gt;</a>. Guide terms are used for grouping purposes and should not be used in matches as they are not concepts, although the application will not currently prevent you from doing so.</p>
 		
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
 		<hr>
 		
 		<h3 id="deleteRow"><i class='fas fa-minus-circle' title='delete'></i> Delete Row</h3>
@@ -212,26 +171,12 @@
 				
         <h3 id="clearRows"><i class="fas fa-trash-alt"></i> Clear Rows</h3>
         <p>This will clear ALL current matches from the table. You may wish to save the current set of matches to an external (JSON) file prior to doing this, so they can be loaded back in on this or another machine at a later date to continue working, or communicated to other people. You will be prompted before the data actually disappears, to prevent accidental deletions.</p> 
-		
-		<h3 id="showHelp"><i class="fas fa-info"></i> Show Help</h3>
-        <p>Displays this help page in a separate browser tab.</p>
-		
-		<a href="#main" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 
-		<hr />
-		<section class="row footer">
-           
-            <div class="one-third column">
-                <a target="_blank" href="https://ariadne-infrastructure.eu/"><img alt="ARIADNEplus" src="/Ariadne_plus-Logo-500.png" width="250" /></a>
-				<small><p id="footer-app-project">ARIADNEplus is a Horizon 2020 project funded by the European Commission (Grant Agreement No 823914)</p></small>
-            </div>
-            <div class="two-thirds">
-                <small>
-                    <p>Created by <a id="footer-app-author" target="_blank" href="http://hypermedia.research.southwales.ac.uk/">University of South Wales - Hypermedia Research Group</a></p>
-					<p>This application retrieves some information originating from Getty Art &amp; Architecture Thesaurus (AAT)&reg; which is made available under the <a target="aat" href="http://opendatacommons.org/licenses/by/1.0/">ODC Attribution License</a>. See <a target="aat" href="http://vocab.getty.edu/">http://vocab.getty.edu/</a> for further details.</p>
-                    
-                </small>
-            </div>
-        </section>
-    </div><!--end div.container-->
-</body>
-</html>
+		<a href="#help" class="u-pull-right"><i class="fas fa-arrow-up"></i> [Back to top]</a> 		
+</template>
+
+<style lang="css" scoped>
+    a:hover { color: red; } 
+	ul, li , a { margin: 0; padding: 0 }
+	#vmt a { border: 2px solid red; position: absolute; }
+	#vmt a:hover { border: 2px solid red; background: gray; opacity: 0.3;}	 
+</style>

@@ -9,9 +9,10 @@
     import { useModal } from '@/composables/useModal'
     import dayjs from "dayjs"
     import emitter from "@/composables/useEventBus"
-
+    import i18n_mappingsTable from "@/../i18n_mappingsTable.json"
     import { URI_SKOS } from "@/composables/Constants"
 
+    
     const { t, locale } = useI18n()
     
     const selectedRowIndex = ref(-1)
@@ -29,7 +30,7 @@
      
     //const { data: languages } = useFetchJSON("/i18n_languages.json")
     import languages from "@/../i18n_languages.json"
-   
+  
     const sortedLangs = computed(() => (languages || [])
         .map((item: i18n_Language) => {
             return { id: item.id, label: item.label || item.labelEN || item.id }
@@ -46,7 +47,6 @@
         [URI_SKOS.NARROWMATCH]: t("skos-narrow-match"),
         [URI_SKOS.RELATEDMATCH]: t("skos-related-match") 
     })
-    
 
     // custom mutator to remove any surrounding single or double quotes from text values
     const unquoteMutator = (value: string) => (value || "").replaceAll(/^["']|["']$/gu, "")
@@ -245,22 +245,14 @@
         tabulatorData.value = []
         localStorage.removeItem(CACHENAME)
     }
-   
 
-    /*onst tableDataRowCount = computed(() => {
-        return tabulatorData.value.length       
-        //if(table && table.rowManager)
-            //return table.rowManager.rows.length;
-        //else
-            //return 0;        
-    })
-
-    watch(tableDataRowCount, (newValue) => {
-        document.getElementById("table-row-count")!.textContent = newValue.toString()   
-        table.footerElement     
-    })*/
     
-    onMounted(() => {
+
+    
+
+        
+    onMounted(() => {    
+
     // Build Tabulator
     const table = new Tabulator("#mappings-table", {
         index: "id",                // identifies column providing unique row index values
@@ -279,205 +271,12 @@
             columnCalcs:false,      // do not include column calculation rows in clipboard output
         },
         columnHeaderVertAlign: "top",
-        footerElement: "<div class='tabulator-footer'><span id='table-row-count'>0</span>&nbsp;<span id='table-row-count-label'>rows</span></div>", 
+        footerElement: "<div class='tabulator-footer'><span id='table-row-count'>0</span>&nbsp;<span id='table-row-count-label'>rows</span></div>",
         downloadConfig: {
             columnGroups: false // don't include column groups in column headers for download
         },
         locale: locale.value,  // set initial locale for table
-        langs: {
-            "en": {
-                // English language column definitions
-                "columns": {
-                    "sourceConcept": `<span>Source Concept</span>`,
-                    "sourceURI": `<span title='Source concept identifier'><i class='fas fa-key'></i>&nbsp;Source identifier</span>`,
-                    "sourceLabel": `<span title='Source concept label'><i class='fas fa-tag'></i>&nbsp;Source Label</span>`,
-                    "sourceLabelLanguage": `<span title='Source concept label language'><i class='fas fa-language'></i></span>`,
-                    "matchURI": `<span title='Match Type'><i class='fas fa-wave-square'></i>&nbsp;Match Type</span>`,
-                    "targetURI": `<span title='Target concept identifier'><i class='fas fa-key'></i> Identifier</span>`,
-                    "targetLabel": `<span title='Target Concept'>Target Concept</span>`,
-                    "created": `Created`,
-                    "updated": `Updated`,
-                    "suggest": `<span title='Suggest'>Suggest</span>`,
-                    "delete": `<span title='Delete Row'>Delete Row</span>`
-                },
-                "pagination": {
-                    "first": "<i class='fas fa-step-backward'></i> First",
-                    "first_title":"First Page",
-                    "last":"Last <i class='fas fa-step-forward'></i>",
-                    "last_title":"Last Page",
-                    "prev":"<i class='fas fa-backward'></i> Prev",
-                    "prev_title":"Prev Page",
-                    "next":"Next <i class='fas fa-forward'></i>",
-                    "next_title":"Next Page",
-                },
-                "headerFilters": {
-                    "columns": {
-                        "sourceLabel": "Filter column...",
-                        "targetLabel": "Filter column...",
-                    }
-                }
-            },
-            "fr": {
-                // French language column definitions
-                "columns": {
-                    "sourceConcept": "<span title='Concept d&apos;origine'>Concept d'origine</span>",
-                    "sourceURI": "<span title='Identifiant du concept source'><i class='fas fa-key'></i> identifiant</span>",
-                    "sourceLabel": "<span title='Label concept source'><i class='fas fa-tag'></i> étiquette</span>",
-                    "sourceLabelLanguage": "<span title='Langue de l&apos;étiquette du concept source'><i class='fas fa-language'></i></span>",
-                    "matchURI": "<span title='Type de correspondance'><i class='fas fa-wave-square'></i> Type de correspondance</span>",
-                    "targetURI": "<span title='Identifiant du concept cible'><i class='fas fa-key'></i> identifiant</span>",
-                    "targetLabel": "<span title='Concept cible'>Concept cible</span>",
-                    "created": "créé",
-                    "updated": "mis à jour",
-                    "suggest": "<span title='suggérer'>suggérer</span>",
-                    "delete": "<span title='Supprimer la ligne'>Supprimer la ligne</span>"
-                },
-                "pagination":{
-                    "first":"<i class='fas fa-step-backward'></i> Premier",
-                    "first_title":"Première page",
-                    "last":"Dernier <i class='fas fa-step-forward'></i>",
-                    "last_title":"Dernière page",
-                    "prev":"<i class='fas fa-backward'></i> précédent",
-                    "prev_title":"Page précédente",
-                    "next":"Suivant <i class='fas fa-forward'></i>",
-                    "next_title":"Page suivante",
-                },
-                "headerFilters":{
-                    "columns": {
-                        "sourceLabel": "Filtrer la colonne...",
-                        "targetLabel": "Filtrer la colonne...",
-                    }
-                }
-            },
-            "de": {
-                // German language column definitions
-                "columns": {
-                    "sourceConcept": "<span title='Quellkonzept'>Quellkonzept</span>",
-                    "sourceURI": "<span title='Kennung des Quellkonzepts'><i class='fas fa-key'></i> Kennung</span>",
-                    "sourceLabel": "<span title='Quellkonzept-Label'><i class='fas fa-tag'></i> beschriften</span>",
-                    "sourceLabelLanguage": "<span title='Beschriftungssprache des Quellkonzepts'><i class='fas fa-language' title='Sprache'></i></span>",
-                    "matchURI": "<span title='Art der Übereinstimmung'><i class='fas fa-wave-square'></i> Art der Übereinstimmung</span>",
-                    "targetURI": "<span title='Zielkonzept-ID'><i class='fas fa-key'></i> Kennung</span>",
-                    "targetLabel": "<span title='Zielkonzept'>Zielkonzept</span>",
-                    "created": "erstellt",
-                    "updated": "aktualisierte",
-                    "suggest": "<span title='vorschlagen'>vorschlagen</span>",
-                    "delete": "<span title='Zeile löschen'>Zeile löschen</span>"
-                },
-                "pagination":{
-                    "first":"<i class='fas fa-step-backward'></i> Zuerst",
-                    "first_title":"Erste Seite",
-                    "last":"Zuletzt <i class='fas fa-step-forward'></i>",
-                    "last_title":"Letzte Seite",
-                    "prev":"<i class='fas fa-backward'></i> Bisherige",
-                    "prev_title":"Vorherige Seite",
-                    "next":"Nächster <i class='fas fa-forward'></i>",
-                    "next_title":"Nächste Seite",
-                },
-                "headerFilters":{
-                    "columns": {
-                        "sourceLabel": "Filterspalte...",
-                        "targetLabel": "Filterspalte...",
-                    }
-                }
-            },
-            "es": {
-                // Spanish language column definitions
-                "columns": {
-                    "sourceConcept": "<span title='Concepto de fuente'>Concepto de fuente</span>",
-                    "sourceURI": "<span title='Identificador del concepto de fuente'><i class='fas fa-key'></i> Identificador</span>",
-                    "sourceLabel": "<span title='Etiqueta de concepto fuente'><i class='fas fa-tag'></i> Etiqueta</span>",
-                    "sourceLabelLanguage": "<span title='Lenguaje de la etiqueta del concepto fuente'><i class='fas fa-language' title='Idioma'></i></span>",
-                    "matchURI": "<span title='Tipo de concordancia'><i class='fas fa-wave-square'></i> Tipo de concordancia</span>",
-                    "targetURI": "<span title='Identificador del concepto objetivo'><i class='fas fa-key'></i> Identificador</span>",
-                    "targetLabel": "<span title='Concepto objetivo'>Concepto objetivo</span>",
-                    "created": "creado",
-                    "updated": "actualizado",
-                    "suggest": "<span title='sugerir'>sugerir</span>",
-                    "delete": "<span title='Borrar fila'>Borrar fila</span>"
-                },
-                "pagination":{
-                    "first": "<i class='fas fa-step-backward'></i> primero",
-                    "first_title": "Primera página",
-                    "last": "Último <i class='fas fa-step-forward'></i>",
-                    "last_title": "Última página",
-                    "prev": "<i class='fas fa-backward'></i> Anterior",
-                    "prev_title": "Pagina anterior",
-                    "next": "Siguiente <i class='fas fa-forward'></i>",
-                    "next_title": "Siguiente página",
-                },
-                "headerFilters":{
-                    "columns": {
-                        "sourceLabel": "Filtrar la columna...",
-                        "targetLabel": "Filtrar la columna...",
-                    }
-                }
-            },
-            "it": {
-                // Italian language column definitions
-                "columns": {
-                    "sourceConcept": "<span title='Concetto di origine'>Concetto di origine</span>",
-                    "sourceURI": "<span title='Identificatore del concetto di origine'><i class='fas fa-key'></i> identificatore</span>",
-                    "sourceLabel": "<span title='Etichetta concetto di origine'><i class='fas fa-tag'></i> Etichetta</span>",
-                    "sourceLabelLanguage": "<span title='Lingua dell&apos;etichetta concettuale di origine'><i class='fas fa-language'></i></span>",
-                    "matchURI": "<span title='Tipo di corrispondenza'><i class='fas fa-wave-square'></i> Tipo di corrispondenza</span>",
-                    "targetURI": "<span title='Identificatore del concetto di destinazione'><i class='fas fa-key'></i> identificatore</span>",
-                    "targetLabel": "<span title='Concetto di destinazione'>Concetto di destinazione</span>",
-                    "created": "creato",
-                    "updated": "aggiornato",
-                    "suggest": "<span title='suggerire'>suggerire</span>",
-                    "delete": "<span title='Elimina riga'>Elimina riga</span>"
-                },
-                "pagination":{
-                    "first":"<i class='fas fa-step-backward'></i> Primo",
-                    "first_title":"Prima pagina",
-                    "last":"Scorso <i class='fas fa-step-forward'></i>",
-                    "last_title":"Ultima pagina",
-                    "prev":"<i class='fas fa-backward'></i> Precedente",
-                    "prev_title":"Pagina precedente",
-                    "next":"Il prossimo <i class='fas fa-forward'></i>",
-                    "next_title":"Pagina successiva",
-                },
-                "headerFilters":{
-                    "columns": {
-                        "sourceLabel": "Filtra la colonna...",
-                        "targetLabel": "Filtra la colonna...",
-                    }
-                 }
-            },
-                "nl": {
-                // Dutch language column definitions
-                "columns": {
-                    "sourceConcept": "<span title='Bron concept'>Bron concept</span>",
-                    "sourceURI": "<span title='Bronconceptidentificatie'><i class='fas fa-key'></i> Identifier</span>",
-                    "sourceLabel": "<span title='Bron concept label'><i class='fas fa-tag'></i> etiket</span>",
-                    "sourceLabelLanguage": "<span title='Bronconcept labeltaal'><i class='fas fa-language'></i></span>",
-                    "matchURI": "<span title='correspondentietype'><i class='fas fa-wave-square'></i> correspondentietype</span>",
-                    "targetURI": "<span title='Target concept identifier'><i class='fas fa-key'></i> Identifier</span>",
-                    "targetLabel": "<span title='Doel concept'>Doel concept</span>",
-                    "created": "aangemaakt",
-                    "updated": "bijgewerkt",
-                    "suggest": "<span title='stel voor'>stel voor</span>",
-                    "delete": "<span title='Verwijder rij'>Verwijder rij</span>"
-                },
-                "pagination":{
-                    "first":"<i class='fas fa-step-backward'></i> Eerste",
-                    "first_title":"Eerste pagina",
-                    "last":"Laatste <i class='fas fa-step-forward'></i>",
-                    "last_title":"Laatste pagina",
-                    "prev":"<i class='fas fa-backward'></i> voorgaand",
-                    "prev_title":"Vorige pagina",
-                    "next":"volgende <i class='fas fa-forward'></i>",
-                    "next_title":"Volgende pagina",
-                },
-                 "headerFilters":{
-                     "columns": {
-                        "sourceLabel": "Filter de kolom...",
-                        "targetLabel": "Filter de kolom...",
-                    }
-                }
-            }
-        },
+        langs: i18n_mappingsTable,
         // selectable: true,     // highlights rows when clicked
         // reactiveData: true,     // turn on data reactivity
         history: true,          // track changes for undo/redo functionality
@@ -608,14 +407,8 @@
         ]        
         
     }) // end of table definition
+
     
-    const updateTableRowCount = () => {
-        //const el = document.getElementById("table-row-count")
-        const el = document.querySelector(".table-row-count")
-        if(el)
-            el.textContent = table.getData().length.toString()
-    }
-    updateTableRowCount()
 
     table.on("dataLoading", function (data: any[]) {
         // data - the data loading into the table
@@ -634,15 +427,20 @@
     
     table.on("dataLoaded", function (data: any[]) {        
         localStorage.tabulatordata = JSON.stringify(data);
-        updateTableRowCount()
+        // update the table row count
+        const el = document.getElementById('table-row-count')
+        if(el)
+            el.textContent = data.length.toString()
     })
 
 
     table.on("dataChanged", function (data: any[]) {
-        // data - the updated table data
-        //$("#table-row-count").first().text(data.length);
         localStorage.tabulatordata = JSON.stringify(data);
-        updateTableRowCount()
+        // update the table row count
+        const el = document.getElementById('table-row-count')
+        if(el)
+            el.textContent = data.length.toString()
+        //updateTableRowCount()
     })
 
 
@@ -668,12 +466,7 @@
 
 
     emitter.on("importJSON", (e: any) => {  
-        table.import("json", ".json")
-            .then(() => {updateTableRowCount()})
-            .catch(function (error: any) {
-                //handle error importing data
-                alert(error);
-            });
+        table.import("json", ".json") 
     })
 
 
@@ -689,8 +482,7 @@
                 targetLabel: "",
                 created: timestamp,
                 updated: timestamp
-            }], true);
-        updateTableRowCount()
+            }], true);        
     })
     
 
@@ -754,13 +546,15 @@
             if (result) {
                 table.clearData()
                 localStorage.tabulatordata = JSON.stringify([])
-                updateTableRowCount()
+                // update the table row count
+                const el = document.getElementById('table-row-count')
+                if(el)
+                    el.textContent = "0"
             }          
         }        
     })
 
     watch(locale, (newValue) => {
-        //console.log(`locale changed from ${oldValue} to ${newValue}`);
         if (table.setLocale) 
             table.setLocale(newValue)
     }, { immediate: true })
